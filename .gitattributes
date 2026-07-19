@@ -1,0 +1,5 @@
+# 跨平台換行統一（Windows 開發、Linux CI/Spaces 部署）
+* text=auto
+*.png binary
+*.gif binary
+*.gguf binary

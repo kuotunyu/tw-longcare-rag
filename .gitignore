@@ -1,0 +1,27 @@
+# 金鑰與環境
+.env
+.venv/
+
+# 公開文案禁詞清單與私人筆記（見 scripts/check_public_text.py）
+.claude/private/
+
+# 大型資料與產出物（由腳本重建）
+data/raw/
+data/chroma/
+models/
+logs/
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+
+# 編輯器 / 系統
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
