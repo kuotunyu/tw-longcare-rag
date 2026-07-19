@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }
 dependencies = [
+    "huggingface-hub>=1.24.0",
     "python-dotenv>=1.2.2",
 ]
 
