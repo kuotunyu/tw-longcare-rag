@@ -1,0 +1,4 @@
+#!/bin/sh
+# 公開文案守門：擋下含禁詞/本機路徑/金鑰樣式的 staged 變更
+# 啟用方式（clone 後執行一次）：git config core.hooksPath .githooks
+PYTHONUTF8=1 uv run python scripts/check_public_text.py --staged || exit 1
