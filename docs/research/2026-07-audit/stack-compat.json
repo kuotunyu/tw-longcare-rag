@@ -1,0 +1,69 @@
+{
+  "summary": "截至 2026-07-20，langchain 1.3.14 為現行穩定版，create_agent／init_chat_model／init_embeddings／LCEL(Runnable) 均為官方現行推薦 API，四個整合套件（chroma/google-genai/openai/ollama）皆活躍維護且支援 langchain-core 1.x；chromadb 1.5.9 提供官方 win_amd64 wheel、bm25s 0.3.9 為純 Python+numpy，Windows 11 + Python 3.11 均無安裝障礙。ragas 最新版 0.4.3 目前有未關閉的 import 崩壞 issue（與新版 langchain 生態衝突），建議依 CLAUDE.md 既定方針改用 deepeval（4.1.1，活躍維護、G-Eval/LLM-as-judge 成熟）。Gradio 現為 6.x 大版本；HF Spaces 免費 CPU Basic 為 2 vCPU / 16GB RAM / 50GB 非持久磁碟且閒置會休眠。",
+  "findings": [
+    {
+      "topic": "(a) langchain 1.x 穩定版本",
+      "status": "confirmed",
+      "detail": "PyPI info.version = 1.3.14（GitHub releases 顯示 2026-07-16 發布，1.3.13 為 07-10），requires-python >=3.10,<4.0，py3-none-any wheel。langchain-core 現為 1.4.9。1.3.x 系列每週持續更新。來源：pypi.org/pypi/langchain/json、github.com/langchain-ai/langchain/releases"
+    },
+    {
+      "topic": "(a) create_agent / init_chat_model / init_embeddings / LCEL 是否為現行推薦 API",
+      "status": "confirmed",
+      "detail": "官方 v1 release notes（docs.langchain.com/oss/python/releases/langchain-v1）明載：create_agent 是「建 agent 的新標準」（取代 langgraph.prebuilt.create_react_agent，建於 LangGraph 之上，middleware 為核心客製機制）；init_chat_model 與 init_embeddings 列為主要進入點（Unified model initialization）；舊式 chains 與 AgentExecutor 確認移入 langchain-classic。LCEL/Runnable 介面在 v1 文件中仍是元件組合的統一介面，無棄用聲明，但文件重心已轉向 create_agent；簡單組合用 LCEL、複雜編排用 LangGraph 的分工仍成立。"
+    },
+    {
+      "topic": "(a) langchain 整合套件現況",
+      "status": "confirmed",
+      "detail": "langchain-chroma 1.1.0（2025-12-12；要求 langchain-core>=1.1.3,<2、chromadb>=1.3.5,<2，與 chromadb 1.5.9 相容）；langchain-google-genai 4.2.7（2026-07-06；langchain-core>=1.4.7,<2）；langchain-openai 1.3.5（langchain-core>=1.4.9,<2）；langchain-ollama 1.1.0（2026-04-07；langchain-core>=1.2.21,<2、ollama>=0.6.1,<1.0）。四者皆為 1.x/4.x 現行版、皆相容 langchain-core 1.x。均為 PyPI 官方資料。"
+    },
+    {
+      "topic": "(b) ragas 現況與 langchain 1.x 相容性",
+      "status": "confirmed",
+      "detail": "ragas 最新版 0.4.3（PyPI，repo 已改掛 vibrantlabsai/ragas）。已知衝突：issue #2745（狀態 Open，2026 年 5 月回報）— ragas/llms/base.py 仍從已移除的 langchain_community.chat_models.vertexai 匯入 ChatVertexAI（該類別已移至 langchain-google-vertexai），導致 `import ragas` 直接 ModuleNotFoundError；相關 PR #2793 尚未確認合併。官方 workaround 為 pin ragas==0.3.9。另 ragas pyproject.toml 對 langchain/langchain-core/langchain-community/langchain_openai 完全不設版本約束，與 langchain 1.x 同環境安裝時相容性無保證。結論：ragas 目前與 langchain 1.x 生態確有實際衝突。"
+    },
+    {
+      "topic": "(b) deepeval 版本與 LLM-as-judge 成熟度",
+      "status": "confirmed",
+      "detail": "deepeval 最新版 4.1.1（PyPI；GitHub releases 顯示 v4.1.0 2026-07-12、4.0.x 系列 2026 年 5 月密集發布，活躍維護）。requires-python >=3.9,<4.0，核心依賴不含 langchain（僅 openai/pydantic/pytest 等），與 langchain 1.x 無依賴衝突。LLM-as-judge 成熟：GEval（自訂準則）、MultimodalGEval、ArenaGEval（pairwise 比較）皆為官方功能，RAG 指標（contextual precision 等）持續強化中。適合作為 RAGAS 的替代評估框架。"
+    },
+    {
+      "topic": "(c) bm25s",
+      "status": "confirmed",
+      "detail": "最新版 0.3.9（PyPI），官方描述明載「ultrafast implementation of BM25 in pure Python, powered by Numpy」，核心僅依賴 numpy，wheel 為 py3-none-any 純 Python wheel，requires-python >=3.8 → Windows 11 + Py3.11 免編譯直接安裝。選配加速（PyStemmer、numba）為額外套件且各自有 Windows wheel，非必需。"
+    },
+    {
+      "topic": "(d) chromadb",
+      "status": "confirmed",
+      "detail": "最新版 1.5.9（2026-05-05 前後發布），requires-python >=3.9。PyPI files 頁面確認提供 chromadb-1.5.9-cp39-abi3-win_amd64.whl（23.5MB，maturin/Rust 建置）等五平台 wheel → Windows 官方 wheel 正常，無需本機編譯。與 langchain-chroma 1.1.0 的約束（chromadb>=1.3.5,<2）相容。"
+    },
+    {
+      "topic": "(e) gradio 與 HF Spaces 免費硬體",
+      "status": "confirmed",
+      "detail": "gradio 最新版 6.20.0（大版本 6，requires-python >=3.10）。HF Spaces 官方文件（huggingface.co/docs/hub/spaces-overview）：免費 CPU Basic = 2 vCPU、16GB RAM、50GB 非持久磁碟；免費硬體閒置一段時間後會自動休眠（go to sleep），文件未載明確切時數；網路僅開放 80/443/8080 端口；Secrets 由 Space Settings 管理並以環境變數注入。"
+    },
+    {
+      "topic": "(f) sentence-transformers / pyvis / networkx",
+      "status": "confirmed",
+      "detail": "sentence-transformers 5.3.0（2026-03-12，requires-python >=3.10，transformers>=4.41,<6），支援 embedding/reranker/sparse encoder，版本足新可支援 EmbeddingGemma 的 prompt_name 機制。networkx 3.6.1（requires-python >=3.11 且排除 3.14.1；Py3.11 相容）。pyvis 停留在 0.3.2（2023-02-24 發布，逾三年未更新），純 Python 仍可用但屬低維護狀態。"
+    }
+  ],
+  "risks": [
+    "ragas 0.4.3 目前在新版 langchain 生態下 import 即崩（issue #2745 Open，ChatVertexAI 舊路徑已移除），且其 pyproject 對 langchain 系列完全不設版本上限——切勿與 langchain 1.x 裝在同一環境；評估框架應直接採 deepeval 或自製 LLM-as-judge（與 CLAUDE.md 既定方針一致）",
+    "HF Spaces 免費 CPU Basic 僅 2 vCPU / 16GB RAM：bge-reranker-v2-m3（約 2.3GB）+ embeddinggemma-300m 在 CPU 上推論延遲高，demo 需考慮縮小 rerank 候選數或改雲端 API 路徑；且 50GB 磁碟非持久＋閒置休眠——chroma 索引與模型權重須在啟動時自 HF Hub 下載或重建，冷啟動時間會很長",
+    "gradio 已進入 6.x 大版本：網路上大量教學仍是 4.x/5.x 寫法，UI API 有 breaking changes；開發時應以 Gradio 6 官方文件為準，並在 Spaces README 的 sdk_version 指定 6.x",
+    "langchain-google-genai 已跳到 4.x 大版本（2026-07-06 發布），與舊 2.x 範例程式碼可能不相容，撰寫前應以 Context7/官方文件確認現行 API",
+    "deepeval 4.x 發版頻繁（近兩個月 5+ 個 release），API 有變動風險，requirements 應以 uv lock 鎖定確切版本",
+    "pyvis 0.3.2 自 2023-02 起未更新：與新版 networkx 3.6/jinja2 目前仍可運作，但屬無人維護風險；知識圖譜視覺化若遇問題可考慮改輸出 HTML/D3 或 mermaid 替代",
+    "networkx 3.6.1 requires-python >=3.11：本專案用 Py3.11 剛好達標，但若未來降版 Python 會裝不了最新 networkx",
+    "chromadb 1.x 核心已改 Rust（cp39-abi3 wheel）：Windows wheel 正常，但若 uv 誤解析到 sdist（如指定不存在的版本）會觸發本機 Rust 編譯而失敗，requirements 應鎖定有 wheel 的版本（如 1.5.x）",
+    "部分 WebFetch 摘要模型回傳的發布日期有幻覺跡象（版本號皆已以 PyPI info.version 與 GitHub releases 交叉確認，但個別日期精確度存疑，僅供參考）"
+  ],
+  "recommendations": [
+    "評估框架直接選 deepeval（鎖 4.1.x）或自製 LLM-as-judge，完全跳過 ragas；在 README 註明 ragas 與 langchain 1.x 的已知衝突（vibrantlabsai/ragas issue #2745）作為選型依據",
+    "requirements 以 uv lock 鎖定：langchain==1.3.14、langchain-core==1.4.9、langchain-openai==1.3.5、langchain-google-genai==4.2.7、langchain-ollama==1.1.0、langchain-chroma==1.1.0、chromadb==1.5.9、sentence-transformers==5.3.0、bm25s==0.3.9、gradio==6.x、deepeval==4.1.1",
+    "程式一律用 v1 現行 API：create_agent（含 middleware）、init_chat_model、init_embeddings；元件組合用 LCEL/Runnable；不得 import langchain-classic 舊式 chains/AgentExecutor",
+    "HF Spaces demo 設計為輕量路徑：啟動時從 HF Hub 拉預建 chroma 索引（非現場重建），rerank 候選數壓在 10-20 以內，或在 Space 上改用雲端 API（Gemini）做生成、地端重運算留在本機 4090",
+    "bm25s 直接採用（純 Python + numpy，Windows 零風險），可作為 hybrid retrieval 的 sparse 分支",
+    "pyvis 可暫用於知識圖譜視覺化，但將其定位為可替換模組，遇相容性問題改 mermaid 或自產 HTML"
+  ]
+}

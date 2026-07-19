@@ -1,0 +1,51 @@
+{
+  "summary": "全國法規資料庫確有官方 Open API（Swagger：law.moj.gov.tw/api/swagger/index.html），提供整包 ZIP（XML/JSON）下載，已實測下載並解析：中文法律包 6.1MB（1,345 部）、中文命令包 25.7MB（10,432 部），五部目標法規全數在內且 PCode 全部查證確認。資料授權為政府資料開放授權條款第 1 版，每月更新（本次資料時間 2026/07/10）。建議 fetch_laws.py 直接走 Open API JSON 整包下載後以 pcode 過濾，網頁爬取僅留作備援（頁面為靜態 HTML、無反爬，技術上完全可行）。",
+  "findings": [
+    {
+      "topic": "(a) 官方 Web API：全國法規資料庫 Open API",
+      "status": "confirmed",
+      "detail": "存在且已實測可用。Swagger UI：https://law.moj.gov.tw/api/swagger/index.html（OAS 2.0 spec 在 https://law.moj.gov.tw/api/swagger/docs/v1）。共 4 個 GET 端點（host law.moj.gov.tw、basePath /api、僅 https、僅 GET，HEAD 回 405）：/Ch/Law/{fileType}、/Ch/Order/{fileType}、/En/Law/{fileType}、/En/Order/{fileType}，fileType 為 path 參數，值為 XML 或 json。即：https://law.moj.gov.tw/api/ch/law/json（中文法律，實測 ZIP 6,096,612 bytes、1,345 部）與 https://law.moj.gov.tw/api/ch/order/json（中文命令，實測 ZIP 25,725,041 bytes、10,432 部）。注意：僅提供「整個資料庫打包下載」，無單一法規查詢端點。ZIP 內含 ChLaw.json/ChOrder.json + schema.csv + manifest.csv。JSON 結構：{UpdateDate, Laws:[{LawLevel, LawName, LawURL, LawCategory, LawModifiedDate, LawEffectiveDate, LawEffectiveNote, LawAbandonNote, LawHasEngVersion, EngLawName, LawAttachements, LawHistories, LawForeword, LawArticles:[{ArticleType, ArticleNo, ArticleContent}]}]}。ArticleType：'A'=條文、'C'=編章節標題（ArticleNo 為空字串）。ArticleNo 格式如「第 1 條」「第 8-1 條」。JSON 為 UTF-8 with BOM（需用 utf-8-sig 解碼）。本次抓到的 UpdateDate 為 2026/7/10。"
+    },
+    {
+      "topic": "(b) data.gov.tw 開放資料集",
+      "status": "confirmed",
+      "detail": "有，共兩個對應資料集（法務部資訊處提供、每 1 月更新、政府資料開放授權條款-第1版、免費）：(1) dataset 18289「中文法規_法律資料檔下載」https://data.gov.tw/dataset/18289，資源 URL：https://sendlaw.moj.gov.tw/PublicData/GetFile.ashx?DType=XML&AuData=CF（另有 DType=RAW_XML）；(2) dataset 18290「中文法規_命令資料檔下載」https://data.gov.tw/dataset/18290，資源 URL：https://sendlaw.moj.gov.tw/PublicData/GetFile.ashx?DType=XML&AuData=CM。此 sendlaw 管道僅 XML；law.moj.gov.tw 的 Open API 為同源資料且多了 JSON 格式，較適合程式使用。涵蓋範圍為全國法規資料庫收錄之全部中央法規（法律/命令分包）。"
+    },
+    {
+      "topic": "(c) 五部法規 PCode 與 URL 格式",
+      "status": "confirmed",
+      "detail": "全部實際查證（含在 Open API ZIP 內比對命中）：1) 長期照顧服務法 L0070040（LawArticles 79 筆含章節列）；2) 長期照顧服務法施行細則 L0070043（15 條，異動 20191024）；3) 正確全名為「長期照顧服務機構設立許可及管理辦法」L0070044（38 條，異動 20220210）——非「長照機構設立許可及管理辦法」；4) 正確全名為「長期照顧服務申請及給付辦法」L0070059（22 條+5 章節列，主管機關衛生福利部，修正日期民國 114/06/19）；5) 老人福利法 D0050037（LawArticles 65 筆）。URL 格式：全文頁 https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode={PCode}；單條頁 https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode={PCode}&flno={條號}，flno 用純數字或帶連字號（如 1、8-1，對應「第 8-1 條」）。JSON 內每部法規的 LawURL 欄位即含 pcode，可直接用來過濾。"
+    },
+    {
+      "topic": "(d) 授權條款",
+      "status": "confirmed",
+      "detail": "law.moj.gov.tw/Service/Copyright.aspx「政府網站資料開放宣告」明載採「政府資料開放授權條款-第1版」（Open Government Data License v1.0），要求使用時註明出處、不得惡意變更資訊、尊重第三人著作人格權；data.gov.tw 兩個資料集頁面亦標同一授權。README 建議註明文字：「本專案之法規條文資料取自法務部『全國法規資料庫』（https://law.moj.gov.tw/）及政府資料開放平臺（https://data.gov.tw/dataset/18289、18290），依《政府資料開放授權條款-第1版》規定利用並註明出處。法規內容以全國法規資料庫公布之最新版本為準。」（OGDL v1 一般認為與 CC BY 4.0 相容，但此點本次未逐字查證條款原文，README 若要寫明相容性請再確認 https://data.gov.tw/license）"
+    },
+    {
+      "topic": "(e) 網頁爬取可行性（備援）",
+      "status": "confirmed",
+      "detail": "實測以 curl（僅帶一般 UA）GET https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=L0070040 回 HTTP 200、96KB，內容為伺服器端渲染之靜態 HTML，未遇 CAPTCHA/Cloudflare 阻擋。條文結構乾淨：div.law-reg-content 之下每條為 div.row，內含 div.col-no > a[name=flno]（條號文字「第 N 條」，href 指向 LawSingle.aspx）與 div.col-data > div.law-article > div.line-xxxx（各項/款逐行）。用 requests+BeautifulSoup 即可解析，但既有官方 API，爬取僅作備援。"
+    },
+    {
+      "topic": "附帶觀察：附表/附件不在條文文字內",
+      "status": "confirmed",
+      "detail": "長期照顧服務申請及給付辦法（L0070059）有 6 份附表（照顧問題清單、長照需要等級、照顧組合表等），這些是 LawAttachements 中的獨立附件檔（FileName/FileURL），不在 ArticleContent 文字內。RAG 若需要給付項目/照顧組合細節，需另行下載附表處理，否則檢索會缺這塊。"
+    }
+  ],
+  "risks": [
+    "Open API 僅整包下載（無單法規端點），但兩包合計約 32MB、實測數秒可下載完成，實務上不是問題；惟端點路徑非版本化 REST，未來若改版需調整",
+    "整包資料每月更新一次（本次 UpdateDate 2026/07/10），網站本身可能比整包檔新最多約一個月；L0070059 於 2025-06-19 剛修正過，長照給付相關法規修法頻繁，需在 pipeline 記錄 UpdateDate/LawModifiedDate 作為資料版本",
+    "JSON 檔為 UTF-8 with BOM，未用 utf-8-sig 解碼會在檔頭多出 ﻿",
+    "LawArticles 混有 ArticleType='C' 的編章節列（ArticleNo 為空），直接照抄會產生空條號紀錄；ArticleNo 格式為「第 8-1 條」樣式，轉 flno 需去除「第/條/空白」並保留連字號",
+    "附表（如給付辦法的照顧組合表）不在條文文字中，僅列於 LawAttachements；RAG 語料若只收條文會缺附表內容",
+    "OGDL v1 與 CC BY 4.0 的相容性敘述未在本次逐字查證，README 撰寫時建議再對照 https://data.gov.tw/license 條款原文"
+  ],
+  "recommendations": [
+    "首選：scripts/fetch_laws.py 直接打官方 Open API 下載兩個 JSON 整包——https://law.moj.gov.tw/api/ch/law/json（長期照顧服務法 L0070040、老人福利法 D0050037）與 https://law.moj.gov.tw/api/ch/order/json（L0070043、L0070044、L0070059）——解壓後以 LawURL 內的 pcode 過濾五部法規，逐條輸出 {law_name, article_no, content, url}；條文只取 ArticleType=='A'，ArticleNo「第 8-1 條」正規化為 flno『8-1』，url 組成 https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode={pcode}&flno={flno}；ZIP 原檔快取到 data/raw/ 並記錄 UpdateDate，避免重覆下載",
+    "次選（備援 1）：data.gov.tw sendlaw XML 管道（AuData=CF / AuData=CM），內容同源但僅 XML；當 Open API 端點變動時切換",
+    "末選（備援 2）：直接解析 LawAll.aspx 靜態 HTML（div.law-reg-content > div.row > div.col-no / div.law-article 結構已驗證），加 UA 與禮貌性延遲即可，但有官方 API 時不建議常態使用",
+    "法規名稱採用查證後全名：『長期照顧服務機構設立許可及管理辦法』（L0070044）與『長期照顧服務申請及給付辦法』（L0070059），不要用簡稱『長照機構設立許可及管理辦法』『長照服務申請及給付辦法』當 law_name",
+    "README 資料來源段註明：法務部全國法規資料庫 Open API 與政府資料開放平臺 dataset 18289/18290，授權為《政府資料開放授權條款-第1版》，並附抓取時的資料版本日期（UpdateDate）",
+    "後續 Phase 若要涵蓋長照給付細節，評估另外下載 L0070059 的 6 份附表（LawAttachements 內含 FileURL）做表格抽取，否則在 README 說明語料範圍僅及條文本文"
+  ]
+}

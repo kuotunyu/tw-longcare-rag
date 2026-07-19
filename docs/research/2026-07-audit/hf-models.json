@@ -1,0 +1,65 @@
+{
+  "summary": "七個 HF 模型 ID 全部存在且拼寫正確;其中 4 個為 gated(taide 兩個為 gated:auto、twinkle-ai/Llama-3.2-3B-F1-Instruct 為 gated:auto、google/gemma-3-12b-it 為 gated:manual),需登入 HF 並接受授權才能下載,其餘 3 個(twinkle-ai/gemma-3-4B-T1-it、BAAI 兩個)不設限。EmbeddingGemma 官方用法確認:query 與 document 必須用不同 prompt(sentence-transformers >=5.0 的 encode_query/encode_document,或 prompt_name=\"query\"/\"document\",內建 prompt 為 \"task: search result | query: \" 與 \"title: none | text: \"),MRL 支援 768/512/256/128。taide/embeddinggemma-GTAIDE-300m-2605 模型卡有完整使用範例與評測(基於 google/embeddinggemma-300m,以全國法規資料庫等 142.88 MB 繁中資料微調,法規檢索 Recall@1 74.43%、nDCG@10 86.22%),但卡上未提 MRL。",
+  "findings": [
+    {
+      "topic": "taide/Gemma-3-TAIDE-12b-Chat-2602",
+      "status": "confirmed",
+      "detail": "ID 存在且正確。gated:\"auto\"(需登入 HF 同意授權,自動核准)。safetensors 參數量 12,401,873,520(約 12.4B),權重 6 個分片(model-00001~00006-of-00006.safetensors),BF16 推估約 24.8 GB。授權 license:\"other\",license_name:\"gemma-version-taide-models-license-agreement\"(TAIDE 自訂條款,非標準開源授權)。pipeline_tag 為 null。來源:https://huggingface.co/api/models/taide/Gemma-3-TAIDE-12b-Chat-2602"
+    },
+    {
+      "topic": "taide/embeddinggemma-GTAIDE-300m-2605",
+      "status": "confirmed",
+      "detail": "ID 存在且正確。gated:\"auto\"。safetensors total 302,863,104(約 303M 參數),主權重 model.safetensors 加 2_Dense/3_Dense 兩個 Dense 模組,檔案總量約 0.6~1.2 GB(依 dtype,未逐檔查證)。授權同上為 TAIDE 自訂條款(license:other / gemma-version-taide-models-license-agreement),另附「個人資料蒐集告知聲明」。pipeline_tag:\"feature-extraction\",tags 含 sentence-transformers。來源:HF API 與模型頁"
+    },
+    {
+      "topic": "twinkle-ai/gemma-3-4B-T1-it",
+      "status": "confirmed",
+      "detail": "ID 存在且正確(注意大小寫:gemma-3-4B-T1-it)。gated:false(可直接下載)。license:\"gemma\"(Google Gemma 條款)。API safetensors 欄位內部不一致(parameters.BF16=4,551,515,648 但 total=3,880,263,168),實測 siblings 檔案大小為 4.96 GB + 4.14 GB 共約 9.14 GB(usedStorage 9,142,316,736),與 ~4.55B 參數 BF16 相符;參數量以約 4.3~4.6B 看待。base_model:google/gemma-3-4b-pt,pipeline_tag:text-generation"
+    },
+    {
+      "topic": "twinkle-ai/Llama-3.2-3B-F1-Instruct",
+      "status": "confirmed",
+      "detail": "ID 存在且正確。gated:\"auto\"(需登入同意 Llama 3.2 授權)。license:\"llama3.2\"(含 Meta acceptable use policy)。safetensors total 3,606,752,256(約 3.6B 參數,BF16),權重 2 個分片,推估約 7.2 GB。pipeline_tag:text-generation。下載數僅 10,屬小眾模型"
+    },
+    {
+      "topic": "BAAI/bge-reranker-v2-m3",
+      "status": "confirmed",
+      "detail": "ID 存在且正確。gated:false。license:\"apache-2.0\"。safetensors total 567,755,777(約 568M 參數,F32),單一 model.safetensors 約 2.27 GB。pipeline_tag:text-classification(cross-encoder reranker),下載數 1,753 萬+,生態成熟"
+    },
+    {
+      "topic": "BAAI/bge-m3",
+      "status": "confirmed",
+      "detail": "ID 存在且正確。gated:false。license:MIT。pipeline_tag:sentence-similarity,主權重為 pytorch_model.bin(API 無 safetensors 參數欄位)。參數量約 568M(XLM-RoBERTa-large 架構,與 bge-reranker-v2-m3 同底,此數為架構推估非 API 直接回報),檔案約 2.3 GB。下載數 3,467 萬+"
+    },
+    {
+      "topic": "google/gemma-3-12b-it",
+      "status": "confirmed",
+      "detail": "ID 存在且正確。gated:\"manual\"(API 回報值;需登入 HF 接受 Google Gemma 使用條款才能下載)。license:\"gemma\"。safetensors total 12,187,325,040(約 12.2B,BF16),5 個分片,推估約 24.4 GB。pipeline_tag:image-text-to-text(多模態),下載數 124 萬+。適合作為 TAIDE 12B 的基準對照模型"
+    },
+    {
+      "topic": "EmbeddingGemma 官方 sentence-transformers 用法與 MRL",
+      "status": "confirmed",
+      "detail": "官方(google/embeddinggemma-300m 模型卡與 HF 官方 blog)確認 query 與 document 必須用不同 prompt:sentence-transformers >=5.0(搭配 transformers >=4.56)提供 model.encode_query(query) 與 model.encode_document(docs) 便捷 API;等價做法是 model.encode(..., prompt_name=...) 使用模型內建 13 種 prompts,其中 \"query\": \"task: search result | query: \"、\"document\": \"title: none | text: \"(另有 Clustering、Classification、STS 等)。MRL:原生 768 維,官方確認可截斷至 512/256/128(用 SentenceTransformer(..., truncate_dim=256) 或 encode 時指定,截斷後需重新正規化,框架自動處理)。CLAUDE.md 中「query 與 document 需各自 prompt 編碼」的規範與官方文件一致。模型 308M 參數、2K context(ai.google.dev 確認)"
+    },
+    {
+      "topic": "taide/embeddinggemma-GTAIDE-300m-2605 模型卡特殊說明",
+      "status": "confirmed",
+      "detail": "模型卡內容完整:1) 有 sentence-transformers 使用範例,示範 encode_query/encode_document 與 similarity(),範例情境即為法規檢索(勞保繳費問答配對法條)。2) fine-tune 背景:以 google/embeddinggemma-300m 為基底,繁中訓練資料 142.88 MB,法規資料來源為全國法規資料庫(更新至 2026-04-01),目標是強化查詢與法規條文的語義相似度。3) 有評測表:自建法規檢索評測 30,651 題(Recall@1 74.43%、nDCG@10 86.22%,顯著優於原版 embeddinggemma-300m),另附 MTEB v2 與 C-MTEB 對照。4) 需同意「(Gemma版次)-TAIDE模型授權條款」與「個人資料蒐集告知聲明」(gated:auto)。5) 輸出維度 768;模型卡未提及 MRL 截斷支援"
+    }
+  ],
+  "risks": [
+    "四個 gated 模型(taide 兩個、twinkle-ai/Llama-3.2-3B-F1-Instruct、google/gemma-3-12b-it)未先在 HF 網頁接受授權就跑下載腳本會直接 401/403 失敗;google/gemma-3-12b-it 的 gated 值為 manual,核准可能非即時",
+    "TAIDE 兩模型授權為自訂條款(license:other),非 OSI 開源授權,公開 repo/HF Space 的再散布與衍生模型上傳權限需人工細讀條款確認",
+    "taide/embeddinggemma-GTAIDE 模型卡未聲明 MRL 支援;雖 base model 支援 768/512/256/128 截斷,微調後低維度的檢索品質未經驗證,直接降維可能劣化",
+    "twinkle-ai/gemma-3-4B-T1-it 的 HF API safetensors total 與 BF16 參數數字不一致(3.88B vs 4.55B),引用參數量時建議以檔案實際大小 9.14 GB 與 ~4.5B 級距描述",
+    "BAAI/bge-m3 的參數量(~568M)為架構推估,HF API 未直接回報 safetensors 參數欄位",
+    "若未依 EmbeddingGemma 規範對 query/document 使用對應 prompt(encode_query/encode_document 或 prompt_name),檢索品質會嚴重下降——與 CLAUDE.md 警語一致"
+  ],
+  "recommendations": [
+    "開發前先 huggingface-cli login(或設 HF_TOKEN),並逐一到 taide/Gemma-3-TAIDE-12b-Chat-2602、taide/embeddinggemma-GTAIDE-300m-2605、twinkle-ai/Llama-3.2-3B-F1-Instruct、google/gemma-3-12b-it 四個模型頁面接受授權;下載腳本遇 401 時提示使用者去接受授權而非換模型",
+    "requirements 鎖定 sentence-transformers>=5.0 與 transformers>=4.56,embedding 一律用 model.encode_query()/model.encode_document()(或 prompt_name=\"query\"/\"document\"),並寫一個 pytest 驗證兩種編碼產生的向量確實不同",
+    "若考慮用 MRL 降維(512/256/128)節省 chromadb 儲存,先用專案評估集對 taide 微調版做 768 vs 低維度的檢索品質對照,確認可接受再採用",
+    "README 模型選型表可直接引用 taide embedding 模型卡的官方評測(法規檢索 Recall@1 74.43%、nDCG@10 86.22% vs 原版)作為選用依據,並註明 TAIDE 授權為自訂條款、資料來源含全國法規資料庫",
+    "磁碟預算:TAIDE 12B 約 24.8 GB + google gemma-3-12b-it 約 24.4 GB + 其餘小模型合計約 15 GB,全部下載約需 65 GB 以上空間,4090 24GB VRAM 跑 12B BF16 需量化(建議走 Ollama 的 taide-gemma3-12b 現成建置)"
+  ]
+}

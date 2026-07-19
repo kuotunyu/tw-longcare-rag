@@ -1,0 +1,53 @@
+{
+  "summary": "三個模型字串在 2026-07 全部有效：gemini-3.1-flash-lite 與 gemini-2.5-flash-lite 均為 ai.google.dev 官方模型頁列出的 stable 模型，gpt-5-mini 仍是 OpenAI 可呼叫的 alias（snapshot gpt-5-mini-2025-08-07），但該 snapshot 已於 2026-06-11 公告將在 2026-12-11 關閉，官方建議的後繼是 gpt-5.4-mini。成本試算：500 個 chunk 用最便宜的 gemini-2.5-flash-lite 摘要約 $0.087（免費層內可能 $0）；30 題 × 3 指標用 gpt-5-mini 當 judge 約 $0.18。Gemini 免費層 RPM/RPD 官方文件已改為「到 AI Studio 依專案查看」，不再公布固定表格。",
+  "findings": [
+    {
+      "topic": "gemini-3.1-flash-lite 有效性",
+      "status": "confirmed",
+      "detail": "有效。ai.google.dev/gemini-api/docs/models 將 gemini-3.1-flash-lite 列為 stable 模型（定位：以低成本達到接近大模型的 frontier-class 表現），可直接作為 API 模型字串呼叫。同世代還有 gemini-3.5-flash（stable）與 gemini-3.1-pro-preview 等。"
+    },
+    {
+      "topic": "gemini-2.5-flash-lite 有效性",
+      "status": "confirmed",
+      "detail": "有效。ai.google.dev 官方模型頁仍將 gemini-2.5-flash-lite 列為 stable，描述為最快、最省成本的多模態模型，未標示 deprecated；pricing 頁亦仍有其獨立價格列。"
+    },
+    {
+      "topic": "gpt-5-mini 有效性",
+      "status": "confirmed",
+      "detail": "目前仍有效可呼叫。developers.openai.com（platform.openai.com 已 301 轉址至此）的 gpt-5-mini 模型頁顯示 alias gpt-5-mini → snapshot gpt-5-mini-2025-08-07，context 400K / max output 128K，未標 deprecated。但官方 deprecations 頁顯示：2026-06-11 已公告 gpt-5-mini-2025-08-07 將於 2026-12-11 關閉，建議替代為 gpt-5.4-mini。亦即 2026 年 7 月當下可用，年底前需遷移。最接近的現行替代字串：gpt-5.4-mini（input $0.75 / output $4.50 per 1M）。"
+    },
+    {
+      "topic": "(a) 定價（每百萬 token，標準付費層）",
+      "status": "confirmed",
+      "detail": "gemini-3.1-flash-lite：input $0.25（text/image/video；audio $0.50）／output $1.50；batch 半價（$0.125／$0.75）。gemini-2.5-flash-lite：input $0.10（audio $0.30)／output $0.40；batch 半價（$0.05／$0.20）。gpt-5-mini：input $0.25／cached input $0.025／output $2.00。參考：gpt-5.4-mini input $0.75／cached $0.075／output $4.50。來源：ai.google.dev/gemini-api/docs/pricing 與 developers.openai.com/api/docs/models/gpt-5-mini（各數字經同頁二次擷取覆核一致）。注意：OpenAI 主 pricing 頁的當前表格已只列 gpt-5.4/5.5/5.6 世代，gpt-5-mini 價格僅存在於其模型頁。"
+    },
+    {
+      "topic": "(b) Gemini 免費層 RPM/RPD",
+      "status": "uncertain",
+      "detail": "官方 rate-limits 頁（ai.google.dev/gemini-api/docs/rate-limits）已不再公布各模型固定的 Free tier RPM/TPM/RPD 表格，原文明示 rate limits『depend on a variety of factors (such as your usage tier) and can be viewed in Google AI Studio』，需到 aistudio.google.com/rate-limit 依專案查看；頁上僅剩 Batch API 各 tier 的 enqueued-token 表。pricing 頁確認兩個 flash-lite 模型免費層皆可用（input/output token 免費）。非官方 2026 年來源（多個第三方整理）普遍回報 flash-lite 級免費層約 15 RPM／約 1,000 RPD，可作規劃參考但非官方保證。"
+    },
+    {
+      "topic": "(c-1) 500 chunk 上下文摘要成本試算",
+      "status": "confirmed",
+      "detail": "最便宜 flash-lite 級模型為 gemini-2.5-flash-lite（$0.10/$0.40）。試算：input 500×1,500=750K tokens → 0.75M×$0.10=$0.075；output 500×60=30K tokens → 0.03M×$0.40=$0.012；合計約 $0.087（不到 $0.10）。若走 Batch API 半價則約 $0.043；若在免費層跑（500 requests，依非官方 15 RPM/1,000 RPD 推算約 34 分鐘可跑完）成本為 $0。對照：改用 gemini-3.1-flash-lite 為 0.75M×$0.25+0.03M×$1.50=$0.2325。"
+    },
+    {
+      "topic": "(c-2) 30 題 RAGAS 式評估（gpt-5-mini judge）成本試算",
+      "status": "confirmed",
+      "detail": "假設每題×每指標一次呼叫：30 題×3 指標=90 次呼叫。input 90×4,000=360K tokens → 0.36M×$0.25=$0.090；output 90×500=45K tokens → 0.045M×$2.00=$0.090；合計 $0.18。若『每題 4,000/500』已含 3 指標合併成單次呼叫（30 次），則為 $0.06。對照：同工作量改用 gpt-5.4-mini 約 $0.27+$0.20=$0.47。兩項試算合計（摘要+評估）約 $0.27，遠低於 $1。"
+    }
+  ],
+  "risks": [
+    "gpt-5-mini 唯一 snapshot（gpt-5-mini-2025-08-07）已排定 2026-12-11 關閉：專案若在年底後仍要跑評估，OPENAI_MODEL 需改為 gpt-5.4-mini（成本約為現在的 2.3~3 倍），建議在 .env.example 註記此期限。",
+    "gpt-5-mini 是 reasoning 模型，計費 output tokens 含 reasoning tokens，實際 output 可能明顯超過每題 500 tokens 的假設，judge 成本可能上浮數倍（但量級仍在 <$1）。",
+    "Gemini 免費層限額已改為按專案動態顯示（AI Studio），15 RPM/1,000 RPD 為非官方數字，實際跑批次前應先在 AI Studio 確認，否則可能觸發 429。",
+    "gemini-2.5-flash-lite 屬上一世代，雖現為 stable 但存在被淘汰的時程風險；CLAUDE.md 以 .env 切換模型字串的設計正好可對沖此風險。"
+  ],
+  "recommendations": [
+    "三個 .env 預設值（GEMINI_MODEL=gemini-3.1-flash-lite、GEMINI_LITE_MODEL=gemini-2.5-flash-lite、OPENAI_MODEL=gpt-5-mini）目前全部可沿用，無需更動。",
+    "大量一次性前處理（chunk 摘要）維持用 gemini-2.5-flash-lite，並優先考慮 Batch API（半價，總成本約 $0.04）或免費層（$0）；500 筆規模即使全走標準付費層也僅約 $0.09。",
+    "在 README/成本估算段落記錄：摘要約 $0.09、judge 評估約 $0.18，總計 <$0.30。",
+    "於 .env.example 或 README 註記 gpt-5-mini 的 2026-12-11 關閉期限與官方指定替代 gpt-5.4-mini（input $0.75/output $4.50），屆時只改環境變數即可。",
+    "批次執行前先到 aistudio.google.com/rate-limit 確認該專案免費層實際 RPM/RPD，據此設定呼叫節流。"
+  ]
+}
