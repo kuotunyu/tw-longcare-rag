@@ -2,10 +2,10 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：Phase 0 進行中——git + 公開文案防護 + 四份文件重寫 + 骨架測試已就緒，剩 TAIDE 12B 地端化與 HF 授權。
+- **現在做到哪**：Phase 0 進行中——git + 公開文案防護 + 四份文件重寫 + 三支 skills + 骨架測試就緒；gemma3:12b（基準）已入 Ollama；**卡在三個 HF gated 授權未接受**（已實測探測，全部 GATED），TAIDE 12B 下載無法開始。
 - **下一步**：
-  1. 作者到 HF 接受 gated 授權（清單見下），並確認 `.env` 內 HF_TOKEN 有值
-  2. TAIDE 12B：磁碟檢查 → 下載 safetensors（~25GB）→ `ollama create` timebox → 失敗轉 llama.cpp 官方 release 轉檔（PLAN.md D5）
+  1. **作者到 HF 接受 gated 授權**（清單見下；HF_TOKEN 已確認有值、磁碟 117GB 足夠）
+  2. TAIDE 12B：下載 safetensors（~25GB）→ `ollama create` timebox 10 分 → 失敗轉 llama.cpp 官方 release 轉檔（PLAN.md D5；Modelfile TEMPLATE 取自已就位的 gemma3:12b）
   3. Phase 0 驗收展示 → 作者確認 → `git tag phase-0` → 進 Phase 1（fetch_laws.py）
 - **未決問題**：
   - LICENSE 著作權人為佔位字串（作者決定：公開前再填）
@@ -32,6 +32,8 @@
   - 驗證證據（實跑）：
     - hook 攔截實測：含禁詞檔案的 commit 與含禁詞訊息的 commit 均被擋（exit 1，兩類禁詞各驗一次）
     - `uv run pytest -q` → `4 passed in 0.06s`
-  - 相關 commit：`7092d12` 專案骨架、`f945ac5` 公開文案防護（其餘見本日後續條目）
+    - HF gated 探測（huggingface_hub auth_check）：taide 兩個 + google/gemma-3-12b-it 皆回 GATED（授權尚未接受）
+    - `ollama pull gemma3:12b` 完成，`ollama list` 可見（8.1 GB）
+  - 相關 commit：`7092d12` 骨架、`f945ac5` 防護、`49bae50`/`37327d4`/`19f264e` 文件與查證、`674d55e` skills、`1aef7f9` huggingface-hub
   - 決策變更：Decision Log D1–D7 初版定案（見 PLAN.md）
   - 實際成本：$0（尚無專案 API 呼叫）
