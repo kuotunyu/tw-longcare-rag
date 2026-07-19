@@ -18,6 +18,8 @@
 - **⚠️ 已知坑**：
   - 專案資料夾曾整個搬遷過：舊 `.venv` 殘留舊路徑（含中文）導致 cp950 解碼崩潰，已重建。**若再搬資料夾，先 `rm -rf .venv` 再 `uv sync`**
   - 同日稍早的草稿文件（已重寫）備份在本機 scratchpad，不進 git
+  - **`ollama create -q <quant> -f Modelfile`（直接從 safetensors 量化匯入）不可信任**：曾在使用者於權限提示按下「拒絕」之後，仍在 Ollama 背景服務繼續執行約 10 分鐘、寫入 ~33GB 暫存 blob 到 `~/.ollama/models/blobs/`，最終未產出可用模型（`ollama list` 無此模型），且該次「拒絕」沒能真正中止伺服器端工作。原因推測：`ollama create` 是送 HTTP 請求給常駐的 `ollama serve`，一旦請求送達，client 端被中止不代表 server 端工作跟著停。**因此 D5 改為直接跳過此路徑，一律走 llama.cpp 官方 release 轉檔**（`convert_hf_to_gguf.py` → GGUF → `llama-quantize.exe` → 匯入的是已量化完成的 GGUF 檔，`ollama create` 此時只是輕量匯入，無現場轉檔風險）。若之後懷疑任何 ollama 指令是否真的中止，用 `tasklist` 查 process + 追蹤 `~/.ollama/models/blobs/` 檔案數與大小是否還在成長來確認，不能只看工具呼叫的拒絕訊息。
+  - 孤兒 blob 清理程序（若未來又發生類似情況）：比對 `~/.ollama/models/manifests/**` 內所有 `"digest":"sha256:..."` 與 `~/.ollama/models/blobs/` 實際檔案，沒被任何 manifest 引用的才安全刪除。
 
 ## 📜 Phase 日誌（append-only）
 

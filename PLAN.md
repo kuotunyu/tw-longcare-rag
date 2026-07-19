@@ -25,7 +25,7 @@
 | D2 | 2026-07-20 | 雲端模型字串採預設：GEMINI_MODEL=gemini-3.1-flash-lite、GEMINI_LITE_MODEL=gemini-2.5-flash-lite、OPENAI_MODEL=gpt-5-mini；**現值唯一出處為 `.env.example`**，本檔不再抄寫 | 三字串經官方文件查證全部有效（cloud-models.json）；gpt-5-mini snapshot 2026-12-11 落日 → 屆時改 .env 為 gpt-5.4-mini 即可 |
 | D3 | 2026-07-20 | 評估框架 **deepeval 優先**；P5 開工用 15 分鐘 timebox 實測 ragas，import/uv lock 過不了即定案 deepeval | ragas 0.4.3 有未關閉的 import 崩壞 issue #2745，且對 langchain 系列不設版本約束（stack-compat.json）；README 註明選型依據 |
 | D4 | 2026-07-20 | 公開文案防護制度化：`.githooks/`（pre-commit + commit-msg）跑 `scripts/check_public_text.py`，禁詞清單 `.claude/private/redlist.txt` 不進 git；commit 訊息不含任何公司/產品名與外部署名尾行 | commit 歷史不可改寫，防護必須在第一個 commit 前就位（已實測攔截成功） |
-| D5 | 2026-07-20 | TAIDE 12B 地端化：先試 `ollama create` 量化匯入（timebox 10 分鐘），失敗轉 llama.cpp 官方 Windows release 轉 GGUF Q4_K_M；**GGUF 僅留本地不上傳** | TAIDE 無官方 GGUF（hf-models.json）；TAIDE 自訂授權對再散布有限制 |
+| D5 | 2026-07-20 | TAIDE 12B 地端化：**直接走 llama.cpp 官方 Windows release 轉 GGUF Q4_K_M**（不再嘗試 `ollama create` 直接從 safetensors 量化匯入）；**GGUF 僅留本地不上傳** | TAIDE 無官方 GGUF（hf-models.json）；TAIDE 自訂授權對再散布有限制。**D5 修正（同日）**：實測 `ollama create -q` 從 safetensors 匯入時，client 端工具呼叫被拒絕/中止後，`ollama serve` 仍在背景繼續轉檔約 10 分鐘、燒掉 ~33GB 暫存且未產出可用模型——因為該指令是送 HTTP 請求給常駐服務，client 端中止不保證 server 端停止。改為只對「已完成量化的 GGUF 檔」做 `ollama create`（輕量匯入，無現場轉檔），可控性高很多 |
 | D6 | 2026-07-20 | 法規資料走官方 Open API 整包 ZIP（月更），以 UpdateDate 記錄資料版本；**P1 驗收後資料凍結**，中途重抓＝回到 P1 gate 重走 | Open API 已實測可用（law-data.json）；長照給付法規修法頻繁，凍結版本才能保證評估可比性 |
 | D7 | 2026-07-20 | 檢索管線預設寫死保證可重現：BM25 top-20 + 向量 top-20 → RRF(k=60) → reranker 前 20 → top-5；圖譜擴展在 rerank 之後、上限 +5 | 評估矩陣需要固定 baseline；參數進 config 不進散落常數 |
 
