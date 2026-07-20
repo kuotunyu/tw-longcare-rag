@@ -192,11 +192,16 @@ def judge_sentences(
     lookup: LawsLookup,
     model,
     retries: int = 1,
+    related: list | None = None,
 ) -> list[SentenceVerdict]:
     """一次呼叫批次判定全部候選句；judge 沒回覆到的句子保守視為不支持。
 
     重試一次後仍解析失敗則拋 JudgeUnavailable（不吞錯，讓呼叫端決定
     要拒答還是放行未查核內容——這是信任層級的決策，不該在此處預設）。
+
+    related：Phase 4 圖譜擴展的關聯條文，併入 judge 可查核的條文範圍
+    （否則句子若只被關聯條文支持，會被誤判不支持——回答本來就允許引用
+    這些條文，查核範圍不該比生成範圍窄）。
     """
     if not sentences:
         return []
@@ -210,6 +215,7 @@ def judge_sentences(
         pass
 
     articles = dedup_articles(retrieved, lookup)
+    articles += [(r.law_name, r.article_no, r.content) for r in (related or [])]
     context = "\n\n".join(
         f"[{i}] 《{name}》第 {no} 條：\n{content}"
         for i, (name, no, content) in enumerate(articles, start=1)
@@ -321,12 +327,16 @@ REFUSAL_FINAL_TEXT = f"{REFUSAL_TEXT}。建議撥打 1966 長照服務專線洽�
 
 
 def apply_grounding(
-    text: str, retrieved: list[RetrievedChunk], lookup: LawsLookup, model
+    text: str, retrieved: list[RetrievedChunk], lookup: LawsLookup, model,
+    related: list | None = None,
 ) -> GroundingResult:
-    """生成後查核：不受支持的句子從最終回答中移除，保留段落結構。"""
+    """生成後查核：不受支持的句子從最終回答中移除，保留段落結構。
+
+    related：Phase 4 圖譜擴展的關聯條文，一併納入 judge 可查核範圍。
+    """
     pairs = _split_with_paragraphs(text)
     sentences = [s for _, s in pairs]
-    verdicts = judge_sentences(sentences, retrieved, lookup, model)
+    verdicts = judge_sentences(sentences, retrieved, lookup, model, related=related)
 
     kept_by_para: dict[int, list[str]] = {}
     for (p_idx, _s), v in zip(pairs, verdicts):

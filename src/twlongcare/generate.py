@@ -77,14 +77,38 @@ def build_context(retrieved: list[RetrievedChunk], lookup: LawsLookup) -> str:
     )
 
 
-def build_messages(question: str, retrieved: list[RetrievedChunk], lookup: LawsLookup):
+def build_related_context(related: list) -> str:
+    """Phase 4 圖譜擴展的關聯條文 → context 區塊（與參考條文分開標示，
+    避免跟直接檢索結果混淆——Phase 5 評估 precision 分母不計這些）。"""
+    if not related:
+        return ""
+    return "\n\n".join(
+        f"《{r.law_name}》第 {r.article_no} 條：\n{r.content}" for r in related
+    )
+
+
+def build_messages(
+    question: str, retrieved: list[RetrievedChunk], lookup: LawsLookup,
+    related: list | None = None,
+):
     context = build_context(retrieved, lookup)
-    user = f"參考條文：\n\n{context}\n\n---\n問題：{question}"
+    parts = [f"參考條文：\n\n{context}"]
+    related_ctx = build_related_context(related or [])
+    if related_ctx:
+        parts.append(
+            "關聯條文（由上方條文的引用關係一階擴展帶入，可視情況輔助回答）：\n\n"
+            + related_ctx
+        )
+    parts.append(f"---\n問題：{question}")
+    user = "\n\n".join(parts)
     return [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=user)]
 
 
-def answer(question: str, retrieved: list[RetrievedChunk], lookup: LawsLookup, model) -> str:
+def answer(
+    question: str, retrieved: list[RetrievedChunk], lookup: LawsLookup, model,
+    related: list | None = None,
+) -> str:
     if not retrieved:
         return f"{REFUSAL_TEXT}。建議撥打 1966 長照服務專線洽詢。"
-    reply = model.invoke(build_messages(question, retrieved, lookup))
+    reply = model.invoke(build_messages(question, retrieved, lookup, related))
     return extract_text(reply.content).strip()

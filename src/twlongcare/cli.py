@@ -6,6 +6,7 @@
     uv run python -m twlongcare.cli "問題" --provider openai --no-rerank
     uv run python -m twlongcare.cli "問題" --embedding bge-m3
     uv run python -m twlongcare.cli "問題" --no-grounding   # 關閉 Phase 3 查核（對照用）
+    uv run python -m twlongcare.cli "問題" --no-graph       # 關閉 Phase 4 圖譜擴展（對照用）
 
 模型分工（PLAN 分工總表）：主生成用該 provider 主模型；query 改寫與
 grounding 判定在 ollama 模式用同一地端模型（零成本）、gemini 模式用
@@ -73,6 +74,8 @@ def main(argv: list[str] | None = None) -> None:
                         help="使用 noctx 索引（需先以 --no-contextual 建索引）")
     parser.add_argument("--no-grounding", action="store_true",
                         help="關閉 Phase 3 逐句 groundedness 查核（對照展示用）")
+    parser.add_argument("--no-graph", action="store_true",
+                        help="關閉 Phase 4 法條引用圖譜一階擴展（對照展示用）")
     parser.add_argument("--show-chunks", action="store_true",
                         help="顯示檢索到的 chunk 與分數（除錯用）")
     args = parser.parse_args(argv)
@@ -87,7 +90,7 @@ def main(argv: list[str] | None = None) -> None:
     from .retriever import HybridRetriever
     from .rewrite import rewrite_query
 
-    print("[1/4] 檢索器載入與 query 改寫…", file=sys.stderr)
+    print("[1/5] 檢索器載入與 query 改寫…", file=sys.stderr)
     retriever = HybridRetriever(
         embedding_key=args.embedding,
         dim=args.dim,
@@ -99,31 +102,51 @@ def main(argv: list[str] | None = None) -> None:
     if query != args.question:
         print(f"    改寫：{query}", file=sys.stderr)
 
-    print("[2/4] hybrid 檢索…", file=sys.stderr)
+    print("[2/5] hybrid 檢索…", file=sys.stderr)
     retrieved = retriever.retrieve(query)
     for c in retrieved:
         rs = f" rerank={c.rerank_score:.3f}" if c.rerank_score is not None else ""
         print(f"    {c.chunk_id}（{'+'.join(c.sources)}{rs}）", file=sys.stderr)
 
     lookup = LawsLookup()
+
+    related: list = []
+    if not args.no_graph and retrieved:
+        from .graph_expand import GRAPH_PATH, expand_related_articles, load_graph
+
+        if GRAPH_PATH.exists():
+            print("[3/5] 法條引用圖譜一階擴展…", file=sys.stderr)
+            graph = load_graph()
+            related = expand_related_articles(retrieved, graph, lookup)
+            for r in related:
+                print(f"    +關聯條文 {r.pcode}-{r.article_no}（經 {r.via_parent_id} 引用）",
+                      file=sys.stderr)
+        else:
+            print("[3/5] 圖譜檔案不存在，略過擴展（跑 scripts/build_graph.py 建立）",
+                  file=sys.stderr)
+    else:
+        print("[3/5] 圖譜擴展已停用", file=sys.stderr)
+
     if not args.no_grounding and should_refuse_before_generation(retrieved):
-        print("[3/4] 檢索分數低於拒答門檻，略過生成…", file=sys.stderr)
+        print("[4/5] 檢索分數低於拒答門檻，略過生成…", file=sys.stderr)
         from .grounding import REFUSAL_FINAL_TEXT
 
         result = REFUSAL_FINAL_TEXT
         retrieved_for_display: list = []
     else:
-        print("[3/4] 生成回答…", file=sys.stderr)
+        print("[4/5] 生成回答…", file=sys.stderr)
         model = make_chat_model(args.provider, settings, args.ollama_model)
-        result = answer(args.question, retrieved, lookup, model)
+        result = answer(args.question, retrieved, lookup, model, related=related)
         retrieved_for_display = retrieved
 
         if not args.no_grounding:
-            print("[4/4] 逐句 groundedness 查核…", file=sys.stderr)
+            print("[5/5] 逐句 groundedness 查核…", file=sys.stderr)
             from .grounding import GroundingResult, JudgeUnavailable, REFUSAL_FINAL_TEXT
 
             try:
-                grounding_result = apply_grounding(result, retrieved, lookup, rewrite_model)
+                grounding_result = apply_grounding(
+                    result, retrieved, lookup, rewrite_model, related=related
+                )
             except JudgeUnavailable as e:
                 # 查核本身失敗時，寧可拒答也不放行未查核內容（信任優先於可用性）
                 print(f"    ⚠️ judge 失敗，改為拒答：{e}", file=sys.stderr)
@@ -147,6 +170,10 @@ def main(argv: list[str] | None = None) -> None:
             continue
         seen.add(c.parent_id)
         print(f"  《{c.law_name}》第 {c.article_no} 條  {c.url}")
+    if related:
+        print("\n關聯條文（法條引用關係擴展）：")
+        for r in related:
+            print(f"  《{r.law_name}》第 {r.article_no} 條  {r.url}")
     print("\n⚠️ 本工具為非官方個人專案，僅供參考；正式資訊以衛生福利部公告與 1966 專線為準。")
 
     if args.show_chunks:
