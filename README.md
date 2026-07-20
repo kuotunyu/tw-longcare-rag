@@ -12,8 +12,8 @@
 
 ## 系統架構
 
-> Phase 0〜4 已實作（索引建置、hybrid 檢索、生成、逐句查核、
-> 法條引用圖譜一階擴展）；評估與介面（Phase 5〜6）尚待實作。
+> Phase 0〜5 已實作（索引建置、hybrid 檢索、生成、逐句查核、
+> 法條引用圖譜一階擴展、對照實驗與盲測評估）；介面（Phase 6〜7）尚待實作。
 
 **索引建置**（離線，`scripts/build_index.py`）：
 
@@ -159,7 +159,49 @@ flowchart LR
 
 ## 評估結果
 
-（Phase 5 補上：檢索對照實驗表、生成端盲測表、成本實績；完整矩陣見 docs/eval.md）
+30 題正式測試集（人工校對，見 [docs/eval.md](docs/eval.md)）。完整矩陣、每題明細、
+誠實解讀（含負面結果）見該文件；以下是摘要。
+
+**Retrieval 一factor-at-a-time**（baseline = hybrid+rerank／GTAIDE-768／contextual on／graph on）：
+
+| config | hit@5 | MRR | 變因 |
+|---|---|---|---|
+| **baseline** | 93% | 0.79 | — |
+| pure_vector | 87% | 0.76 | 關 BM25＋關 rerank |
+| hybrid_norerank | 90% | 0.72 | 開 BM25，關 rerank |
+| bge_m3 | 93% | 0.79 | 基準 embedding（1024 維） |
+| contextual_off | **80%** | 0.68 | 關 contextual retrieval |
+| graph_off | 93% | 0.79 | 關圖譜一階擴展 |
+| mrl_256 | 93% | 0.79 | GTAIDE MRL 截斷 256 維 |
+
+Contextual retrieval 是唯一造成明顯退步的單一因子（93%→80%）；embedding 模型與
+維度在此語料規模下幾乎不影響結果（reranker 影響力蓋過 embedding 選型的邊際效益，
+docs/eval.md 有詳細分析）。
+
+**生成端盲測**（10 題，三模型同一檢索 context、temperature=0、不套用 grounding，
+`OPENAI_MODEL` 當第三方評審）：
+
+| 對戰 | taide-12b | 對手 |
+|---|---|---|
+| taide-12b vs GEMINI_MODEL | 2/10 | gemini 8/10 |
+| taide-12b vs gemma3:12b | 2/10 | gemma3 8/10 |
+
+taide-12b 輸的題目敗因幾乎都是句尾引用格式標註不完整（法規內容本身多半正確），
+贏的題目則是對手出現引用條號錯誤或內容失焦——與 Phase 2/3 觀察到的地端模型
+citation 覆蓋率落差一致，這次用第三方評審量化出實際勝率差距。
+
+**Faithfulness / Answer Relevancy**（deepeval，30 題，baseline config，
+生成 provider=GEMINI_MODEL，不套用 grounding，judge=OPENAI_MODEL）：
+
+| 指標 | 平均分數 |
+|---|---|
+| Faithfulness | 1.000 |
+| Answer Relevancy | 0.957 |
+
+30 題全數未被 judge 抓到與檢索條文矛盾的內容；唯一偏低的一題（relevancy
+0.62）是答案多寫了與問題無直接關係的鄰近主題內容，屬於「回答過度延伸」而非
+事實錯誤。樣本量小（30 題單次執行），不代表零幻覺保證，僅反映這批測試題目
+的實測結果。
 
 ## 關鍵套件版本
 
@@ -173,18 +215,26 @@ flowchart LR
 | langchain-openai | 1.3.5 | jieba | 0.42.1 |
 | langchain-ollama | 1.1.0 | networkx | 3.6.1 |
 | torch | 2.11.0+cu128 | pyvis | 0.3.2 |
-| | | gradio（Phase 6） | 6.x |
-| | | deepeval（Phase 5） | 4.1.x |
+| deepeval | 2.9.3 | gradio（Phase 6） | 6.x |
 
 註：向量庫直接呼叫 `chromadb`（不經 `langchain-chroma` 包裝），因 hybrid 檢索需要對候選集做精細控制；LLM 呼叫仍全數走 LangChain（見 PLAN.md D9）。
 
-評估框架選型：deepeval 優先——ragas 0.4.3 目前與 LangChain 1.x 生態有未解的 import 衝突（上游 issue #2745），詳見 `docs/research/2026-07-audit/stack-compat.json`。
+評估框架選型：deepeval 優先——ragas 0.4.3 目前與 LangChain 1.x 生態有未解的 import 衝突（上游 issue #2745），詳見 `docs/research/2026-07-audit/stack-compat.json`。裝到的實際版本（2.9.3）與 2026-07 稽核記錄的 4.1.1 不同，Phase 5 開工時已更正（PLAN.md D11）；其內建 judge 白名單不含 `gpt-5-mini`，改用自訂 `OpenAIJudge` 直連官方 SDK 繞過。
 
 ## 成本透明
 
 全程雲端 API 預算 < US$1（快取齊全、重跑不重複計費）。實際花費隨各 Phase 記錄於 PROGRESS.md：
 Phase 2 contextual 摘要（205 條、208 chunks，gemini-3.1-flash-lite）估算 $0.13〜0.41，已完成生成並快取。
-Phase 5 完成後在此回填全程實績總表。
+
+| Phase 5 項目 | 實績 |
+|---|---|
+| 測試集生成 30 題 | $0.003 |
+| Retrieval 矩陣（7 config，全本地模型） | $0 |
+| 生成端盲測（10 題 ×2 對戰） | $0.027 |
+| Faithfulness/AnswerRelevancy（30 題生成+judge） | ≈$0.03（生成）+ ≤$0.10（judge 上限估算，deepeval 不暴露精確用量） |
+| **Phase 5 合計** | **< $0.2** |
+
+完整成本表（含估算 vs 實績對照）見 [docs/eval.md](docs/eval.md)。
 
 ## 資料來源與授權
 
