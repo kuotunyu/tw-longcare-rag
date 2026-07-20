@@ -24,6 +24,9 @@ class Settings:
     gemini_lite_model: str
     openai_model: str
     ollama_model: str
+    embedding_model: str
+    embedding_baseline_model: str
+    reranker_model: str
 
 
 @lru_cache(maxsize=1)
@@ -38,4 +41,7 @@ def get_settings() -> Settings:
         gemini_lite_model=os.getenv("GEMINI_LITE_MODEL", "gemini-2.5-flash-lite"),
         openai_model=os.getenv("OPENAI_MODEL", "gpt-5-mini"),
         ollama_model=os.getenv("OLLAMA_MODEL", "taide-gemma3-12b"),
+        embedding_model=os.getenv("EMBEDDING_MODEL", "taide/embeddinggemma-GTAIDE-300m-2605"),
+        embedding_baseline_model=os.getenv("EMBEDDING_BASELINE_MODEL", "BAAI/bge-m3"),
+        reranker_model=os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-v2-m3"),
     )
