@@ -181,6 +181,8 @@ tw-longcare-rag/
 | 開發機 GPU 被其他工作佔用 | 載模型前 nvidia-smi；embedding/reranker 可退 CPU |
 | gradio 6.x 與網路教學不相容 | 以官方 6.x 文件為準；sdk_version 釘 6.x |
 | taide-12b（12B 地端）引用格式遵循能力有限，grounding judge 準確度亦有限 | Phase 2 驗收實測：句尾 citation 覆蓋率約 50%（漏標非捏造內容）；prompt 層加強規則反而讓覆蓋率降至 0（規則超出小模型負荷），已回退最小修正版。Phase 3 grounding 查核本身也實測到地端 judge 假陰性（誤判條文中確實存在的內容為不支持、且引用不存在的條號當理由），雲端 judge 交叉驗證同案例皆正確。**不再嘗試靠 prompt 根治這類地端模型能力限制**，Phase 5 blind test 正式量化地端 vs 雲端差距，README 誠實揭露此已知限制 |
+| 拒答門檻（D10 後 0.636）與 Query 改寫 few-shot prompt 皆只用小樣本（5+5 題、12 題）人工標註校準，樣本量不足以外推 | 先以小樣本暫定值上線並在 README/PROGRESS 註明樣本量；Phase 5 產出 30 題正式測試集後，用其重新驗證門檻與改寫效果，取代這裡的暫定值 |
+| pyvis 互動圖譜（`docs/assets/law_graph.html`）渲染正常，但本專案用的自動化瀏覽器截圖工具對其連續逾時卡住 | 依 Phase 4 風險備援不深究 pyvis 本身；README 改用手繪 mermaid 聚合圖佐證統計數字，互動 HTML 仍保留供使用者自行本機開啟查看，僅截圖流程受限 |
 
 ## 進度管理與專案級 skills
 

@@ -2,21 +2,17 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：Phase 4（法條引用圖譜 GraphRAG-lite）**實作與驗證完成，待作者驗收**——regex 抽取（205節點/134邊）、LLM 補抽（3邊，含修正一次真實假邊的過程）、查詢時一階擴展、CLI 整合、視覺化、DoD 全部跑通並有實測數據佐證。
+- **現在做到哪**：Phase 4（法條引用圖譜 GraphRAG-lite）**作者驗收通過，已打 tag `phase-4`**。作者親自實跑 CLI（含 `--no-graph` 對照）與互動圖譜圖例說明確認後接受。
 - **下一步**：
-  1. 作者驗收 Phase 4 → `git tag phase-4`
-  2. Phase 5（評估）開工：`gen_testset.py` 30 題（含預期條號，GEMINI_LITE 生成後**人工校對是硬 gate**）→ deepeval-first（D3；ragas timebox 15分鐘）→ one-factor-at-a-time 對照矩陣（純向量vs hybrid vs hybrid+rerank；GTAIDE vs bge-m3；contextual開/關；圖譜開/關；MRL 768vs256）→ 生成端盲測 taide-12b vs GEMINI_MODEL + vs gemma3:12b（完整規格見 PLAN.md Phase 5；執行前印成本估算、檢查 OPENAI_MODEL 落日）
+  1. 詢問作者是否要開始 Phase 5（評估）——若同意，第一步是 `uv run python scripts/gen_testset.py`（GEMINI_LITE 生成 30 題含預期條號，**執行前先印成本估算給作者確認**）
+  2. 30 題生成後：**人工校對是硬 gate**，校對完才進 deepeval-first 對照矩陣（純向量vs hybrid vs hybrid+rerank；GTAIDE vs bge-m3；contextual開/關；圖譜開/關；MRL 768vs256）→ 生成端盲測 taide-12b vs GEMINI_MODEL + vs gemma3:12b（完整規格見 PLAN.md Phase 5；跑前檢查 OPENAI_MODEL 落日）
 - **未決問題**：
   - LICENSE 著作權人為佔位字串（作者決定：公開前再填）
   - README 動機段為草稿，待作者潤飾
 - **待使用者人工處理**：
   - https://huggingface.co/google/gemma-3-12b-it （**manual** 人工核准，可能不即時；P5 基準對照才用到，先點不擋路）
   - `gen_testset.py` 生成的 30 題測試集人工校對（P5 硬 gate，屆時提醒）
-- **⚠️ 已知坑**：
-  - grounding judge 本身並非完美，實測抓到過假陰性與一次真實假陽性（皆已記錄與部分修復，見 Phase 3 日誌「作者驗收過程」）；雲端 judge（gemini/openai）交叉驗證準確度全面更高。此為已知模型能力落差，已記入 PLAN 風險表，Phase 5 blind test 會正式量化
-  - `should_refuse_before_generation` 的門檻（D10 後為 0.636）僅用 5+5 題小樣本校準，Phase 5 應擴大樣本重新驗證
-  - Query 改寫品質現在有 12 題 dev set 可量測（`scripts/eval_rewrite.py`，hit@5），但 dev set 標籤是人工標的、樣本小；P5 的 30 題正式測試集出來後應以其為準
-  - pyvis 互動圖譜渲染正常，但自動化瀏覽器工具截圖會逾時卡住（已知限制，README 改用 mermaid 聚合圖，不影響互動 HTML 本身可用性）
+- **⚠️ 已知坑**：（Phase 4 收尾已清空；grounding judge 地端準確度落差、拒答門檻/改寫 dev set 樣本小、pyvis 截圖工具限制皆已轉入 PLAN.md 風險與對策表，非隱藏遺留）
 
 ## 📜 Phase 日誌（append-only）
 
@@ -163,7 +159,7 @@
     - 殘留已知限制：地端 judge 逐句判定後仍見過一次「reason 說相符、supported 卻為 False」的自相矛盾（假陰性），推測為地端小模型在結構化欄位輸出時的一致性限制，非本次修正範圍能根治；README 與 PLAN 風險表已誠實揭露
     - 驗收結論：假陽性根因已查明並修正、機制驗證有效（可重現的失敗案例修正後不再出現）；殘留的地端模型精度限制已誠實記錄，非隱瞞
 
-### Phase 4 — 法條引用圖譜 GraphRAG-lite（實作完成 2026-07-20，待驗收）
+### Phase 4 — 法條引用圖譜 GraphRAG-lite（已完成，2026-07-20 驗收，tag `phase-4`）
 
 - **2026-07-20**：
   - 完成內容：
@@ -219,3 +215,14 @@
     `82d5dd2` 開關對照demo、`1b56a7d` README、本條目 PROGRESS
   - 決策變更：無新 D 決策（照 PLAN Phase 4 執行）
   - 實際成本：LLM 補抽 <$0.02（gemini-3.1-flash-lite，兩輪含修正重跑）
+
+- **2026-07-20（作者驗收）**：
+  - 完成內容：
+    - 作者自行實跑 CLI 驗收（`uv run python -m twlongcare.cli "沒有申請許可就開長照機構會怎樣" --provider ollama`，開/關 `--no-graph` 各跑一次對照），確認「關聯條文（法條引用關係擴展）」區塊正確帶出老人福利法 §36/§37/§37-1
+    - 作者對互動圖譜（`docs/assets/law_graph.html`）畫面提問，逐項說明節點/顏色/邊/箭頭方向/由來（regex vs LLM 補抽）後確認理解
+    - 收 Phase 四檔同步 checklist：README/PLAN/CLAUDE.md 於本 Phase 開發過程中已同步更新，本次未發現需追加變更；`.env.example` 無新變數
+    - 快速回憶區「已知坑」四項清空——已轉入 `PLAN.md` 風險與對策表新增兩列（門檻/dev set 樣本小；pyvis 截圖工具限制），grounding judge 落差原已在表中
+  - 驗證證據（實跑）：作者本機終端輸出貼出，確認 `[3/5] 法條引用圖譜一階擴展…` 正確列出 3 條關聯條文，且 `--no-graph` 對照下該區塊消失、其餘檢索結果不變
+  - 相關 commit：本條目 PROGRESS + PLAN 風險表更新（待 commit）
+  - 決策變更：無
+  - 實際成本：$0（本次僅本機驗收，無 API 呼叫）
