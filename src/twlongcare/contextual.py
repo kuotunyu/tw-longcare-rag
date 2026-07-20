@@ -120,6 +120,22 @@ class ContextualCache:
         )
 
 
+def _extract_text(content: str | list) -> str:
+    """AIMessage.content 正規化：部分 provider/版本回傳 list of content parts
+    而非純字串（實測 langchain-google-genai 曾整批如此），須攤平成文字。"""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = []
+        for item in content:
+            if isinstance(item, str):
+                parts.append(item)
+            elif isinstance(item, dict) and item.get("text"):
+                parts.append(item["text"])
+        return "".join(parts)
+    return str(content)
+
+
 def generate_summaries(
     pending: list[Chunk],
     law_texts: dict[str, str],
@@ -128,7 +144,14 @@ def generate_summaries(
     api_key: str | None = None,
     max_concurrency: int = 4,
 ) -> None:
-    """呼叫 GEMINI_LITE 補齊缺漏摘要並寫入快取（呼叫端負責成本確認）。"""
+    """呼叫 GEMINI_LITE 補齊缺漏摘要並寫入快取（呼叫端負責成本確認）。
+
+    穩健性：`model.batch()` 一次送出全部請求即已產生實際費用，任何後製
+    處理錯誤都不該讓已付費的結果整批遺失——曾實際發生過 content 格式
+    非預期導致單一例外中止迴圈、cache.save() 從未被呼叫、全部結果作廢。
+    對策：逐筆立即存檔（單筆失敗不牽連其他）＋ return_exceptions 隔離
+    單筆 API 錯誤，最後才彙整回報失敗清單。
+    """
     from langchain.chat_models import init_chat_model
 
     model = init_chat_model(
@@ -138,13 +161,29 @@ def generate_summaries(
     # 依法規分組送批次：同法規的請求相鄰，提高隱式快取命中率
     ordered = sorted(pending, key=lambda c: (c.law_name, c.part, c.article_no))
     batch = [build_messages(law_texts[c.law_name], c.law_name, c.text) for c in ordered]
-    replies = model.batch(batch, config={"max_concurrency": max_concurrency})
+    replies = model.batch(
+        batch, config={"max_concurrency": max_concurrency}, return_exceptions=True
+    )
+
+    failures: list[tuple[str, str]] = []
     for chunk, reply in zip(ordered, replies):
-        summary = reply.content.strip().replace("\n", " ")
+        if isinstance(reply, BaseException):
+            failures.append((chunk.chunk_id, repr(reply)))
+            continue
+        summary = _extract_text(reply.content).strip().replace("\n", " ")
         if not summary:
-            raise RuntimeError(f"{chunk.chunk_id} 摘要為空，中止（避免壞資料入快取）")
+            failures.append((chunk.chunk_id, "空回覆"))
+            continue
         cache.put(chunk, summary, model_name)
-    cache.save()
+        cache.save()  # 逐筆落地：已花費的 API 成本不因後續任何錯誤而作廢
+
+    if failures:
+        detail = "; ".join(f"{cid}: {err}" for cid, err in failures[:5])
+        more = f"（其餘 {len(failures) - 5} 筆略）" if len(failures) > 5 else ""
+        raise RuntimeError(
+            f"{len(failures)}/{len(ordered)} 筆摘要生成失敗（已成功者已存入快取，"
+            f"重跑只會補這些失敗筆）：{detail}{more}"
+        )
 
 
 def composite_text(chunk: Chunk, summary: str | None) -> str:
