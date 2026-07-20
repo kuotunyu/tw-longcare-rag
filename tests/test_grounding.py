@@ -3,11 +3,14 @@
 from twlongcare.grounding import (
     GroundingResult,
     REFUSAL_FINAL_TEXT,
+    REFUSAL_RERANK_THRESHOLD,
     SentenceVerdict,
     _is_substantive,
     apply_grounding,
+    should_refuse_before_generation,
     split_sentences,
 )
+from twlongcare.retriever import RetrievedChunk
 
 
 # ---------- 案例一：列舉（項次不應被誤判為句界） ----------
@@ -189,6 +192,31 @@ def test_apply_grounding_all_unsupported_falls_back_to_refusal(monkeypatch) -> N
     result = apply_grounding(text, retrieved=[], lookup=None, model=model)
     assert result.final_text == REFUSAL_FINAL_TEXT
     assert result.removed_count == 1
+
+
+def _rc(rerank_score: float | None) -> RetrievedChunk:
+    return RetrievedChunk(
+        chunk_id="X-1", text="…", law_name="測試法", pcode="X", article_no="1",
+        chapter="", url="", parent_id="X-1", part=0, rrf_score=0.1,
+        rerank_score=rerank_score,
+    )
+
+
+def test_refuse_before_generation_empty_retrieval() -> None:
+    assert should_refuse_before_generation([]) is True
+
+
+def test_refuse_before_generation_below_threshold() -> None:
+    assert should_refuse_before_generation([_rc(REFUSAL_RERANK_THRESHOLD - 0.001)]) is True
+
+
+def test_refuse_before_generation_above_threshold() -> None:
+    assert should_refuse_before_generation([_rc(REFUSAL_RERANK_THRESHOLD + 0.001)]) is False
+
+
+def test_refuse_before_generation_no_rerank_score_skips_rule() -> None:
+    """--no-rerank 模式沒有 rerank_score，不套用此規則（交給 grounding 事後查核）。"""
+    assert should_refuse_before_generation([_rc(None)]) is False
 
 
 def test_apply_grounding_missing_verdict_index_defaults_unsupported(monkeypatch) -> None:
