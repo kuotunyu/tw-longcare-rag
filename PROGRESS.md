@@ -2,10 +2,10 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：Phase 1（法規資料）實作與驗證完成，**待作者驗收**——`data/laws.json` 五法 205 條（資料版本 2026-07-10）、三層來源全實測、18 個 pytest 全綠、條數與官網逐法核對一致。
+- **現在做到哪**：**Phase 1 已完成並經作者驗收（tag `phase-1`）**——`data/laws.json` 五法 205 條（資料凍結版本 2026-07-10）；開始 Phase 2（索引管線 + CLI）。
 - **下一步**：
-  1. 作者驗收 Phase 1 → `git tag phase-1`
-  2. Phase 2（索引管線 + CLI）：chunking（以條為單位、>512 token 段落切）→ Contextual Retrieval（**先印成本估算給作者確認**）→ GTAIDE embedding + chromadb + bm25s + RRF + bge-reranker → 三 provider CLI（完整規格見 PLAN Phase 2；開工前依 CLAUDE.md 用 Context7 查 LangChain 1.x 現行 API）
+  1. Phase 2 開工：uv add LangChain 1.x 全家桶 + chromadb + bm25s + sentence-transformers + jieba（版本見 PLAN 查證摘要）→ Context7 查現行 API → `chunking.py`（以條為單位、>512 token 段落切、GTAIDE tokenizer 計數）
+  2. Contextual Retrieval（**先印成本估算給作者確認才呼叫 API**）→ embeddings（encode_query/document 分離）→ build_index → retriever（BM25+向量→RRF→rerank）→ 三 provider CLI（規格見 PLAN Phase 2）
 - **未決問題**：
   - LICENSE 著作權人為佔位字串（作者決定：公開前再填）
   - README 動機段為草稿，待作者潤飾
@@ -59,7 +59,7 @@
   - 決策變更：無新決策（D5 路線首次完整執行到驗收）；PLAN 風險表新增「TAIDE 重建」一列（三個 Windows 陷阱對策）
   - 實際成本：$0（全地端，無 API 呼叫）
 
-### Phase 1 — 法規資料（實作完成 2026-07-20，待驗收）
+### Phase 1 — 法規資料（已完成，2026-07-20 驗收，tag `phase-1`）
 
 - **2026-07-20**：
   - 完成內容：
@@ -75,6 +75,6 @@
     - 抽 3 條對原文（LawSingle）：L0070040 §8-1（帶連字號實測）、L0070059 §10、D0050037 §1 全部逐字一致 ✓
     - sendlaw 備援實測（CF 包）：L0070040/D0050037 條數與主來源一致、UpdateDate 同版 ✓
     - L0070059 為 114-06-19 修正後現行文字（LawModifiedDate=20250619、LawEffectiveDate=20260701、EffectiveNote 記部分條文 115 年施行）✓
-  - 相關 commit：見後續 commit hash（驗收後補）
-  - 決策變更：無（照 PLAN Phase 1 與 D6 執行）
+  - 相關 commit：`3cf0ff5` fetch_laws + 測試 + laws.json、`b3a906c` fetch-laws skill、`90a3745` README 資料節、`f93be5f` PROGRESS
+  - 決策變更：無（照 PLAN Phase 1 與 D6 執行）；補充：多代理審查後 laws.json 固定 LF 換行（.gitattributes `*.json text eol=lf`）、sendlaw 層換行統一 `\r\n`、api 快取改交易性寫入 + 分包版本一致性檢查（不一致即中止不降級）
   - 實際成本：$0（無 API 呼叫）
