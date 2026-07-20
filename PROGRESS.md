@@ -2,10 +2,9 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：Phase 3（防幻覺）**實作與驗證完成，待作者驗收**——分句 splitter、CRAG 逐句 judge、拒答門檻校準、CLI 整合全部跑通並實測過，含作者實測抓到並已修復的一次真實假陽性。
+- **現在做到哪**：**Phase 3 已完成並經作者驗收（tag `phase-3`）**——分句 splitter、CRAG 逐句 judge（含作者實測抓到的真實假陽性，已診斷根因並修復）、拒答門檻、Query 改寫 few-shot 升級（D10）全部跑通並有評測數據佐證；開始 Phase 4（法條引用圖譜）。
 - **下一步**：
-  1. 作者驗收 Phase 3 → `git tag phase-3`
-  2. Phase 4（法條引用圖譜 GraphRAG-lite）開工：regex 為主力抽取引用關係（中文數字轉換、範圍展開、each 法 alias table）→ networkx 有向圖 `data/law_graph.json` → 檢索 rerank 之後做一階擴展（規格見 PLAN Phase 4）
+  1. Phase 4（法條引用圖譜 GraphRAG-lite）開工：regex 為主力抽取引用關係（中文數字轉換「第三十七條之一」→37-1、範圍展開「至」、並列「及」、排除「前項」「同條」、「前條」=current−1、each 法 alias table）→ LLM 補抽未涵蓋者（先印成本估算）→ networkx 有向圖 `data/law_graph.json`（記 provenance: regex|llm）→ 檢索 rerank 之後做一階擴展（上限 +5、不重跑 rerank，標「關聯條文」不計入 precision 分母）（完整規格見 PLAN.md Phase 4）
 - **未決問題**：
   - LICENSE 著作權人為佔位字串（作者決定：公開前再填）
   - README 動機段為草稿，待作者潤飾
@@ -132,7 +131,7 @@
   - 決策變更：**D10**（見 PLAN.md Decision Log；含 dual-query 假設被數據推翻的如實記錄）
   - 實際成本：$0（全地端）
 
-### Phase 3 — 防幻覺（實作完成 2026-07-20，待驗收）
+### Phase 3 — 防幻覺（已完成，2026-07-20 驗收，tag `phase-3`）
 
 - **2026-07-20**：
   - 完成內容：
