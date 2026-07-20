@@ -10,7 +10,10 @@
 
 > **本工具為非官方個人專案，僅供參考。正式資訊請以衛生福利部公告與 1966 長照服務專線為準。**
 
-## 系統架構（設計藍圖；Phase 2 起逐步實作）
+## 系統架構
+
+> Phase 2 已實作 Query 改寫 → hybrid 檢索 → RRF → rerank → 生成（含引用）；
+> 引用圖譜擴展（Phase 4）與逐句 groundedness 查核（Phase 3）尚待實作。
 
 ```mermaid
 flowchart LR
@@ -36,17 +39,36 @@ flowchart LR
 
 雲端 provider（可切換）：Gemini 與 OpenAI，模型字串一律由 `.env` 設定（見 `.env.example`，含落日註記）。
 
-## 快速開始（Phase 2 完成後生效）
+## 快速開始
 
 ```powershell
 uv sync
 Copy-Item .env.example .env   # 填入金鑰
-uv run python scripts/fetch_laws.py
-uv run python scripts/build_index.py
+uv run python scripts/fetch_laws.py     # 抓五法條文 → data/laws.json
+uv run python scripts/build_index.py --confirm-cost   # 建索引（含 contextual 摘要，先看成本估算）
 uv run python -m twlongcare.cli "阿嬤請看護政府有補助嗎" --provider ollama
 ```
 
+`--provider` 可切換 `ollama`（地端 TAIDE 12B，預設）/ `gemini` / `openai`。
 開發者：clone 後執行一次 `git config core.hooksPath .githooks` 啟用公開文案守門 hooks。
+
+### 範例輸出（`--provider gemini`）
+
+```
+$ uv run python -m twlongcare.cli "喘息服務一年有幾天" --provider gemini
+
+關於您詢問喘息服務的給付頻率，根據現行法規，喘息服務額度是每年給付一次
+[長期照顧服務申請及給付辦法 §12]。
+
+不過，法規中並未直接規定「一年有幾天」，若您需要確認具體的服務天數或額度
+細節，建議您可以撥打 1966 長照服務專線洽詢，將有專人為您說明。
+
+引用條文出處：
+  《長期照顧服務申請及給付辦法》第 12 條  https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=L0070059&flno=12
+  ...（其餘檢索到的條文）
+
+⚠️ 本工具為非官方個人專案，僅供參考；正式資訊以衛生福利部公告與 1966 專線為準。
+```
 
 ## 誠實拒答與逐句查核
 
@@ -64,16 +86,19 @@ uv run python -m twlongcare.cli "阿嬤請看護政府有補助嗎" --provider o
 |---|---|---|---|
 | python | ≥3.11 | chromadb | 1.5.9 |
 | langchain | 1.3.14 | bm25s | 0.3.9 |
-| langchain-chroma | 1.1.0 | sentence-transformers | 5.3.0 |
-| langchain-google-genai | 4.2.7 | gradio | 6.x |
-| langchain-openai | 1.3.5 | deepeval | 4.1.x |
-| langchain-ollama | 1.1.0 | networkx | 3.6.1 |
+| langchain-chroma | 1.1.0 | sentence-transformers | 5.6.0 |
+| langchain-google-genai | 4.2.7 | jieba | 0.42.1 |
+| langchain-openai | 1.3.5 | gradio（Phase 6） | 6.x |
+| langchain-ollama | 1.1.0 | deepeval（Phase 5） | 4.1.x |
+| torch | 2.11.0+cu128 | networkx（Phase 4） | 3.6.1 |
 
 評估框架選型：deepeval 優先——ragas 0.4.3 目前與 LangChain 1.x 生態有未解的 import 衝突（上游 issue #2745），詳見 `docs/research/2026-07-audit/stack-compat.json`。
 
 ## 成本透明
 
-全程雲端 API 預算 < US$1（contextual 摘要 ≈ $0.09、LLM-as-judge 評估 ≈ $0.18，其餘更低；快取齊全、重跑不重複計費）。實際花費隨各 Phase 記錄於 PROGRESS.md，Phase 5 後在此回填實績。
+全程雲端 API 預算 < US$1（快取齊全、重跑不重複計費）。實際花費隨各 Phase 記錄於 PROGRESS.md：
+Phase 2 contextual 摘要（205 條、208 chunks，gemini-3.1-flash-lite）估算 $0.13〜0.41，已完成生成並快取。
+Phase 5 完成後在此回填全程實績總表。
 
 ## 資料來源與授權
 
