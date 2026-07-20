@@ -5,10 +5,11 @@
 # 公開文案禁詞清單與私人筆記（見 scripts/check_public_text.py）
 .claude/private/
 
-# 大型資料與產出物（由腳本重建）
+# 大型資料與產出物（由腳本重建）；Modelfile 為可重現設定，例外入版控
 data/raw/
 data/chroma/
-models/
+models/*
+!models/Modelfile
 logs/
 
 # Python
