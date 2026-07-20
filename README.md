@@ -4,9 +4,9 @@
 
 **TL;DR (English).** A Traditional-Chinese RAG system for Taiwan's long-term care regulations, built end-to-end on Taiwan's open-source model stack (TAIDE embedding + TAIDE LLM via Ollama), with hybrid retrieval (BM25 + dense + rerank), contextual retrieval, a citation graph for cross-article expansion, and sentence-level groundedness checking — every sentence in an answer carries a legal citation, and the system honestly refuses when no legal basis is found. Benchmarked against international baselines (bge-m3, gemma-3-12b-it). Live demo: (Phase 7 補上)
 
-## 為什麼做這個專案（動機草稿，待作者潤飾）
+## 為什麼做這個專案
 
-前陣子協助家中長輩申請長照服務，才發現相關規定散落在好幾部法規裡：母法在《長期照顧服務法》，申請與給付在另一部辦法，機構管理又是一部，還有《老人福利法》彼此交錯。政府的 1966 專線與各縣市照管中心都很有幫助，但每次想「自己先查清楚再去問」，就得在全國法規資料庫的好幾個頁面之間跳來跳去。所以我想做一個小工具：用口語的繁體中文發問，它去查正式法條、每一句回答都標明出自哪一條，查不到就老實說查不到。同時，這也是我對台灣開源模型生態（TAIDE 與社群微調模型）的一次完整實戰——從 embedding、檢索到生成全部採用台灣在地模型，並與國際基準模型在同一評估集上正面對照。
+家中長輩申請長照服務時，我發現相關規定分散在好幾部法規裡——母法、給付辦法、機構管理辦法、老人福利法彼此交錯，自己查證很花時間。這個專案想做一個工具：用白話中文提問，回答會標明出自哪一條法規，查不到就直接說查不到。同時也是一次台灣開源模型的完整實戰——embedding、檢索、生成全部採用台灣在地模型，並與國際基準模型在同一評估集上對照。
 
 > **本工具為非官方個人專案，僅供參考。正式資訊請以衛生福利部公告與 1966 長照服務專線為準。**
 
