@@ -2,15 +2,14 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：Phase 5（評估）進行中。30 題測試集已生成並經作者確認校對完成（`data/testset.json` meta.human_reviewed=true）。
+- **現在做到哪**：Phase 5（評估）**實作與驗證完成，待作者驗收**——測試集、retrieval 矩陣（7 config）、生成端盲測、faithfulness/answer relevancy、docs/eval.md 正本、README 同步、run-eval skill 全部跑通。
 - **下一步**：
-  1. 建 `scripts/run_eval.py`（deepeval-first，D3）：retrieval 指標（hit@k / MRR）框架，可 `--config` 執行、輸出 jsonl cache
-  2. one-factor-at-a-time 對照矩陣（約 9 config，baseline=hybrid+rerank/GTAIDE-768/contextual on/graph on）：純向量vs hybrid vs hybrid+rerank；GTAIDE vs bge-m3；contextual開/關；圖譜開/關；MRL 768vs256
-  3. 生成端盲測 10 題：taide-12b vs GEMINI_MODEL、taide-12b vs gemma3:12b（跑前檢查 OPENAI_MODEL 落日 2026-12-11、印成本估算給作者確認）
-  4. 收尾：`docs/eval.md` 正本 + README 同步 + 建 `run-eval` skill + 作者驗收 → `git tag phase-5`
+  1. 作者驗收 Phase 5 → `git tag phase-5`
+  2. 之後開 Phase 6（Gradio 介面）
 - **未決問題**：（無）
 - **待使用者人工處理**：（無）
-- **⚠️ 已知坑**：（無）
+- **⚠️ 已知坑**：
+  - `gen_testset.py` 產出的 30 題全為「可回答」題目，未含拒答陷阱題——Phase 3 的拒答門檻（0.636）與 D10 的 query 改寫 dev set，本次**並未**用這 30 題重新驗證（PLAN 風險表原本的期待未達成，如實記錄；非隱藏遺留，收 Phase 前會問作者是否要另外補做）
 
 ## 📜 Phase 日誌（append-only）
 
@@ -235,7 +234,7 @@
   - 決策變更：無
   - 實際成本：$0
 
-### Phase 5 — 評估（進行中）
+### Phase 5 — 評估（實作完成 2026-07-20，待驗收）
 
 - **2026-07-20**：
   - 完成內容：
@@ -260,3 +259,49 @@
   - 相關 commit：`1cd6171` gen_testset.py+測試、本條目 PROGRESS（待 commit）
   - 決策變更：無新 D 決策（照 PLAN Phase 5 執行）
   - 實際成本：<$0.01（gemini-3.1-flash-lite，30 題出題）
+
+- **2026-07-20（retrieval 矩陣、盲測、faithfulness、收尾）**：
+  - 完成內容：
+    - 作者親自查證並決定測試集 2 題修正（原則：以法條原文為準，不依系統
+      檢索結果反推）：第 30 題增列預期條文 `L0070059-2`（與原標籤皆為正當
+      答案）；第 2 題問題偏離出題來源條文（語料庫無解），改寫貼合條文本意
+    - `HybridRetriever` 新增 `use_bm25` 參數（配合既有 `use_rerank`），支援
+      「純向量」實驗臂
+    - `scripts/run_eval.py`：one-factor-at-a-time 矩陣，7 config（baseline/
+      pure_vector/hybrid_norerank/bge_m3/contextual_off/graph_off/mrl_256），
+      hit@5＋MRR＋「+圖譜 hit@5」三指標，改寫結果快取 `data/eval_rewrite_cache.json`
+      共用；`build_index.py` 補建 3 個索引變體（noctx/bge-m3/dim=256）
+    - `scripts/blind_test.py`：10 題盲測，三模型（taide-12b/gemini/gemma3:12b）
+      共用同一 baseline 檢索 context、temperature=0、不套 grounding，
+      `OPENAI_MODEL` 評審、A/B 順序隨機翻轉不透露模型名
+    - `scripts/eval_faithfulness.py`：deepeval FaithfulnessMetric+AnswerRelevancyMetric，
+      30 題 baseline config，生成 provider 固定 GEMINI_MODEL；**實戰發現**：
+      deepeval 2.9.3（`uv add` 當下最新版，非 2026-07 稽核記錄的 4.1.1，已更正）
+      的 `GPTModel` 內建白名單不含 `gpt-5-mini`，改寫自訂 `OpenAIJudge`（繼承
+      `DeepEvalBaseLLM`，走官方 `openai` SDK `.chat.completions.parse()`）繞過
+    - 安裝 deepeval 連帶把 `google-genai` 降版 2.12.1→1.75.0（deepeval 相依
+      限制）；**實跑一次** `--provider gemini` CLI（非僅憑 pytest 綠燈）確認
+      輸出正常，未受影響
+    - `docs/eval.md` 正本（含成本估算 vs 實績、選型依據、已知限制）、README
+      同步（評估結果摘要表、盲測表、faithfulness 表、成本透明、套件版本）、
+      `run-eval` skill、CLAUDE.md skills 索引更新、PLAN.md D11 決策記錄
+  - 驗證證據（實跑）：
+    - `uv run pytest -q` → `92 passed`（含 retriever.py `use_bm25` 變更後）
+    - retrieval 矩陣（修正後）：baseline hit@5=93% MRR=0.79；contextual_off
+      掉到 80%（唯一顯著退步因子）；bge_m3/mrl_256 與 baseline 數字完全相同
+      （已排查非 bug，維度確實不同）；hybrid_norerank 的「+圖譜」從 90%→93%，
+      圖譜擴展首次在正式測試集救回 1 題
+    - 盲測：taide-12b vs gemini 2:8、taide-12b vs gemma3 2:8，taide 贏/輸的
+      題目在兩組對戰中完全一致（非隨機雜訊），敗因集中在句尾引用格式
+    - faithfulness：30 題平均 1.000（全數無矛盾）；answer_relevancy 平均
+      0.957，僅 1 題（Q20）因回答內容延伸到鄰近主題略降至 0.62
+    - `uv run python scripts/check_public_text.py` 全數通過
+  - 相關 commit：`1cd6171` gen_testset.py、`c98e3b9` 校對記錄、`d5e4a8d` run_eval.py
+    矩陣、`0839007` 測試集修正重跑、`3f63c5f`/`1838736` 盲測腳本+結果、
+    `6873fb0` faithfulness 腳本+結果、`eefa5c1` docs/eval.md+README
+  - 決策變更：D11（deepeval 版本更正、自訂 OpenAIJudge）
+  - 實際成本：測試集出題 $0.003＋盲測 $0.027＋faithfulness 生成≈$0.03/judge≤$0.10
+    ≈ **合計 <$0.2**（PLAN 預算 <$1，遠低於預算）
+  - **待處理**：30 題測試集皆為可回答題，未含拒答陷阱題，故 Phase 3 拒答門檻
+    與 D10 query 改寫 dev set 這次未重新驗證（見快速回憶區已知坑）——收 Phase
+    前需與作者確認是否要另外補做，或留待之後有陷阱題測試集時再驗證
