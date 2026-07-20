@@ -126,10 +126,11 @@ GROUNDING_JUDGE_PROMPT = """你是法規回答的查核員。以下是「參考�
 參考條文（依序編號）：
 {context}
 
-候選句清單（依序編號）：
+候選句清單（依序編號，共 {n_sentences} 句）：
 {numbered_sentences}
 
-請只輸出 JSON 陣列，每個元素對應一句話，格式：
+**輸出的 JSON 陣列必須恰好有 {n_sentences} 個元素，每一句話都要有一個判定，
+不可省略任何一句、也不可重複判定同一句。** 每個元素對應一句話，格式：
 [{{"index": 1, "supported": true, "context_no": 3, "reason": "一句話理由"}}]
 - supported：這句話是否被參考條文中某一條的原文實際支持
 - context_no：supported 為 true 時，填入真正支持它的參考條文編號（上方
@@ -144,19 +145,24 @@ GROUNDING_JUDGE_PROMPT = """你是法規回答的查核員。以下是「參考�
 # 會誘發地端 12B 陷入字元重複輸出、陣列永不收尾——JSON 語法約束只保證
 # 結構合法，不保證字串「內容」不失控。改用 context_no 純整數索引後
 # （呼叫端自行對應回法規名），此問題消失。
-_JUDGE_JSON_SCHEMA = {
-    "type": "array",
-    "items": {
-        "type": "object",
-        "properties": {
-            "index": {"type": "integer"},
-            "supported": {"type": "boolean"},
-            "context_no": {"type": ["integer", "null"]},
-            "reason": {"type": "string"},
+def _judge_json_schema(n_sentences: int) -> dict:
+    """minItems/maxItems 釘死陣列長度＝句數：解碼層級保證涵蓋每一句判定，
+    避免模型在較長回答時提早收尾陣列、遺漏後段句子的判定。"""
+    return {
+        "type": "array",
+        "minItems": n_sentences,
+        "maxItems": n_sentences,
+        "items": {
+            "type": "object",
+            "properties": {
+                "index": {"type": "integer"},
+                "supported": {"type": "boolean"},
+                "context_no": {"type": ["integer", "null"]},
+                "reason": {"type": "string"},
+            },
+            "required": ["index", "supported"],
         },
-        "required": ["index", "supported"],
-    },
-}
+    }
 
 
 @dataclass
@@ -204,7 +210,7 @@ def judge_sentences(
             # 陷入重複輸出迴圈、陣列永不收尾；Ollama 原生 format 是解碼層級
             # 約束（強制每個 token 都合法、且符合此 schema 形狀），而非僅是
             # 提示詞要求，可根治此類退化。
-            model = model.bind(format=_JUDGE_JSON_SCHEMA)
+            model = model.bind(format=_judge_json_schema(len(sentences)))
     except ImportError:
         pass
 
@@ -214,7 +220,9 @@ def judge_sentences(
         for i, (name, no, content) in enumerate(articles, start=1)
     )
     numbered = "\n".join(f"{i}. {s}" for i, s in enumerate(sentences, start=1))
-    prompt = GROUNDING_JUDGE_PROMPT.format(context=context, numbered_sentences=numbered)
+    prompt = GROUNDING_JUDGE_PROMPT.format(
+        context=context, numbered_sentences=numbered, n_sentences=len(sentences)
+    )
 
     last_err: Exception | None = None
     items: list[dict] | None = None
