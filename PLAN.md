@@ -164,6 +164,7 @@ tw-longcare-rag/
 | 風險 | 對策 |
 |---|---|
 | Ollama 匯入 gemma3 safetensors 不可靠 | timebox 10 分鐘即轉 llama.cpp 官方 release；兩路皆敗回報列選項（D5） |
+| TAIDE 12B 需重建（換量化等級/模型更新） | 照 PROGRESS phase-0 日誌的已驗證流程；三個 Windows 陷阱：HF 下載用 `--local-dir`（非開發者模式 symlink 權限 WinError 1314）、llama.cpp checkout 與 venv 放短路徑如 `C:\llamacpp-build\`（MAX_PATH 260）且 checkout 用 sparse（`gguf-py requirements conversion`）、requirements 安裝加 `--index-strategy unsafe-best-match`；Modelfile 已入版控（models/Modelfile） |
 | num_ctx 4096 靜默截斷 → 引用規則無聲失效 | Modelfile num_ctx 8192 + ChatOllama 顯式傳參 + prompt 長度守門測試 |
 | 「。」分句與句尾 citation 打架 | splitter 規則明訂 + 獨立 pytest（P3） |
 | TAIDE gated / GGUF 再散布限制 | 先接受授權；GGUF 僅留本地（D5） |

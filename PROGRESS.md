@@ -2,27 +2,20 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：Phase 0 進行中——git + 公開文案防護 + 四份文件重寫 + 三支 skills + 骨架測試就緒；gemma3:12b（基準）已入 Ollama；**taide gated 授權兩個已通過**（google/gemma-3-12b-it 仍 manual 待審，不擋路）。TAIDE 12B 的 Ollama 匯入**技術路線已跑通一次（llama.cpp 轉檔 → Q4_K_M 量化 → 輕量匯入全部成功，含 num_ctx=8192 生效），但應作者要求已整批還原**（models/ 清空、Ollama 模型移除、一次性工具清掉），回到「尚未建置」的狀態，尚未做中文對話 smoke test。
+- **現在做到哪**：**Phase 0 已完成並經作者驗收（tag `phase-0`）**——taide-gemma3-12b（Q4_K_M、num_ctx 8192）已入 Ollama、三輪中文 smoke test 通過；接著開 Phase 1（法規資料）。
 - **下一步**：
-  1. 重新走一次 TAIDE 12B 建置（步驟已驗證可行，見下方已知坑的完整記錄）：HF 下載 safetensors ~25GB → llama.cpp 轉檔（**注意路徑長度**，見已知坑）→ Q4_K_M 量化 → Modelfile（TEMPLATE 取自 `ollama show gemma3:12b --template`、num_ctx 8192）→ `ollama create` → 中文多輪對話 smoke test（**這次要跑到底**，上次在此步驟前被還原）
-  2. Phase 0 驗收展示 → 作者確認 → `git tag phase-0` → 進 Phase 1（fetch_laws.py）
+  1. 寫 `scripts/fetch_laws.py`：官方 Open API 整包 ZIP（`/api/ch/law/json` 取 L0070040、D0050037；`/api/ch/order/json` 取 L0070043、L0070044、L0070059）→ ZIP 快取 `data/raw/`（檔名帶 UpdateDate）→ 解析存 `data/laws.json`（utf-8-sig、以 LawURL pcode 過濾、ArticleType=='A' 條文/'C' 章節、flno 正規化；完整規格見 PLAN Phase 1）
+  2. pytest（schema、條號完整性）→ 五法條數對官網 + 抽 3 條對原文 → 建 `fetch-laws` skill → README 補資料快照日期 → 驗收 → tag phase-1
 - **未決問題**：
   - LICENSE 著作權人為佔位字串（作者決定：公開前再填）
   - README 動機段為草稿，待作者潤飾
 - **待使用者人工處理**：
   - https://huggingface.co/google/gemma-3-12b-it （**manual** 人工核准，可能不即時；P5 基準對照才用到，先點不擋路）
-  - taide 兩個 gated repo 已核准，HF_TOKEN 已確認可用，不用再處理
-- **⚠️ 已知坑**：
-  - 專案資料夾曾整個搬遷過：舊 `.venv` 殘留舊路徑（含中文）導致 cp950 解碼崩潰，已重建。**若再搬資料夾，先 `rm -rf .venv` 再 `uv sync`**
-  - 同日稍早的草稿文件（已重寫）備份在本機 scratchpad，不進 git
-  - **`ollama create -q <quant> -f Modelfile`（直接從 safetensors 量化匯入）不可信任**：曾在使用者於權限提示按下「拒絕」之後，仍在 Ollama 背景服務繼續執行約 10 分鐘、寫入 ~33GB 暫存 blob 到 `~/.ollama/models/blobs/`，最終未產出可用模型（`ollama list` 無此模型），且該次「拒絕」沒能真正中止伺服器端工作。原因推測：`ollama create` 是送 HTTP 請求給常駐的 `ollama serve`，一旦請求送達，client 端被中止不代表 server 端工作跟著停。**因此 D5 改為直接跳過此路徑，一律走 llama.cpp 官方 release 轉檔**（`convert_hf_to_gguf.py` → GGUF → `llama-quantize.exe` → 匯入的是已量化完成的 GGUF 檔，`ollama create` 此時只是輕量匯入，無現場轉檔風險）。若之後懷疑任何 ollama 指令是否真的中止，用 `tasklist` 查 process + 追蹤 `~/.ollama/models/blobs/` 檔案數與大小是否還在成長來確認，不能只看工具呼叫的拒絕訊息。
-  - 孤兒 blob 清理程序（若未來又發生類似情況）：比對 `~/.ollama/models/manifests/**` 內所有 `"digest":"sha256:..."` 與 `~/.ollama/models/blobs/` 實際檔案，沒被任何 manifest 引用的才安全刪除。
-  - **llama.cpp 轉檔踩過的兩個坑（下次重做直接避開）**：(1) `convert_hf_to_gguf.py` 需要 repo 內的 `gguf-py/` 與 `conversion/` 兩個資料夾（不是只有腳本本身）；完整 `git clone` 在 Windows 會因 `tools/ui/` 底下路徑過深而 `Filename too long` 失敗，改用 `git clone --filter=blob:none --sparse` + `git sparse-checkout set gguf-py requirements conversion`（cone 模式下 repo 根目錄檔案含 `convert_hf_to_gguf.py` 會自動含入）。(2) **轉檔用的 venv 絕對不能建在路徑很長的資料夾底下**（例如本 session 的 scratchpad，含 36 字元 UUID）：`transformers` 套件內部模組路徑很深，疊加後總長度會超過 Windows 260 字元 MAX_PATH，導致 `FileNotFoundError`（且 `ls`/`git bash` 看得到檔案、只有 Python `open()` 會炸，容易誤判成防毒鎖檔或安裝損壞）。**對策：venv 與 llama.cpp checkout 一律建在磁碟根目錄附近的短路徑**（如 `C:\llamacpp-build\`），轉檔完成後刪除即可，輸出的 GGUF 直接指向專案 `models/` 資料夾沒問題（那條路徑不深，不受影響）。`uv pip install -r requirements-convert_hf_to_gguf.txt` 需加 `--index-strategy unsafe-best-match`（該檔案同時指到 pytorch 與 pypi 兩個 index，預設策略會解不出 transformers）。
-  - **`ollama create` 匯入已量化好的 GGUF（非現場轉檔）驗證安全**：這次改流程後，匯入前後比對 blob 只新增了跟檔案大小相符的量（+8GB 對應 7.7GB 的 Q4_K_M 檔），確認不會重演背景失控的問題；`ollama show <model> --parameters` 可驗證 num_ctx 等參數真的生效。
+- **⚠️ 已知坑**：（無——收 Phase 0 時清空：TAIDE 重建流程的 Windows 陷阱與對策已轉入 PLAN.md 風險表；ollama 背景服務教訓已制度化於 D5；搬資料夾重建 .venv 已寫入 CLAUDE.md）
 
 ## 📜 Phase 日誌（append-only）
 
-### Phase 0 — 骨架與資源就緒（進行中）
+### Phase 0 — 骨架與資源就緒（已完成，2026-07-20 驗收，tag `phase-0`）
 
 - **2026-07-20**：
   - 完成內容：
@@ -46,3 +39,22 @@
   - 決策變更：Decision Log D1–D7 初版定案；D5 於同日修正為直接走 llama.cpp 路線（見 PLAN.md）
   - 實際成本：$0（尚無專案 API 呼叫）
   - 附註：這次的還原是應作者指示執行，不是技術路線失敗——llama.cpp 轉檔+量化+匯入的流程本身已驗證可行，下次可直接照上方「已知坑」的兩個路徑修正重做，預期能一次跑到 smoke test
+
+- **2026-07-20（回歸 session，Phase 0 收斂）**：
+  - 完成內容：
+    - 重建 TAIDE 12B 全程照 D5 路線一次跑通：HF 下載 25.4GB（六分片 safetensors）→ llama.cpp 轉 F16 GGUF → `llama-quantize.exe` Q4_K_M → `ollama create` 輕量匯入為 `taide-gemma3-12b`
+    - HF 下載遇 Windows symlink 權限（WinError 1314，非開發者模式）→ 改 `hf download --local-dir` 落檔短路徑解決（記入 PLAN 風險表）
+    - Modelfile 入版控（`models/Modelfile`；.gitignore 改 `models/*` + `!models/Modelfile` 例外）——TEMPLATE 取自 `ollama show gemma3:12b --template`、num_ctx 8192、參數對齊 gemma3:12b
+    - 中文三輪多輪對話 smoke test 通過（長照 2.0 常識、跨輪脈絡接續、1966 專線皆正確；第 3 輪夾一句未查證的轉接號碼＝裸 LLM 幻覺實例，佐證 P3 逐句 grounding 的必要性）
+    - 清理：llama.cpp 工具鏈、F16 中間檔、safetensors 原始檔（作者核准刪除）；快速回憶區「已知坑」依收 Phase 規則清空（轉入 PLAN 風險表）
+  - 驗證證據（實跑）：
+    - 下載：六分片共 25.4GB 齊備（`model-00001..00006-of-00006.safetensors`）
+    - 轉檔：`EXIT_CODE=0`，`n_tensors = 627, total_size = 26.4G`（text-only）
+    - 量化：`EXIT_CODE=0`，`quant size = 7779.38 MiB (4.94 BPW)`（與上次完全一致）
+    - 匯入：`success`；blob store 前後比對 49→53 個、56.1→63.7GB（+7.6GB ≒ GGUF 檔案大小，確認輕量匯入無現場轉檔）
+    - `ollama show taide-gemma3-12b --parameters`：`num_ctx 8192`、`stop "<end_of_turn>"`、temperature 1、top_k 64、top_p 0.95
+    - smoke test：3 輪全繁中、多輪脈絡正常（第 2 輪正確引用第 1 輪內容）
+    - `uv run pytest -q` → `4 passed`
+  - 相關 commit：見本條目後續 commit（Modelfile 入版控 + 本檔更新）
+  - 決策變更：無新決策（D5 路線首次完整執行到驗收）；PLAN 風險表新增「TAIDE 重建」一列（三個 Windows 陷阱對策）
+  - 實際成本：$0（全地端，無 API 呼叫）
