@@ -86,11 +86,13 @@ $ uv run python -m twlongcare.cli "喘息服務一年有幾天" --provider gemin
 |---|---|---|---|
 | python | ≥3.11 | chromadb | 1.5.9 |
 | langchain | 1.3.14 | bm25s | 0.3.9 |
-| langchain-chroma | 1.1.0 | sentence-transformers | 5.6.0 |
-| langchain-google-genai | 4.2.7 | jieba | 0.42.1 |
-| langchain-openai | 1.3.5 | gradio（Phase 6） | 6.x |
-| langchain-ollama | 1.1.0 | deepeval（Phase 5） | 4.1.x |
-| torch | 2.11.0+cu128 | networkx（Phase 4） | 3.6.1 |
+| langchain-google-genai | 4.2.7 | sentence-transformers | 5.6.0 |
+| langchain-openai | 1.3.5 | jieba | 0.42.1 |
+| langchain-ollama | 1.1.0 | gradio（Phase 6） | 6.x |
+| torch | 2.11.0+cu128 | deepeval（Phase 5） | 4.1.x |
+| | | networkx（Phase 4） | 3.6.1 |
+
+註：向量庫直接呼叫 `chromadb`（不經 `langchain-chroma` 包裝），因 hybrid 檢索需要對候選集做精細控制；LLM 呼叫仍全數走 LangChain（見 PLAN.md D9）。
 
 評估框架選型：deepeval 優先——ragas 0.4.3 目前與 LangChain 1.x 生態有未解的 import 衝突（上游 issue #2745），詳見 `docs/research/2026-07-audit/stack-compat.json`。
 

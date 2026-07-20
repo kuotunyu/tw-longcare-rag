@@ -29,6 +29,7 @@
 | D6 | 2026-07-20 | 法規資料走官方 Open API 整包 ZIP（月更），以 UpdateDate 記錄資料版本；**P1 驗收後資料凍結**，中途重抓＝回到 P1 gate 重走 | Open API 已實測可用（law-data.json）；長照給付法規修法頻繁，凍結版本才能保證評估可比性 |
 | D7 | 2026-07-20 | 檢索管線預設寫死保證可重現：BM25 top-20 + 向量 top-20 → RRF(k=60) → reranker 前 20 → top-5；圖譜擴展在 rerank 之後、上限 +5 | 評估矩陣需要固定 baseline；參數進 config 不進散落常數 |
 | D8 | 2026-07-20 | 全案 Gemini 呼叫統一為單一模型 `gemini-3.1-flash-lite`：**supersedes D2** 的雙模型分工（GEMINI_LITE_MODEL 原為 gemini-2.5-flash-lite）。GEMINI_MODEL 不變、GEMINI_LITE_MODEL 改與其相同 | 作者要求全案模型單一化，簡化維護與行為一致性優先於邊際成本差；定價由 $0.10/$0.40 變 $0.25/$1.50（約 2.5 倍），總預算仍遠低於 $1（見下方成本估算）。**已執行的 Phase 2 contextual 摘要批次（208 chunks）沿用呼叫當下的舊設定 gemini-2.5-flash-lite（作者已確認執行、屬沉沒成本，不重跑）；D8 生效於此批次之後的所有呼叫**（testset 生成、圖譜 LLM 補抽、grounding 判定、盲測） |
+| D9 | 2026-07-20 | 向量庫直接呼叫 `chromadb.PersistentClient`，**不使用** `langchain-chroma` 的 `Chroma` vectorstore 包裝（依賴已移除）；LangChain 仍是全案 LLM 呼叫的唯一介面（`init_chat_model`/`ChatOllama`/LCEL） | D7 的 hybrid 檢索（BM25 top-20 + 向量 top-20 → RRF → rerank → top-5）需要對候選集做精細控制（雙路 id 對齊、缺漏補查、RRF 融合），LangChain 的 `VectorStoreRetriever` 抽象封裝掉這些細節、不利此處客製；CLAUDE.md 的 LangChain 鐵律針對「涉及 LLM 的程式」，向量庫存取層不在此列。此決策原為實作中未經討論的既成事實，經作者詢問後回溯記錄並移除未用依賴 |
 
 ## 模型分工總表（防「地端模式偷打雲端」）
 

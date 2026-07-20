@@ -11,6 +11,7 @@
 ## 開發流程
 
 - 藍圖在 `PLAN.md`，照 Phase 執行；每 Phase 完成：`update-progress` skill → 展示驗收 → 作者確認 → `git tag phase-N` → 才進下一 Phase
+- 開工前查證外部套件現行 API：**優先用 Context7 MCP**；若當下 session 未連接 Context7（`ToolSearch` 查不到），改用 WebFetch 抓官方文件頁面替代，效果等同
 - 小功能隨做隨 commit（Conventional Commits）；權重與大型資料不進 git
 - **commit 訊息與一切公開文字不得含任何公司/產品名或外部署名尾行**（公開文案守則）；clone 後執行一次 `git config core.hooksPath .githooks` 啟用守門 hooks
 - 會花錢的批次 API 呼叫：先印成本估算、作者確認後執行；結果一律快取（contextual_cache.json 等）
