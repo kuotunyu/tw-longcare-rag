@@ -8,7 +8,6 @@
   2. 30 題生成後：**人工校對是硬 gate**，校對完才進 deepeval-first 對照矩陣（純向量vs hybrid vs hybrid+rerank；GTAIDE vs bge-m3；contextual開/關；圖譜開/關；MRL 768vs256）→ 生成端盲測 taide-12b vs GEMINI_MODEL + vs gemma3:12b（完整規格見 PLAN.md Phase 5；跑前檢查 OPENAI_MODEL 落日）
 - **未決問題**：（無；LICENSE 著作權人與 README 動機段已於 2026-07-20 定案）
 - **待使用者人工處理**：
-  - https://huggingface.co/google/gemma-3-12b-it （**manual** 人工核准，可能不即時；P5 基準對照才用到，先點不擋路）
   - `gen_testset.py` 生成的 30 題測試集人工校對（P5 硬 gate，屆時提醒）
 - **⚠️ 已知坑**：（Phase 4 收尾已清空；grounding judge 地端準確度落差、拒答門檻/改寫 dev set 樣本小、pyvis 截圖工具限制皆已轉入 PLAN.md 風險與對策表，非隱藏遺留）
 
@@ -224,3 +223,13 @@
   - 相關 commit：本條目 PROGRESS + PLAN 風險表更新（待 commit）
   - 決策變更：無
   - 實際成本：$0（本次僅本機驗收，無 API 呼叫）
+
+- **2026-07-20（收尾小事）**：
+  - 完成內容：
+    - LICENSE 著作權人由佔位字串定案為 `tw-longcare-rag contributors`（作者未指定具名方式，採開源專案常見寫法，不綁定個人身分）
+    - README 動機段由草稿精簡定稿（作者要求：簡短、不煽情），過 `check_public_text.py` 守門
+    - `google/gemma-3-12b-it` gated 存取：作者截圖確認頁面顯示「You have been granted access to this model」，已核准，非待處理事項
+  - 驗證證據（實跑）：`uv run python scripts/check_public_text.py README.md LICENSE` → 通過；gemma-3-12b-it 存取由作者截圖佐證
+  - 相關 commit：`740e957` LICENSE+README、`872bed3` PROGRESS 未決問題清空
+  - 決策變更：無
+  - 實際成本：$0
