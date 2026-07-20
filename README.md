@@ -12,8 +12,8 @@
 
 ## 系統架構
 
-> Phase 0〜3 已實作（索引建置、hybrid 檢索、生成、逐句查核）；
-> 引用圖譜擴展（Phase 4，圖中虛線）尚待實作。
+> Phase 0〜4 已實作（索引建置、hybrid 檢索、生成、逐句查核、
+> 法條引用圖譜一階擴展）；評估與介面（Phase 5〜6）尚待實作。
 
 **索引建置**（離線，`scripts/build_index.py`）：
 
@@ -37,11 +37,11 @@ flowchart LR
     BM25 --> RRF[RRF 融合<br/>公平合併兩套排名]
     VEC --> RRF
     RRF --> RR[bge-reranker-v2-m3<br/>重排取 top-5<br/>更精準的第二輪篩選]
-    RR -.Phase 4.-> GE[引用圖譜一階擴展<br/>關聯條文]
+    RR --> GE[引用圖譜一階擴展<br/>關聯條文，上限+5]
     RR --> GATE1{top-1 分數<br/>< 門檻 0.644?}
     GATE1 -->|是，跳過生成| A2[查無明確法源<br/>+ 1966 專線]
     GATE1 -->|否| GEN[LLM 生成<br/>每句附法條引用]
-    GE -.-> GEN
+    GE --> GEN
     GEN --> GND[CRAG 逐句 groundedness 查核<br/>不受支持者刪除/改寫]
     GND --> GATE2{全部句子<br/>皆不支持?}
     GATE2 -->|是| A2
@@ -121,6 +121,42 @@ provider 因批次判定已驗證準確，維持批次以節省呼叫次數）�
 模型在句尾引用格式上的覆蓋率限制屬同一類已知落差，Phase 5 會做
 正式的地端 vs 雲端對照評估。
 
+## 法條引用圖譜（GraphRAG-lite）
+
+法規條文彼此大量互相引用（「依第八條規定」「準用第十二條」），單獨檢索
+到一條，常常看不到它實際依附的規定。這個 Phase 用 regex 為主力抽取條文間
+的引用關係（中文數字轉換、範圍展開「至」、並列「、及」、「前條」解析、
+每法 alias table），LLM 補抽 regex 未涵蓋的案例（成本 <$0.02），建成有向圖；
+檢索時對 top-5 條文做一階擴展，把它們引用到的關聯條文一併帶入回答的
+參考範圍，標示為「關聯條文」。
+
+**統計**（`data/law_graph.json`）：205 節點、134 條邊（regex 131 條、
+LLM 補抽 3 條，佔比 98% / 2%）；125/205 條文至少有一條引用關係。
+
+法規層級聚合視角（子法 → 母法的邊最密集，印證此圖譜設計假設）：
+
+```mermaid
+flowchart LR
+    D0050037[老人福利法<br/>18 條內部引用] -->|1| L0070040
+    L0070043[長期照顧服務法<br/>施行細則<br/>1 條內部引用] -->|17| L0070040
+    L0070044[長期照顧服務機構<br/>設立許可及管理辦法<br/>26 條內部引用] -->|11| L0070040
+    L0070059[長期照顧服務<br/>申請及給付辦法<br/>8 條內部引用] -->|5| L0070040
+    L0070040[長期照顧服務法<br/>母法<br/>47 條內部引用]
+```
+
+完整 205 節點互動圖（可縮放、拖曳、依法規顏色分群）：
+[docs/assets/law_graph.html](docs/assets/law_graph.html)（下載後在瀏覽器開啟）。
+
+一題開/關擴展對照（含完整管線的 grounding 查核）：
+[docs/examples/graph_expansion_diff.md](docs/examples/graph_expansion_diff.md)。
+該題實測發現圖譜擴展本身不保證零幻覺——多帶入的關聯條文 context 讓生成端
+多寫了一句查無依據的內容，但完整管線（圖譜擴展 + Phase 3 grounding）
+正確攔截移除，印證兩層防護需要搭配運作。
+
+已知限制：pyvis（互動圖譜渲染套件）三年未維護；渲染本身正常，但用
+自動化瀏覽器工具截圖時會逾時卡住，故本節以 mermaid 聚合圖代替傳統截圖
+（PLAN.md 風險備援方案）。
+
 ## 評估結果
 
 （Phase 5 補上：檢索對照實驗表、生成端盲測表、成本實績；完整矩陣見 docs/eval.md）
@@ -135,9 +171,10 @@ provider 因批次判定已驗證準確，維持批次以節省呼叫次數）�
 | langchain | 1.3.14 | bm25s | 0.3.9 |
 | langchain-google-genai | 4.2.7 | sentence-transformers | 5.6.0 |
 | langchain-openai | 1.3.5 | jieba | 0.42.1 |
-| langchain-ollama | 1.1.0 | gradio（Phase 6） | 6.x |
-| torch | 2.11.0+cu128 | deepeval（Phase 5） | 4.1.x |
-| | | networkx（Phase 4） | 3.6.1 |
+| langchain-ollama | 1.1.0 | networkx | 3.6.1 |
+| torch | 2.11.0+cu128 | pyvis | 0.3.2 |
+| | | gradio（Phase 6） | 6.x |
+| | | deepeval（Phase 5） | 4.1.x |
 
 註：向量庫直接呼叫 `chromadb`（不經 `langchain-chroma` 包裝），因 hybrid 檢索需要對候選集做精細控制；LLM 呼叫仍全數走 LangChain（見 PLAN.md D9）。
 
