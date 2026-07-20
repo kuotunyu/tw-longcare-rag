@@ -2,10 +2,9 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：Phase 5（評估）**實作與驗證完成，待作者驗收**——測試集、retrieval 矩陣（7 config）、生成端盲測、faithfulness/answer relevancy、docs/eval.md 正本、README 同步、run-eval skill 全部跑通。
+- **現在做到哪**：Phase 5（評估）**作者驗收通過，已打 tag `phase-5`**。測試集、retrieval 矩陣（7 config）、生成端盲測、faithfulness/answer relevancy、拒答門檻大樣本重新驗證、docs/eval.md 正本、README 同步、run-eval skill 全部完成。
 - **下一步**：
-  1. 作者驗收 Phase 5 → `git tag phase-5`
-  2. 之後開 Phase 6（Gradio 介面）
+  1. 詢問作者是否要開始 Phase 6（Gradio 介面）
 - **未決問題**：（無）
 - **待使用者人工處理**：（無）
 - **⚠️ 已知坑**：（無——拒答門檻已補做大樣本重新驗證，殘留的「主題相似度≠可回答性」結構性限制已轉入 PLAN 風險表與 docs/eval.md，含未來工作方向）
@@ -233,7 +232,7 @@
   - 決策變更：無
   - 實際成本：$0
 
-### Phase 5 — 評估（實作完成 2026-07-20，待驗收）
+### Phase 5 — 評估（已完成，2026-07-20 驗收，tag `phase-5`）
 
 - **2026-07-20**：
   - 完成內容：
