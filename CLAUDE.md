@@ -38,4 +38,5 @@ uv run python -m twlongcare.cli "問題" --provider ollama         # CLI 問答�
 - `update-progress`：PROGRESS.md 更新格式（每 Phase 完成 / session 收工前 / 重大決策時）
 - `resume-context`：隔段時間回來的第一個動作（恢復脈絡，不動手改東西）
 - `public-copy-check`：任何公開文字/截圖產出前的守門程序
-- （隨 Phase 陸續加入：fetch-laws、rebuild-index、ask-cli、run-eval、deploy-space）
+- `fetch-laws`：抓取/重抓五法資料的標準程序（含 D6 凍結判斷與重抓後 checklist）
+- （隨 Phase 陸續加入：rebuild-index、ask-cli、run-eval、deploy-space）
