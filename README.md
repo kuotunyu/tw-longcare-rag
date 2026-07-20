@@ -72,7 +72,27 @@ $ uv run python -m twlongcare.cli "喘息服務一年有幾天" --provider gemin
 
 ## 誠實拒答與逐句查核
 
-（Phase 3 補上：陷阱題的 grounding 開/關對照 transcript）
+生成的回答會經過兩層防幻覺機制：
+
+1. **檢索分數拒答門檻**：問題與五法完全無關時（例如問勞保、健保、交通違規），
+   hybrid 檢索的 top-1 rerank 分數會明顯偏低，低於校準門檻（實測 0.644，
+   正常題 0.70+ 對陷阱題 0.59-；詳見 `scripts/calibrate_grounding.py`）時
+   直接拒答，不浪費一次生成呼叫。
+2. **CRAG 式逐句 groundedness 查核**：生成後把回答拆成逐句，連同檢索到的
+   條文一起送給查核模型，判斷每一句是否真的被條文支持；不支持的句子直接
+   移除，全部不支持則整段回答退為「查無明確法源」。分句規則會跳過引號/
+   括號內的句尾標點、把句尾的法條引用併回原句、過濾轉介語等樣板句
+   （細節見 `src/twlongcare/grounding.py` docstring）。
+
+5 題誘導幻覺問題的開/關對照 transcript（provider=ollama）：
+[docs/examples/grounding_diff.md](docs/examples/grounding_diff.md)。
+其中「申請長照服務要準備哪些文件」一題最能看出效果：模型原始生成列出
+9 項文件，但條文實際只寫了 5 項，查核後正確移除 4 項模型自行腦補的內容。
+
+已知限制：地端 12B 模型的查核判斷本身也並非完美，實測偶有假陰性（把
+條文中確實存在的內容誤判為不支持）；跨 provider 交叉驗證顯示雲端模型
+（Gemini／OpenAI）的查核準確度更高。這與地端模型在句尾引用格式上的
+覆蓋率限制屬同一類已知落差，Phase 5 會做正式的地端 vs 雲端對照評估。
 
 ## 評估結果
 
