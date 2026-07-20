@@ -1,0 +1,252 @@
+{
+ "meta": {
+  "n": 30,
+  "config": "baseline",
+  "gen_provider": "gemini",
+  "judge_model": "gpt-5-mini",
+  "mean_faithfulness": 1.0,
+  "mean_relevancy": 0.9570119503740193
+ },
+ "results": [
+  {
+   "id": 1,
+   "question": "長照中心拿到了設立許可卻一直沒有開張，政府會把許可證收回去嗎？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty (contradictions = []), indicating no discrepancies between the actual output and the retrieval context — the output fully aligns with the context. Great job!",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the response fully addressed the question without irrelevant statements—explaining that permit revocation depends on local regulations, typical timelines, and recommended next steps (contact主管機關、說明情況或申請延期). It can’t be higher because 1.00 is the maximum possible score."
+  },
+  {
+   "id": 2,
+   "question": "隨便一間公司可以自己掛長照中心的招牌嗎？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty, indicating no discrepancies between the actual output and the retrieval context; the output fully aligns with the source.",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the response was fully relevant to whether a company can display a long-term care center sign, directly addressed the question, and contained no irrelevant statements."
+  },
+  {
+   "id": 3,
+   "question": "社區型的長照服務大概包含哪些項目呢？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty, indicating no discrepancies between the actual output and the retrieval context.",
+   "relevancy_score": 0.9333333333333333,
+   "relevancy_reason": "The score is 0.93 because 回答大致切題並提供相關資訊，因此得分偏高；但未達滿分是因為出現了不必要的問候語（僅為問候語，未提供社區型長照服務具體項目），稍微降低了相關性。"
+  },
+  {
+   "id": 4,
+   "question": "我開的私立老人安養中心，名字是不是一定要加上私立兩個字？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty, indicating no mismatches between the actual output and the retrieval context; the output is fully faithful and consistent—great job.",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the assistant’s output remained fully focused on your question with no irrelevant statements. It can’t be higher because 1.00 is the maximum possible score."
+  },
+  {
+   "id": 5,
+   "question": "本來就在經營長照服務的機構，現在要正式轉型申請設立許可的話，需要準備哪些文件呢？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty, indicating the actual output fully aligns with the retrieval context and contains no inconsistencies.",
+   "relevancy_score": 0.9655172413793104,
+   "relevancy_reason": "The score is 0.97 because 回答中對於需準備的文件提供了明確且相關的說明與清單，故得高分；但包含一段與主題無關的問候語（只是問候語，與所需文件內容無關），因此被略微扣分，無法達到滿分。"
+  },
+  {
+   "id": 6,
+   "question": "政府會不會限制某些地區不能再開新的長照機構？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because there are no contradictions listed; the actual output fully aligns with the retrieval context.",
+   "relevancy_score": 0.8571428571428571,
+   "relevancy_reason": "The score is 0.86 because the reply included only a greeting that did not answer whether the government would restrict opening new long-term care institutions, which prevents a higher score; it remains 0.86 because, apart from that irrelevant opening, the response was largely on-topic."
+  },
+  {
+   "id": 7,
+   "question": "我自己開的長照機構可以把業務外包給別人做嗎？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty (Contradictions: []), indicating there are no discrepancies between the actual output and the retrieval context — the output fully aligns with the provided information.",
+   "relevancy_score": 0.8,
+   "relevancy_reason": "The score is 0.80 because 大部分內容聚焦於長照機構能否外包的相關實務與法規面，具有實質回應，因此相關性較高；但無法更高是因為包含了僅為問候語的無關陳述，降低了整體精準度。"
+  },
+  {
+   "id": 8,
+   "question": "長照審議委員會在開會時，如果討論到跟委員自己利益相關的案子，應該要怎麼處理？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because there are no contradictions listed — the actual output fully aligns with the retrieval context.",
+   "relevancy_score": 0.8333333333333334,
+   "relevancy_reason": "The score is 0.83 because 回答大部分聚焦在處理利益迴避的實務步驟（申報利益、迴避、會議紀錄與替代安排），因此高度相關；但回覆中包含一段只是問候語，與如何處理利益迴避無關，削弱了精準度，故分數無法更高。"
+  },
+  {
+   "id": 9,
+   "question": "非營利長照機構要租用政府閒置的房子，租金是怎麼算的？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the Contradictions list is empty, indicating the actual output fully aligns with the retrieval context and no inconsistencies were detected—nice work!",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "分數為 1.00，因為回覆完全切中題意且沒有任何不相關的陳述；無法更高，已達滿分。"
+  },
+  {
+   "id": 10,
+   "question": "請問什麼樣條件的人才可以去申請政府的長照服務？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty, indicating no discrepancies were found and the actual output fully aligns with the retrieval context — great alignment.",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "分數為 1.00，因為回覆完全聚焦於申請政府長照服務的資格，沒有任何與問題無關的敘述；分數無法更高，因為 1.00 已是滿分。很棒，回覆切題且清楚。"
+  },
+  {
+   "id": 11,
+   "question": "家裡有長輩經濟狀況比較不好，政府有沒有補助修房子或是租房子的錢？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty, indicating no mismatches between the actual output and the retrieval context—well done, the output is fully faithful.",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "分數是 1.00，因為回覆完全切題、直接回應有關政府是否提供修繕或租屋補助給經濟較差的長輩，且沒有出現任何不相關的陳述，因此獲得滿分；由於 1.00 為最高分，故無法再提高。"
+  },
+  {
+   "id": 12,
+   "question": "家裡的長輩失智了需要幫他申請監護宣告，政府單位可以幫忙嗎？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because there are no contradictions listed: the actual output fully aligns with the retrieval context and faithfully reflects the provided information.",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the response directly addressed whether government agencies can assist with guardianship declarations for a dementia-affected elder and contained no irrelevant statements; it can’t be higher because 1.00 is the maximum possible score."
+  },
+  {
+   "id": 13,
+   "question": "申請開辦長照機構送件後，政府大概要多久才會審核完畢？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the Contradictions list is empty ([]), indicating no discrepancies — the actual output fully aligns with the retrieval context. Great job; the response is faithful.",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the output directly and fully addresses the question about government review time with no irrelevant statements; it cannot be higher because 1.00 is the maximum score. Great job!"
+  },
+  {
+   "id": 14,
+   "question": "政府人員來檢查沒立案的長照機構時，我可以拒絕讓他們進去嗎？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because there are no contradictions in the list — the actual output fully aligns with the retrieval context. Well done: the response is faithful and consistent!",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "分數為 1.00，因為回覆直接切中提問、沒有包含任何與主題無關的陳述；已達到最高相關性，故無法再提高。繼續保持清晰精準的回答！"
+  },
+  {
+   "id": 15,
+   "question": "以前立案的老人安養機構如果不符合現在的規定，是不是一定要改進？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because there are no contradictions; the actual output fully aligns with the retrieval context. Nice work — the response is faithful and accurate.",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the response fully addressed the question and contained no irrelevant statements—well done."
+  },
+  {
+   "id": 16,
+   "question": "政府有沒有鼓勵老人家把財產拿去信託來保障安全？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because there are no contradictions listed, indicating the actual output fully aligns with the retrieval context; well done—the response is faithful.",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the response contained no irrelevant statements and directly addressed whether the government encourages seniors to use trusts to protect their assets."
+  },
+  {
+   "id": 17,
+   "question": "政府對於偏鄉地區的長照資源不足有什麼規劃嗎",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty — there are no reported contradictions, indicating the actual output fully aligns with the retrieval context. Nice work!",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because 回答完全切題，沒有包含任何與問題無關的陳述；內容聚焦且實用，表現良好。"
+  },
+  {
+   "id": 18,
+   "question": "長照評估等級幾級以上才會有政府提供的服務補助呢？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the Contradictions list is empty, indicating the actual output fully aligns with the retrieval context and no inconsistencies were found — nice and faithful.",
+   "relevancy_score": 0.8571428571428571,
+   "relevancy_reason": "The score is 0.86 because the response consisted mainly of a greeting and did not provide the requested information about long-term care assessment levels or government subsidies. It isn’t lower because it still engaged the user politely and did not include incorrect information—just incomplete and therefore not fully relevant."
+  },
+  {
+   "id": 19,
+   "question": "養護機構如果只是增加床位但沒有擴建房子的面積，這樣算擴充嗎？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty, indicating the actual output fully aligns with the retrieval context and no inconsistencies were detected — excellent fidelity.",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "分數為 1.00，因為回覆完全切中主題並針對問題給出相關說明，且沒有出現與問題無關的敘述。無法更高是因為 1.00 已為最高可能分數。"
+  },
+  {
+   "id": 20,
+   "question": "幾歲才算老人可以申請老人福利服務？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty, indicating the actual output fully aligns with the retrieval context—no inconsistencies found. Well done!",
+   "relevancy_score": 0.625,
+   "relevancy_reason": "The score is 0.62 because the reply was only partially relevant (it likely touched on eligibility/age thresholds) but included off‑topic sentences about long‑term care disability criteria and about which agency or local authority to apply to—these do not answer “幾歲才算老人”，so they lowered the overall relevancy."
+  },
+  {
+   "id": 21,
+   "question": "長照中心的設立許可證書不見了要怎麼補辦？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty (no contradictions), indicating the actual output fully aligns with the retrieval context—well done!",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the output contained no irrelevant statements and stayed fully on-topic; it already achieves maximum relevance so it cannot be higher. Great job keeping the response focused."
+  },
+  {
+   "id": 22,
+   "question": "政府辦理老人福利的錢是從哪裡來的？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the Contradictions list is empty, indicating no identified inconsistencies — the actual output fully aligns with the retrieval context. Great job: the response is faithful to the source.",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the response directly and accurately addressed where government elderly-welfare funding comes from, contained no irrelevant statements, and was concise—so it’s fully relevant and cannot be higher. Great job keeping it focused."
+  },
+  {
+   "id": 23,
+   "question": "開養護中心是不是一定要跟醫院簽約才可以？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty, indicating the actual output fully aligns with the retrieval context and contains no inconsistencies—well done.",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the response directly addressed whether a care center must sign an agreement with a hospital, provided relevant information, and contained no irrelevant statements. It cannot be higher because 1.00 is the maximum possible score."
+  },
+  {
+   "id": 24,
+   "question": "長照機構的負責人如果請假太久，可以找誰代理以及有規定期限嗎？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty, indicating the actual output fully aligns with the retrieval context — great job!",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the answer was fully relevant to the question about who may act as a substitute and time limits, with no irrelevant statements. It cannot be higher because 1.00 is the maximum possible score."
+  },
+  {
+   "id": 25,
+   "question": "政府補助的長照額度用完之後，剩下的費用要自己出嗎？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because no contradictions were found—the contradictions list is empty, indicating the actual output fully aligns with the retrieval context.",
+   "relevancy_score": 0.8888888888888888,
+   "relevancy_reason": "The score is 0.89 because 回答中僅有問候語，未直接回應「長照補助額度用完後是否需自付及如何負擔」的核心問題；其餘內容可能與題意相關或正確，因此分數較高但非滿分。"
+  },
+  {
+   "id": 26,
+   "question": "長照機構的監事可以同時在裡面上班嗎",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the Contradictions list is empty, indicating no discrepancies— the actual output fully aligns with the retrieval context and is faithful.",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because 回答直接回應了問題（監事是否可同時在機構上班），內容精準且無不相關陳述；無法更高是因為1.00已為最高分。"
+  },
+  {
+   "id": 27,
+   "question": "平常照顧長輩壓力很大，政府有沒有提供什麼資源可以幫忙照顧者？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because there are no contradictions in the provided list, indicating the actual output aligns fully with the retrieval context — great job.",
+   "relevancy_score": 0.95,
+   "relevancy_reason": "The score is 0.95 because the response largely addressed the user’s question about government resources for caregivers and was mostly relevant and helpful, but it included one irrelevant greeting-only sentence ('僅為問候語，未提供有關政府資源的資訊或回覆問題。') that added no substantive information, preventing a perfect 1.0."
+  },
+  {
+   "id": 28,
+   "question": "我想開一家長照機構，名字可以隨便取嗎？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the Contradictions list is empty, indicating no discrepancies between the actual output and the retrieval context—everything aligns closely. Well done!",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because 1.00 is the maximum possible score and the actual output contained no irrelevant statements: it directly addressed the question about naming a long-term care facility. There’s nothing extraneous, so the score is appropriately perfect."
+  },
+  {
+   "id": 29,
+   "question": "長照機構的收費標準是他們自己決定的嗎，還是政府有規定？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because the contradictions list is empty, indicating there are no discrepancies between the actual output and the retrieval context — the output fully aligns with the source. Well done!",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the answer was fully on-topic with no irrelevant statements — it directly addressed whether long-term care facilities set fees themselves or are subject to government regulation."
+  },
+  {
+   "id": 30,
+   "question": "到底怎麼樣才算是有失能需要申請長照服務？",
+   "faithfulness_score": 1.0,
+   "faithfulness_reason": "The score is 1.00 because there are no contradictions listed; the actual output fully aligns with the retrieval context, so everything looks correct — nice work!",
+   "relevancy_score": 1.0,
+   "relevancy_reason": "The score is 1.00 because the response directly addresses how functional impairment qualifies for long-term care services with no irrelevant statements; it cannot be higher since 1.00 is the maximum score."
+  }
+ ]
+}

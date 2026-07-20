@@ -31,6 +31,7 @@
 | D8 | 2026-07-20 | 全案 Gemini 呼叫統一為單一模型 `gemini-3.1-flash-lite`：**supersedes D2** 的雙模型分工（GEMINI_LITE_MODEL 原為 gemini-2.5-flash-lite）。GEMINI_MODEL 不變、GEMINI_LITE_MODEL 改與其相同 | 作者要求全案模型單一化，簡化維護與行為一致性優先於邊際成本差；定價由 $0.10/$0.40 變 $0.25/$1.50（約 2.5 倍），總預算仍遠低於 $1（見下方成本估算）。**已執行的 Phase 2 contextual 摘要批次（208 chunks）沿用呼叫當下的舊設定 gemini-2.5-flash-lite（作者已確認執行、屬沉沒成本，不重跑）；D8 生效於此批次之後的所有呼叫**（testset 生成、圖譜 LLM 補抽、grounding 判定、盲測） |
 | D9 | 2026-07-20 | 向量庫直接呼叫 `chromadb.PersistentClient`，**不使用** `langchain-chroma` 的 `Chroma` vectorstore 包裝（依賴已移除）；LangChain 仍是全案 LLM 呼叫的唯一介面（`init_chat_model`/`ChatOllama`/LCEL） | D7 的 hybrid 檢索（BM25 top-20 + 向量 top-20 → RRF → rerank → top-5）需要對候選集做精細控制（雙路 id 對齊、缺漏補查、RRF 融合），LangChain 的 `VectorStoreRetriever` 抽象封裝掉這些細節、不利此處客製；CLAUDE.md 的 LangChain 鐵律針對「涉及 LLM 的程式」，向量庫存取層不在此列。此決策原為實作中未經討論的既成事實，經作者詢問後回溯記錄並移除未用依賴 |
 | D10 | 2026-07-20 | Query 改寫 prompt 升級為 **few-shot 版**（3 個口語→法規語範例＋微型詞彙對照）；**不採用** dual-query（原問題＋改寫並行 RRF 融合）；`retrieve_multi()` 保留為基礎能力（P5 評估矩陣可用）但 CLI 預設維持單查詢；拒答門檻隨新 prompt 重校準 0.644 → **0.636** | 12 題 dev set（預期條文逐條對照 laws.json 原文查證）實測五種策略：V1 prompt 92%、few-shot 100%（修復 V1 把「服務種類」改偏成「給付標準」的語意漂移）；dual-query 無增益且在 V1 下反而有害（RRF 被口語查詢的雜訊排名稀釋，75〜92%）——假設被數據推翻，如實記錄。「完全不改寫」hit@5 亦 100% 但不可採：改寫的第二個作用是拉開正常/陷阱題的 rerank 分數分離度（不改寫時正常題最低 0.522、與陷阱題重疊，拒答門檻失效）。few-shot 版重校準後分離幅度反而擴大（0.718 vs 0.553）。全程地端評測成本 $0，數據見 `scripts/eval_rewrite.py` 與 PROGRESS |
+| D11 | 2026-07-20 | Phase 5 deepeval 版本更正為實際安裝的 **2.9.3**（`uv add deepeval` 當下 PyPI 最新版，非 2026-07 稽核當時記錄的 4.1.1——稽核資料已過時，以實裝為準）；judge model 改用自訂 `OpenAIJudge`（繼承 `DeepEvalBaseLLM`，內部走官方 `openai` SDK `.chat.completions.parse()`），**不**把 `OPENAI_MODEL` 字串直接傳給 `FaithfulnessMetric(model=...)` | deepeval 2.9.3 的 `GPTModel` 內建模型白名單硬編碼到 `gpt-4.5-preview`/`o4-mini`，不含 `gpt-5-mini`，直接傳字串會拋 `ValueError`；自訂 wrapper 繞過白名單同時保留「模型字串不寫死」鐵律。安裝 deepeval 連帶把 `google-genai` 降版 2.12.1→1.75.0（deepeval 相依限制），已實跑一次 `--provider gemini` CLI 驗證輸出正常、非僅憑 pytest 綠燈 |
 
 ## 模型分工總表（防「地端模式偷打雲端」）
 
@@ -146,7 +147,7 @@ tw-longcare-rag/
 
 - **法規 API** ✅ 實測下載解析成功（law-data.json）：整包 ZIP、utf-8-sig、五法 PCode 全確認、OGDL v1、附表不在條文內
 - **HF 模型** ✅ 七個 ID 全存在（hf-models.json）：gated=taide×2(auto)+twinkle-Llama-3.2-3B(auto)+google/gemma-3-12b-it(manual)；GTAIDE 模型卡以法規資料微調（Recall@1 74.43%），未提 MRL
-- **套件** ✅ 全部可行（stack-compat.json）：langchain 1.3.14 / langchain-core 1.4.9 / langchain-chroma 1.1.0 / langchain-google-genai 4.2.7 / langchain-openai 1.3.5 / langchain-ollama 1.1.0 / chromadb 1.5.9（win wheel）/ bm25s 0.3.9 / sentence-transformers 5.3.0 / gradio 6.20 / deepeval 4.1.1；ragas 0.4.3 import 崩壞（D3）
+- **套件** ✅ 全部可行（stack-compat.json）：langchain 1.3.14 / langchain-core 1.4.9 / langchain-chroma 1.1.0 / langchain-google-genai 4.2.7 / langchain-openai 1.3.5 / langchain-ollama 1.1.0 / chromadb 1.5.9（win wheel）/ bm25s 0.3.9 / sentence-transformers 5.3.0 / gradio 6.20 / deepeval ~~4.1.1~~ **2.9.3**（Phase 5 實裝時更正，見 D11；稽核當時記錄已過時）；ragas 0.4.3 import 崩壞（D3）
 - **雲端模型字串** ✅ 三個全有效（cloud-models.json）；gpt-5-mini 落日 2026-12-11
 
 ## 成本估算（各批次執行前仍以實際 token 重印確認；實績欄由 PROGRESS 彙總回填）
