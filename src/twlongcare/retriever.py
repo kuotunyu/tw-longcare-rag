@@ -72,6 +72,7 @@ class HybridRetriever:
         dim: int | None = None,
         contextual: bool = True,
         use_rerank: bool = True,
+        use_bm25: bool = True,
         device: str | None = None,
     ) -> None:
         import bm25s
@@ -79,6 +80,7 @@ class HybridRetriever:
 
         settings = get_settings()
         self.use_rerank = use_rerank
+        self.use_bm25 = use_bm25
         self._settings = settings
 
         model_id = (
@@ -137,12 +139,13 @@ class HybridRetriever:
         doc_by_id: dict[str, str] = {}
         meta_by_id: dict[str, dict] = {}
         for qi, query in enumerate(queries):
-            q_tokens = jieba_cut(query)
-            if q_tokens:
-                results, _scores = self._bm25.retrieve(
-                    [q_tokens], k=min(BM25_TOP_K, len(self._bm25_ids))
-                )
-                rankings[f"bm25:{qi}"] = [self._bm25_ids[int(i)] for i in results[0]]
+            if self.use_bm25:
+                q_tokens = jieba_cut(query)
+                if q_tokens:
+                    results, _scores = self._bm25.retrieve(
+                        [q_tokens], k=min(BM25_TOP_K, len(self._bm25_ids))
+                    )
+                    rankings[f"bm25:{qi}"] = [self._bm25_ids[int(i)] for i in results[0]]
 
             q_vec = self._embedder.embed_query(query)
             res = self._collection.query(
