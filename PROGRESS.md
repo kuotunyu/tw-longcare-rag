@@ -6,9 +6,7 @@
 - **下一步**：
   1. 詢問作者是否要開始 Phase 5（評估）——若同意，第一步是 `uv run python scripts/gen_testset.py`（GEMINI_LITE 生成 30 題含預期條號，**執行前先印成本估算給作者確認**）
   2. 30 題生成後：**人工校對是硬 gate**，校對完才進 deepeval-first 對照矩陣（純向量vs hybrid vs hybrid+rerank；GTAIDE vs bge-m3；contextual開/關；圖譜開/關；MRL 768vs256）→ 生成端盲測 taide-12b vs GEMINI_MODEL + vs gemma3:12b（完整規格見 PLAN.md Phase 5；跑前檢查 OPENAI_MODEL 落日）
-- **未決問題**：
-  - LICENSE 著作權人為佔位字串（作者決定：公開前再填）
-  - README 動機段為草稿，待作者潤飾
+- **未決問題**：（無；LICENSE 著作權人與 README 動機段已於 2026-07-20 定案）
 - **待使用者人工處理**：
   - https://huggingface.co/google/gemma-3-12b-it （**manual** 人工核准，可能不即時；P5 基準對照才用到，先點不擋路）
   - `gen_testset.py` 生成的 30 題測試集人工校對（P5 硬 gate，屆時提醒）
