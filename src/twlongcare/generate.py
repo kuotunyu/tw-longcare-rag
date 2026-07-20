@@ -12,6 +12,7 @@ import re
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from .config import DATA_DIR
+from .llm_text import extract_text
 from .retriever import RetrievedChunk
 
 REFUSAL_TEXT = "查無明確法源"
@@ -19,8 +20,14 @@ REFUSAL_TEXT = "查無明確法源"
 SYSTEM_PROMPT = (
     "你是台灣長期照顧法規諮詢助手。回答規則：\n"
     "1. 僅依下方「參考條文」回答問題，不得使用其他知識、不得編造條號。\n"
-    "2. 每個論述句的句尾必須標注來源，格式為 [法規名 §條號]，"
-    "例如 [長期照顧服務法 §8-1]；同句多來源可並列 [甲法 §1][乙法 §2]。\n"
+    "2. 每個論述句的句尾必須標注來源，格式**只能**是方括號內「法規全名 空格 半形§ 條號」，"
+    "不得在方括號內加入「第」「條」等文字或項款數字。\n"
+    "   正確：[長期照顧服務法 §8-1]（引用第8-1條）\n"
+    "   正確：[長期照顧服務法 §8][老人福利法 §12]（同句多來源並列，各自獨立方括號）\n"
+    "   錯誤：[長期照顧服務法第8條§2]（禁止：括號內混入「第8條」文字、"
+    "且用 §2 誤指第2項——§ 後面永遠是「條」的號碼，不是項次或款次）\n"
+    "   若要提及第幾項/款，寫在句子裡（如「第8條第2項」），"
+    "方括號內仍只放「法規名 §8-1」這種純條號。\n"
     "3. 若參考條文不足以回答問題，直接說明「查無明確法源」，"
     "並建議撥打 1966 長照服務專線洽詢，不要勉強作答。\n"
     "4. 用繁體中文、平易近人的語氣回答，但內容必須嚴格對應條文。"
@@ -74,4 +81,4 @@ def answer(question: str, retrieved: list[RetrievedChunk], lookup: LawsLookup, m
     if not retrieved:
         return f"{REFUSAL_TEXT}。建議撥打 1966 長照服務專線洽詢。"
     reply = model.invoke(build_messages(question, retrieved, lookup))
-    return (reply.content or "").strip()
+    return extract_text(reply.content).strip()

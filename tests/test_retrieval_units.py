@@ -6,7 +6,8 @@ import pytest
 
 from twlongcare.chunking import Chunk
 from twlongcare.config import DATA_DIR
-from twlongcare.contextual import ContextualCache, _extract_text, composite_text
+from twlongcare.contextual import ContextualCache, composite_text
+from twlongcare.llm_text import extract_text
 from twlongcare.generate import (
     CITATION_RE,
     LawsLookup,
@@ -123,11 +124,12 @@ def test_contextual_cache_roundtrip(tmp_path) -> None:
 
 def test_extract_text_handles_str_and_list_content() -> None:
     """實戰 bug 回歸測試：langchain AIMessage.content 曾整批回傳 list of parts
-    而非純字串，導致 .strip() 直接 AttributeError、已花費的 API 成本全部作廢。"""
-    assert _extract_text("純字串摘要") == "純字串摘要"
-    assert _extract_text([{"type": "text", "text": "分段"}, {"type": "text", "text": "摘要"}]) == "分段摘要"
-    assert _extract_text(["純", "字串", "片段"]) == "純字串片段"
-    assert _extract_text([]) == ""
+    而非純字串——先後在 contextual 摘要生成與 CLI gemini provider 生成
+    兩處實測觸發 AttributeError（一次讓已花費的 API 成本全部作廢）。"""
+    assert extract_text("純字串摘要") == "純字串摘要"
+    assert extract_text([{"type": "text", "text": "分段"}, {"type": "text", "text": "摘要"}]) == "分段摘要"
+    assert extract_text(["純", "字串", "片段"]) == "純字串片段"
+    assert extract_text([]) == ""
 
 
 def test_composite_text_prepends_summary() -> None:

@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .chunking import Chunk, TokenCounter
+from .llm_text import extract_text
 
 # 官方牌價（USD / 1M tokens，2026-07 查證：gemini-3.1-flash-lite；D8 全案模型統一）
 PRICE_IN_PER_M = 0.25
@@ -120,22 +121,6 @@ class ContextualCache:
         )
 
 
-def _extract_text(content: str | list) -> str:
-    """AIMessage.content 正規化：部分 provider/版本回傳 list of content parts
-    而非純字串（實測 langchain-google-genai 曾整批如此），須攤平成文字。"""
-    if isinstance(content, str):
-        return content
-    if isinstance(content, list):
-        parts = []
-        for item in content:
-            if isinstance(item, str):
-                parts.append(item)
-            elif isinstance(item, dict) and item.get("text"):
-                parts.append(item["text"])
-        return "".join(parts)
-    return str(content)
-
-
 def generate_summaries(
     pending: list[Chunk],
     law_texts: dict[str, str],
@@ -170,7 +155,7 @@ def generate_summaries(
         if isinstance(reply, BaseException):
             failures.append((chunk.chunk_id, repr(reply)))
             continue
-        summary = _extract_text(reply.content).strip().replace("\n", " ")
+        summary = extract_text(reply.content).strip().replace("\n", " ")
         if not summary:
             failures.append((chunk.chunk_id, "空回覆"))
             continue

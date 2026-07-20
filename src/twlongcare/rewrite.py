@@ -5,6 +5,8 @@ from __future__ import annotations
 
 from langchain_core.messages import HumanMessage, SystemMessage
 
+from .llm_text import extract_text
+
 REWRITE_SYSTEM = (
     "你是台灣長期照顧法規檢索系統的查詢改寫器。"
     "把使用者的口語問題改寫成適合檢索法規條文的正式用語，"
@@ -21,7 +23,8 @@ def rewrite_query(question: str, model) -> str:
             SystemMessage(content=REWRITE_SYSTEM),
             HumanMessage(content=question),
         ])
-        rewritten = (reply.content or "").strip().splitlines()[0].strip()
+        text = extract_text(reply.content)
+        rewritten = text.strip().splitlines()[0].strip() if text.strip() else ""
         return rewritten or question
     except Exception:  # noqa: BLE001 - 改寫非關鍵路徑
         return question
