@@ -2,7 +2,7 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：Phase 3（防幻覺）**實作與驗證完成，待作者驗收**——分句 splitter、CRAG 逐句 judge、拒答門檻校準、CLI 整合全部跑通並實測過。
+- **現在做到哪**：Phase 3（防幻覺）**實作與驗證完成，待作者驗收**——分句 splitter、CRAG 逐句 judge、拒答門檻校準、CLI 整合全部跑通並實測過，含作者實測抓到並已修復的一次真實假陽性。
 - **下一步**：
   1. 作者驗收 Phase 3 → `git tag phase-3`
   2. Phase 4（法條引用圖譜 GraphRAG-lite）開工：regex 為主力抽取引用關係（中文數字轉換、範圍展開、each 法 alias table）→ networkx 有向圖 `data/law_graph.json` → 檢索 rerank 之後做一階擴展（規格見 PLAN Phase 4）
@@ -12,7 +12,7 @@
 - **待使用者人工處理**：
   - https://huggingface.co/google/gemma-3-12b-it （**manual** 人工核准，可能不即時；P5 基準對照才用到，先點不擋路）
 - **⚠️ 已知坑**：
-  - grounding judge 本身並非完美：地端 12B 實測有假陰性（把條文中確實存在的內容誤判不支持，且引用了根本不在檢索結果中的條號當理由）；雲端 judge（gemini/openai）交叉驗證同一案例皆正確且理由精準。此為已知模型能力落差，同一類問題（地端引用覆蓋率、地端 grounding 準確度）已記入 PLAN 風險表，Phase 5 blind test 會正式量化
+  - grounding judge 本身並非完美，實測抓到過假陰性與一次真實假陽性（皆已記錄與部分修復，見下方 Phase 3 日誌「作者驗收過程」）；雲端 judge（gemini/openai）交叉驗證準確度全面更高。此為已知模型能力落差，同一類問題（地端引用覆蓋率、地端 grounding 準確度）已記入 PLAN 風險表，Phase 5 blind test 會正式量化
   - `should_refuse_before_generation` 的門檻（0.644）僅用 5+5 題小樣本校準，Phase 5 應擴大樣本重新驗證
 
 ## 📜 Phase 日誌（append-only）
@@ -135,3 +135,10 @@
   - 相關 commit：`44a82f8` 分句+judge+apply_grounding、`9c43b7b` 門檻校準、`50c1922` context_no 修正、`1e33a4d` minItems/maxItems 修正、`a2be14e` README（cli.py 整合與 PROGRESS 本條目待補充 commit）
   - 決策變更：無新 D 決策（照 PLAN Phase 3 執行）；已知限制記入下方快速回憶區
   - 實際成本：$0（grounding judge 用 ollama 全地端；雲端交叉驗證僅 4 次小量呼叫，量級可忽略）
+  - **作者驗收過程**（2026-07-20，含真實假陽性發現與根因診斷，非我方單方面宣稱）：
+    - 作者用 CLI 分別跑「開啟 grounding」與 `--no-grounding` 對照，發現兩次結果差異過大——查證後確認 CLI 的 `--no-grounding` 對照**不是同一份生成的兩種後處理**，而是兩次獨立、非決定性的生成（`temperature=0.2`），對照本身有設計缺陷（`scripts/demo_grounding_diff.py` 才是正確做法：對同一次生成分別展示查核前後）
+    - 更嚴重：作者那次「開啟 grounding」的結果裡，「戶口名簿或戶籍謄本」這項**條文完全沒寫**卻沒被移除（真實假陽性）；查 log 發現 judge 給的理由「第1條與第6條第7款相同」是編造的——「第1條」根本不在檢索結果裡，且真正的「第6條第7款」內容是土地建物權狀證明，跟戶口名簿無關；同一段理由文字還被複製貼到另外兩句完全不同的句子上
+    - 根因診斷（3 組對照實驗）：(a) 原始 4 句一起判定→假陽性重現；(b) 同一句單獨判定+單一條文→正確；(c) 同一句單獨判定+全部5條文→正確。**確認變因是「同批句數」而非條文長度**——地端 12B 一次判定多句時會把不同句子的理由互相混淆
+    - 修正：`judge_sentences` 改為對 Ollama provider 逐句單獨呼叫（`batch_size=1`），雲端 provider 維持批次（已驗證批次下準確）。重跑同一類問題（`scripts/demo_grounding_diff.py`），同樣的「戶口名簿」「醫師診斷證明書」兩項腦補內容這次都正確被攔截並給出正確理由；另交叉查證一項疑似異常（「身分證明文件」在某次判定中被判支持）後確認為真——L0070044 §7/§8/§11/§12/§35/§36 皆有身分證明文件要求，非假陽性
+    - 殘留已知限制：地端 judge 逐句判定後仍見過一次「reason 說相符、supported 卻為 False」的自相矛盾（假陰性），推測為地端小模型在結構化欄位輸出時的一致性限制，非本次修正範圍能根治；README 與 PLAN 風險表已誠實揭露
+    - 驗收結論：假陽性根因已查明並修正、機制驗證有效（可重現的失敗案例修正後不再出現）；殘留的地端模型精度限制已誠實記錄，非隱瞞

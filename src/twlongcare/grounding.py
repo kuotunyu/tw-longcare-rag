@@ -200,17 +200,12 @@ def judge_sentences(
     """
     if not sentences:
         return []
-    from langchain_core.messages import HumanMessage
 
+    is_ollama = False
     try:
         from langchain_ollama import ChatOllama
 
-        if isinstance(model, ChatOllama):
-            # 實測地端 12B 在較長 context 下，純靠 prompt 要求 JSON 會偶發
-            # 陷入重複輸出迴圈、陣列永不收尾；Ollama 原生 format 是解碼層級
-            # 約束（強制每個 token 都合法、且符合此 schema 形狀），而非僅是
-            # 提示詞要求，可根治此類退化。
-            model = model.bind(format=_judge_json_schema(len(sentences)))
+        is_ollama = isinstance(model, ChatOllama)
     except ImportError:
         pass
 
@@ -219,6 +214,36 @@ def judge_sentences(
         f"[{i}] 《{name}》第 {no} 條：\n{content}"
         for i, (name, no, content) in enumerate(articles, start=1)
     )
+
+    # 實測：地端 12B 一次批次判定多句時，會把不同句子的判定理由互相混淆
+    # （例如把 A 句的判定理由複製貼到 B 句，導致明明條文沒寫的內容被誤判
+    # 為支持）——同一案例逐句單獨判定兩次都正確、四句一起判就出錯，
+    # 可重現地證實是「同批句數」而非條文長度導致精度下降。雲端模型
+    # （gemini/openai）批次判定已驗證準確，故僅對 Ollama 限縮批次為 1。
+    batch_size = 1 if is_ollama else len(sentences)
+
+    verdicts: list[SentenceVerdict] = []
+    for start in range(0, len(sentences), batch_size):
+        batch = sentences[start : start + batch_size]
+        batch_items = _judge_batch(batch, context, articles, model, is_ollama, retries)
+        verdicts.extend(batch_items)
+    return verdicts
+
+
+def _judge_batch(
+    sentences: list[str],
+    context: str,
+    articles: list[tuple[str, str, str]],
+    model,
+    is_ollama: bool,
+    retries: int,
+) -> list[SentenceVerdict]:
+    """對一小批句子（可能只有 1 句）呼叫 judge 並回傳對應 verdict，保持原順序。"""
+    from langchain_core.messages import HumanMessage
+
+    if is_ollama:
+        model = model.bind(format=_judge_json_schema(len(sentences)))
+
     numbered = "\n".join(f"{i}. {s}" for i, s in enumerate(sentences, start=1))
     prompt = GROUNDING_JUDGE_PROMPT.format(
         context=context, numbered_sentences=numbered, n_sentences=len(sentences)
