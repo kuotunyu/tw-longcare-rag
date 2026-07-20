@@ -2,18 +2,21 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：**Phase 3 已完成並經作者驗收（tag `phase-3`）**——分句 splitter、CRAG 逐句 judge（含作者實測抓到的真實假陽性，已診斷根因並修復）、拒答門檻、Query 改寫 few-shot 升級（D10）全部跑通並有評測數據佐證；開始 Phase 4（法條引用圖譜）。
+- **現在做到哪**：Phase 4（法條引用圖譜 GraphRAG-lite）**實作與驗證完成，待作者驗收**——regex 抽取（205節點/134邊）、LLM 補抽（3邊，含修正一次真實假邊的過程）、查詢時一階擴展、CLI 整合、視覺化、DoD 全部跑通並有實測數據佐證。
 - **下一步**：
-  1. Phase 4（法條引用圖譜 GraphRAG-lite）開工：regex 為主力抽取引用關係（中文數字轉換「第三十七條之一」→37-1、範圍展開「至」、並列「及」、排除「前項」「同條」、「前條」=current−1、each 法 alias table）→ LLM 補抽未涵蓋者（先印成本估算）→ networkx 有向圖 `data/law_graph.json`（記 provenance: regex|llm）→ 檢索 rerank 之後做一階擴展（上限 +5、不重跑 rerank，標「關聯條文」不計入 precision 分母）（完整規格見 PLAN.md Phase 4）
+  1. 作者驗收 Phase 4 → `git tag phase-4`
+  2. Phase 5（評估）開工：`gen_testset.py` 30 題（含預期條號，GEMINI_LITE 生成後**人工校對是硬 gate**）→ deepeval-first（D3；ragas timebox 15分鐘）→ one-factor-at-a-time 對照矩陣（純向量vs hybrid vs hybrid+rerank；GTAIDE vs bge-m3；contextual開/關；圖譜開/關；MRL 768vs256）→ 生成端盲測 taide-12b vs GEMINI_MODEL + vs gemma3:12b（完整規格見 PLAN.md Phase 5；執行前印成本估算、檢查 OPENAI_MODEL 落日）
 - **未決問題**：
   - LICENSE 著作權人為佔位字串（作者決定：公開前再填）
   - README 動機段為草稿，待作者潤飾
 - **待使用者人工處理**：
   - https://huggingface.co/google/gemma-3-12b-it （**manual** 人工核准，可能不即時；P5 基準對照才用到，先點不擋路）
+  - `gen_testset.py` 生成的 30 題測試集人工校對（P5 硬 gate，屆時提醒）
 - **⚠️ 已知坑**：
-  - grounding judge 本身並非完美，實測抓到過假陰性與一次真實假陽性（皆已記錄與部分修復，見下方 Phase 3 日誌「作者驗收過程」）；雲端 judge（gemini/openai）交叉驗證準確度全面更高。此為已知模型能力落差，同一類問題（地端引用覆蓋率、地端 grounding 準確度）已記入 PLAN 風險表，Phase 5 blind test 會正式量化
+  - grounding judge 本身並非完美，實測抓到過假陰性與一次真實假陽性（皆已記錄與部分修復，見 Phase 3 日誌「作者驗收過程」）；雲端 judge（gemini/openai）交叉驗證準確度全面更高。此為已知模型能力落差，已記入 PLAN 風險表，Phase 5 blind test 會正式量化
   - `should_refuse_before_generation` 的門檻（D10 後為 0.636）僅用 5+5 題小樣本校準，Phase 5 應擴大樣本重新驗證
   - Query 改寫品質現在有 12 題 dev set 可量測（`scripts/eval_rewrite.py`，hit@5），但 dev set 標籤是人工標的、樣本小；P5 的 30 題正式測試集出來後應以其為準
+  - pyvis 互動圖譜渲染正常，但自動化瀏覽器工具截圖會逾時卡住（已知限制，README 改用 mermaid 聚合圖，不影響互動 HTML 本身可用性）
 
 ## 📜 Phase 日誌（append-only）
 
@@ -159,3 +162,60 @@
     - 修正：`judge_sentences` 改為對 Ollama provider 逐句單獨呼叫（`batch_size=1`），雲端 provider 維持批次（已驗證批次下準確）。重跑同一類問題（`scripts/demo_grounding_diff.py`），同樣的「戶口名簿」「醫師診斷證明書」兩項腦補內容這次都正確被攔截並給出正確理由；另交叉查證一項疑似異常（「身分證明文件」在某次判定中被判支持）後確認為真——L0070044 §7/§8/§11/§12/§35/§36 皆有身分證明文件要求，非假陽性
     - 殘留已知限制：地端 judge 逐句判定後仍見過一次「reason 說相符、supported 卻為 False」的自相矛盾（假陰性），推測為地端小模型在結構化欄位輸出時的一致性限制，非本次修正範圍能根治；README 與 PLAN 風險表已誠實揭露
     - 驗收結論：假陽性根因已查明並修正、機制驗證有效（可重現的失敗案例修正後不再出現）；殘留的地端模型精度限制已誠實記錄，非隱瞞
+
+### Phase 4 — 法條引用圖譜 GraphRAG-lite（實作完成 2026-07-20，待驗收）
+
+- **2026-07-20**：
+  - 完成內容：
+    - `scripts/build_graph.py`：regex 為主力抽取引用關係——中文數字轉換（1〜9999）、
+      條號 token 掃描（`第N條(之M)?`）、並列/範圍串解析（「、」「及」列舉、「至」展開，
+      兩者可組合如「第十條至第十二條及第二十條」）、每法 alias table（母法「本法」
+      →自己、子法「本法」→母法、「本細則/本辦法」→自己，依全名判斷母子關係）、
+      跨法引用以≤20字 window 比對法規全名（取最長匹配防子字串誤判，如「長期照顧
+      服務法」不可誤配到「長期照顧服務法施行細則」的字首）、「前條」解析為該法
+      **文件實際順序**的前一條（非單純數字-1，避免 8-1 這類插入條被跳過）
+    - LLM 補抽（GEMINI_LITE，成本 <$0.02）：僅處理 regex 完全抽不到引用的 126/205
+      條文；加節流（15 RPM 免費層限制，4.5秒間隔+429重試退避）；抽出的邊驗證
+      target 存在於 laws.json
+    - `src/twlongcare/graph_expand.py`：查詢時一階擴展（rerank 之後對 top-5 去重
+      做 outgoing 擴展，上限+5、全域去重）
+    - `generate.py`/`grounding.py` 延伸支援 `related` 參數：關聯條文併入生成
+      context（標「關聯條文」區塊）且納入 grounding judge 查核範圍（否則回答
+      引用關聯條文的句子會被誤判不支持）
+    - `cli.py` 整合：`[3/5]` 圖譜擴展步驟、`--no-graph` 對照旗標
+    - `scripts/visualize_graph.py`：pyvis 互動視覺化（`cdn_resources=in_line`
+      內嵌資源避免散落 repo 根目錄）+ 統計輸出；`docs/assets/law_graph.html`
+    - 建 `docs/examples/graph_expansion_diff.md`（開/關擴展對照，控制檢索結果
+      固定+temperature=0，避免像 Phase 3 早期版本那樣因兩次獨立生成不可比較）
+    - README 新增「法條引用圖譜」章節（mermaid 法規層級聚合圖代替傳統截圖）
+  - **實戰發現與修正**（皆真實跑出來才發現）：
+    1. LLM 補抽第一輪把 D0050037§38 的「第一項」（同條內部段落）誤判為引用
+       「第一條」，人工查證原文後確認是假邊——LLM 把「項」跟「條」搞混。
+       修正 prompt 明確排除「項/款」誤判為條號，重跑後 3 條新邊全數人工驗證正確
+       （含 1 條「依前三條規定」的複數範圍引用，regex 只處理單數「前條」不處理，
+       刻意分工由 LLM 補上，已驗證 D0050037§49→§46/47/48 三邊皆對）
+    2. pyvis 渲染本身正常（無錯誤、產出有效 HTML），但用自動化瀏覽器工具截圖
+       時連續逾時卡住；照 PLAN 風險備援不深究 pyvis，改用 mermaid 聚合圖
+    3. `net.write_html()` 預設會把 JS/CSS 資源複製到執行目錄下的 `lib/`（污染
+       repo 根目錄）；加 `cdn_resources="in_line"` 內嵌進單一 HTML 檔解決
+  - 驗證證據（實跑）：
+    - `uv run pytest -q` → `84 passed`；17 個 regex 抽取測試全取材自 laws.json
+      真實出現過的引用寫法；6 個 graph_expand 測試涵蓋邊界案例
+    - regex 抽取：205 節點、131 條邊，126/205 條文無 regex 命中（抽樣 10 條
+      人工核對，確認皆為真無引用，非漏抓）
+    - LLM 補抽：126 條文處理，成本上限 $0.013（實際 <$0.02 因重試）；修正
+      prompt 後最終 3 條新邊
+    - **DoD 5 條人工驗邊**：實際驗證 8 條（5 regex + 3 llm）全數對照 laws.json
+      原文確認正確，含一次先發現假邊、診斷、修正、重驗證的完整過程
+    - CLI 端到端實測（「沒有申請許可就開長照機構會怎樣」）：正確找到 3 條關聯
+      條文（老人福利法 §36/37/37-1，皆經 top-5 條文引用而來）
+    - 開/關對照（控制變因）：圖譜擴展本身不保證零幻覺——開啟後生成端多寫一句
+      查無依據的內容，但完整管線（圖譜擴展+Phase 3 grounding）正確攔截移除，
+      印證兩層防護需要搭配運作，非單一層萬能
+    - 最終圖譜統計：205 節點、134 條邊（regex 131／98%、llm 3／2%），
+      125/205 條文至少有一條引用關係；子法→母法邊最密集（17+11+5=33條，
+      印證 PLAN 假設「子法→母法是最有價值的邊」）
+  - 相關 commit：`b4da41b` regex抽取+LLM補抽+視覺化、`ee05db8` 查詢時擴展+CLI、
+    `82d5dd2` 開關對照demo、`1b56a7d` README、本條目 PROGRESS
+  - 決策變更：無新 D 決策（照 PLAN Phase 4 執行）
+  - 實際成本：LLM 補抽 <$0.02（gemini-3.1-flash-lite，兩輪含修正重跑）
