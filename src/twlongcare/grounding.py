@@ -290,11 +290,11 @@ def _judge_batch(
 # ---------- 拒答門檻 ----------
 
 # 校準依據（2026-07-20 實跑 scripts/calibrate_grounding.py，5 正常題 + 5
-# 陷阱題，皆先過 query 改寫再檢索——與 cli.py 實際流程一致）：
-# 正常題 rerank top-1 分數 0.697〜0.731；陷阱題 0.504〜0.592。
-# 兩組完全分離，取中點。dev set 僅 5+5 題，樣本小，Phase 5 正式評估
-# 應擴大樣本重新驗證此門檻。
-REFUSAL_RERANK_THRESHOLD = 0.644
+# 陷阱題，皆先過 query 改寫再檢索——與 cli.py 實際流程一致；D10 改寫
+# prompt 換 few-shot 版後重校準）：正常題 rerank top-1 分數 0.718〜0.730；
+# 陷阱題 0.507〜0.553。兩組完全分離（分離幅度較 V1 prompt 更大），取中點。
+# dev set 僅 5+5 題，樣本小，Phase 5 正式評估應擴大樣本重新驗證此門檻。
+REFUSAL_RERANK_THRESHOLD = 0.636
 
 
 def should_refuse_before_generation(retrieved: list[RetrievedChunk]) -> bool:

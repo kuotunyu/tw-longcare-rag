@@ -30,6 +30,7 @@
 | D7 | 2026-07-20 | 檢索管線預設寫死保證可重現：BM25 top-20 + 向量 top-20 → RRF(k=60) → reranker 前 20 → top-5；圖譜擴展在 rerank 之後、上限 +5 | 評估矩陣需要固定 baseline；參數進 config 不進散落常數 |
 | D8 | 2026-07-20 | 全案 Gemini 呼叫統一為單一模型 `gemini-3.1-flash-lite`：**supersedes D2** 的雙模型分工（GEMINI_LITE_MODEL 原為 gemini-2.5-flash-lite）。GEMINI_MODEL 不變、GEMINI_LITE_MODEL 改與其相同 | 作者要求全案模型單一化，簡化維護與行為一致性優先於邊際成本差；定價由 $0.10/$0.40 變 $0.25/$1.50（約 2.5 倍），總預算仍遠低於 $1（見下方成本估算）。**已執行的 Phase 2 contextual 摘要批次（208 chunks）沿用呼叫當下的舊設定 gemini-2.5-flash-lite（作者已確認執行、屬沉沒成本，不重跑）；D8 生效於此批次之後的所有呼叫**（testset 生成、圖譜 LLM 補抽、grounding 判定、盲測） |
 | D9 | 2026-07-20 | 向量庫直接呼叫 `chromadb.PersistentClient`，**不使用** `langchain-chroma` 的 `Chroma` vectorstore 包裝（依賴已移除）；LangChain 仍是全案 LLM 呼叫的唯一介面（`init_chat_model`/`ChatOllama`/LCEL） | D7 的 hybrid 檢索（BM25 top-20 + 向量 top-20 → RRF → rerank → top-5）需要對候選集做精細控制（雙路 id 對齊、缺漏補查、RRF 融合），LangChain 的 `VectorStoreRetriever` 抽象封裝掉這些細節、不利此處客製；CLAUDE.md 的 LangChain 鐵律針對「涉及 LLM 的程式」，向量庫存取層不在此列。此決策原為實作中未經討論的既成事實，經作者詢問後回溯記錄並移除未用依賴 |
+| D10 | 2026-07-20 | Query 改寫 prompt 升級為 **few-shot 版**（3 個口語→法規語範例＋微型詞彙對照）；**不採用** dual-query（原問題＋改寫並行 RRF 融合）；`retrieve_multi()` 保留為基礎能力（P5 評估矩陣可用）但 CLI 預設維持單查詢；拒答門檻隨新 prompt 重校準 0.644 → **0.636** | 12 題 dev set（預期條文逐條對照 laws.json 原文查證）實測五種策略：V1 prompt 92%、few-shot 100%（修復 V1 把「服務種類」改偏成「給付標準」的語意漂移）；dual-query 無增益且在 V1 下反而有害（RRF 被口語查詢的雜訊排名稀釋，75〜92%）——假設被數據推翻，如實記錄。「完全不改寫」hit@5 亦 100% 但不可採：改寫的第二個作用是拉開正常/陷阱題的 rerank 分數分離度（不改寫時正常題最低 0.522、與陷阱題重疊，拒答門檻失效）。few-shot 版重校準後分離幅度反而擴大（0.718 vs 0.553）。全程地端評測成本 $0，數據見 `scripts/eval_rewrite.py` 與 PROGRESS |
 
 ## 模型分工總表（防「地端模式偷打雲端」）
 

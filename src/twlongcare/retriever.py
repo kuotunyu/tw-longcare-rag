@@ -118,27 +118,43 @@ class HybridRetriever:
             c.rerank_score = 1.0 / (1.0 + math.exp(-float(logit)))  # Sigmoid
 
     def retrieve(self, query: str) -> list[RetrievedChunk]:
-        # BM25
-        q_tokens = jieba_cut(query)
-        bm25_ids: list[str] = []
-        if q_tokens:
-            results, _scores = self._bm25.retrieve(
-                [q_tokens], k=min(BM25_TOP_K, len(self._bm25_ids))
+        return self.retrieve_multi([query])
+
+    def retrieve_multi(
+        self, queries: list[str], rerank_query: str | None = None
+    ) -> list[RetrievedChunk]:
+        """多查詢檢索（D10）：每個查詢各走 BM25+向量，全部排名一起 RRF 融合。
+
+        典型用法是 [原問題, 改寫後查詢]——改寫品質不穩時原問題仍能保底，
+        兩個查詢都命中的條文會被 RRF 自然加權。rerank_query 未指定時用
+        第一個查詢（呼叫端慣例：原問題放最前面，rerank 以真實意圖為準）。
+        """
+        queries = [q for q in dict.fromkeys(q.strip() for q in queries) if q]
+        if not queries:
+            return []
+
+        rankings: dict[str, list[str]] = {}
+        doc_by_id: dict[str, str] = {}
+        meta_by_id: dict[str, dict] = {}
+        for qi, query in enumerate(queries):
+            q_tokens = jieba_cut(query)
+            if q_tokens:
+                results, _scores = self._bm25.retrieve(
+                    [q_tokens], k=min(BM25_TOP_K, len(self._bm25_ids))
+                )
+                rankings[f"bm25:{qi}"] = [self._bm25_ids[int(i)] for i in results[0]]
+
+            q_vec = self._embedder.embed_query(query)
+            res = self._collection.query(
+                query_embeddings=[q_vec],
+                n_results=VECTOR_TOP_K,
+                include=["documents", "metadatas"],
             )
-            bm25_ids = [self._bm25_ids[int(i)] for i in results[0]]
+            rankings[f"vector:{qi}"] = res["ids"][0]
+            doc_by_id.update(zip(res["ids"][0], res["documents"][0]))
+            meta_by_id.update(zip(res["ids"][0], res["metadatas"][0]))
 
-        # 向量
-        q_vec = self._embedder.embed_query(query)
-        res = self._collection.query(
-            query_embeddings=[q_vec],
-            n_results=VECTOR_TOP_K,
-            include=["documents", "metadatas"],
-        )
-        vec_ids = res["ids"][0]
-        doc_by_id = dict(zip(res["ids"][0], res["documents"][0]))
-        meta_by_id = dict(zip(res["ids"][0], res["metadatas"][0]))
-
-        fused = rrf_fuse({"bm25": bm25_ids, "vector": vec_ids})
+        fused = rrf_fuse(rankings)
 
         # 補齊 BM25-only 命中的 document/metadata
         missing = [cid for cid, _, _ in fused if cid not in doc_by_id]
@@ -166,6 +182,6 @@ class HybridRetriever:
             ))
 
         if self.use_rerank and candidates:
-            self._rerank(query, candidates)
+            self._rerank(rerank_query or queries[0], candidates)
             candidates.sort(key=lambda c: c.rerank_score, reverse=True)
         return candidates[:FINAL_TOP_K]

@@ -13,7 +13,8 @@
   - https://huggingface.co/google/gemma-3-12b-it （**manual** 人工核准，可能不即時；P5 基準對照才用到，先點不擋路）
 - **⚠️ 已知坑**：
   - grounding judge 本身並非完美，實測抓到過假陰性與一次真實假陽性（皆已記錄與部分修復，見下方 Phase 3 日誌「作者驗收過程」）；雲端 judge（gemini/openai）交叉驗證準確度全面更高。此為已知模型能力落差，同一類問題（地端引用覆蓋率、地端 grounding 準確度）已記入 PLAN 風險表，Phase 5 blind test 會正式量化
-  - `should_refuse_before_generation` 的門檻（0.644）僅用 5+5 題小樣本校準，Phase 5 應擴大樣本重新驗證
+  - `should_refuse_before_generation` 的門檻（D10 後為 0.636）僅用 5+5 題小樣本校準，Phase 5 應擴大樣本重新驗證
+  - Query 改寫品質現在有 12 題 dev set 可量測（`scripts/eval_rewrite.py`，hit@5），但 dev set 標籤是人工標的、樣本小；P5 的 30 題正式測試集出來後應以其為準
 
 ## 📜 Phase 日誌（append-only）
 
@@ -113,6 +114,23 @@
     - 此為 Phase 5 正式盲測（taide-12b vs 雲端模型）的**非正式預覽**，不能取代 Phase 5 的完整流程（30 題測試集、人工校對、deepeval 指標）；作者已確認 Phase 5 仍要正式做一次
     - 過程中另有作者實測抓到的 prompt 品質問題（見上「完成內容」的 SYSTEM_PROMPT 迭代記錄）：兩版加強版 prompt 皆讓 taide-12b 引用覆蓋率不升反降（3/3→0/2），最終回退為最小修正版本
     - 驗收結論：地端模型引用覆蓋率有限但未觀察到內容捏造；此限制已知且轉入 PLAN 風險表，留待 Phase 3 grounding 查核與 Phase 5 正式評估分別處理
+
+### 檢索改進 — Query 改寫評測與升級（2026-07-20，D10；Phase 2/3 補強）
+
+- **2026-07-20**：
+  - 完成內容：
+    - 建 `scripts/eval_rewrite.py`：12 題 dev set（預期條文全數逐條對照 laws.json 原文查證；過程中修正 2 題我方標籤太窄的錯誤——長照法 §47-49 罰則、給付辦法 §8/§20 無障礙改善都是正解卻未列入），量測五種改寫/檢索策略的 hit@5
+    - `rewrite.py`：新增 few-shot 版改寫 prompt（3 範例＋微型口語→法規語對照表），V1 保留供對照；`rewrite_query()` 加 `system` 參數
+    - `retriever.py`：新增 `retrieve_multi(queries, rerank_query)`（多查詢 RRF 融合），`retrieve()` 委派之——dual-query 評測後**不採用**為預設，此函式保留為 P5 評估能力
+    - 門檻重校準：few-shot prompt 下正常/陷阱分離幅度擴大（0.718〜0.730 vs 0.507〜0.553），門檻 0.644 → 0.636
+  - 驗證證據（實跑，全地端 $0）：
+    - hit@5：V1 prompt 11/12、few-shot 12/12、不改寫 12/12、dual-V1 11/12、dual-fs 12/12
+    - V1 唯一漏失案例：「長照服務有哪些種類」被 V1 改寫成「長照給付標準」語意漂移致 L0070040-9 掉出 top-5；few-shot 版修復
+    - 「不改寫」hit@5 雖同為 100% 但正常題 rerank 分數會與陷阱題重疊（校準第一次失敗已證實），拒答門檻會失效，故不可採
+    - `uv run pytest -q` → `61 passed`；`scripts/calibrate_grounding.py` 重跑輸出見 PLAN D10
+  - 相關 commit：見本條目 commit
+  - 決策變更：**D10**（見 PLAN.md Decision Log；含 dual-query 假設被數據推翻的如實記錄）
+  - 實際成本：$0（全地端）
 
 ### Phase 3 — 防幻覺（實作完成 2026-07-20，待驗收）
 
