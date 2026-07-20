@@ -2,18 +2,18 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：Phase 2（索引管線 + CLI）**實作與驗證完成，待作者驗收**——chunking/embedding/contextual/hybrid 檢索/CLI 全部跑通，三 provider（ollama/gemini/openai）+ 5 題現場問答（含拒答陷阱題）皆通過，208 個 contextual 摘要已生成入快取，chroma+bm25s 索引已建。
+- **現在做到哪**：**Phase 2 已完成並經作者驗收（tag `phase-2`）**——索引管線與三 provider CLI 全部跑通；開始 Phase 3（防幻覺）。
 - **下一步**：
-  1. 作者驗收 Phase 2 → `git tag phase-2`
-  2. Phase 3（防幻覺）開工：分句 splitter（`grounding.py`，核心賣點）→ CRAG 式逐句 groundedness 批次判定 → 拒答門檻校準（用陷阱題 dev set 掃 rerank 分數 0.1~0.5；Phase 2 驗收已觀察到陷阱題 rerank 分數普遍 ~0.50 顯著低於正常題 ~0.7，可作校準起點）（規格見 PLAN Phase 3）
+  1. `src/twlongcare/grounding.py`：分句 splitter（核心賣點，見 CLAUDE.md 分句規則）——先按換行切、行內再按「。！？」切；跳過「」『』（）內句號；句尾 citation `[...]` 併回前句；<8 字/純標點/樣板句跳過。獨立 pytest 覆蓋三類案例（列舉、引號、citation 併回）
+  2. CRAG 式逐句 groundedness 批次判定：一次 call 送全部句子 + top-5 條文，judge 回 JSON verdict array + 支持之 article_no（同時驗 citation 指向是否正確——**Phase 2 驗收已實測到「citation 指向正確條文、但句子本文誤植法規名」與「句子內容正確、但漏標 citation」兩種真實案例，judge prompt 設計要涵蓋這兩種**）；不被支持的句子刪除或改寫，log 記錄修正差異於 `logs/grounding/*.jsonl`
+  3. 拒答門檻校準：用陷阱題 dev set 掃 rerank 分數 0.1~0.5（Phase 2 已觀察到陷阱題 rerank 分數普遍 ~0.50、顯著低於正常題 ~0.7，可作校準起點），門檻值進 config
+  4. DoD：splitter 三類案例 pytest；5 題誘導幻覺開/關對照 log；門檻已校準進 config（完整規格見 PLAN.md Phase 3）
 - **未決問題**：
   - LICENSE 著作權人為佔位字串（作者決定：公開前再填）
   - README 動機段為草稿，待作者潤飾
 - **待使用者人工處理**：
   - https://huggingface.co/google/gemma-3-12b-it （**manual** 人工核准，可能不即時；P5 基準對照才用到，先點不擋路）
-- **⚠️ 已知坑**：
-  - 作者自行用 CLI 實測時抓到一則**內文與括號引用矛盾**的真實案例：模型本文講「根據《長期照顧服務申請及給付辦法》第15條」，句尾括號卻是 `[老人福利法 §15]`——查證後括號指向的內容才是對的（老人福利法 §15 原文正是補助依據），本文講錯了法規名。嘗試兩版更嚴格的 prompt（禁止本文提法規名、或大段一致性規則）皆讓地端 12B 引用覆蓋率從 3/3 句掉到 0/2 句（規則太多超出小模型負荷），已回退為最小修正（保留原始精簡格式＋加一句一致性提醒），三題重測覆蓋率恢復。**括號本身與引用條文語意不符這類錯誤，prompt 層無法根治，這正是 Phase 3 逐句 grounding 查核存在的理由，不是 bug**
-  - `data/contextual_cache.json` 目前記錄的模型全部是 `gemini-3.1-flash-lite`（D8 生效後那批）；laws.json 未來若更新，新增/變動條文的摘要會用當時的 GEMINI_LITE_MODEL，不同批次理論上可能混不同模型（目前無影響，僅供未來排查參考）
+- **⚠️ 已知坑**：（無——收 Phase 2 時清空：地端模型引用覆蓋率限制已轉入 PLAN.md 風險表；Phase 5 正式盲測待辦已在 PLAN 既有規劃中，本次僅為非正式預覽，不算完成）
 
 ## 📜 Phase 日誌（append-only）
 
@@ -81,7 +81,7 @@
   - 決策變更：無（照 PLAN Phase 1 與 D6 執行）；補充：多代理審查後 laws.json 固定 LF 換行（.gitattributes `*.json text eol=lf`）、sendlaw 層換行統一 `\r\n`、api 快取改交易性寫入 + 分包版本一致性檢查（不一致即中止不降級）
   - 實際成本：$0（無 API 呼叫）
 
-### Phase 2 — 索引管線 + CLI（實作完成 2026-07-20，待驗收）
+### Phase 2 — 索引管線 + CLI（已完成，2026-07-20 驗收，tag `phase-2`）
 
 - **2026-07-20**：
   - 完成內容：
@@ -102,6 +102,14 @@
       - `--provider ollama` 5 題（含口語改寫題、資格題、機構許可題、評估程序題、**拒答陷阱題**）——拒答陷阱題（「勞保老年給付一次領多少」）正確回「查無明確法源」+ 1966，且觀察到其 rerank 分數（~0.50）顯著低於正常題（~0.7〜0.73），可作 Phase 3 門檻校準起點
       - `--provider gemini` 1 題：引用格式正確、誠實說明法規未載明天數細節
       - `--provider openai` 1 題：多句多引用皆正確標註 `[老人福利法 §47][§48][§49]` 等
-  - 相關 commit：`3165637` 依賴、`f024bc6` chunking+embedding、`adb3125` 檢索+生成+CLI、`4ddb21c` skills、`23f71f0` contextual 穩健性修正、`3ed5d2c` D8 模型統一、`675a4ce` extract_text 共用修正+prompt 收緊、`3c6b883` README（本條目 commit 待補）
-  - 決策變更：**D8**（見上，PLAN.md Decision Log 已記）
+  - 相關 commit：`3165637` 依賴、`f024bc6` chunking+embedding、`adb3125` 檢索+生成+CLI、`4ddb21c` skills、`23f71f0` contextual 穩健性修正、`3ed5d2c` D8 模型統一、`675a4ce` extract_text 共用修正+prompt 收緊、`3c6b883` README、`06649ef`/`da8c6b8`/本條目 PROGRESS 與 prompt 迭代
+  - 決策變更：**D8**（Gemini 模型統一）、**D9**（向量庫不經 langchain-chroma，直接走 chromadb；見 PLAN.md Decision Log）
   - 實際成本：Contextual 摘要 208 筆，事前估算上限 $0.414／樂觀（隱式快取命中）$0.132（gemini-3.1-flash-lite）；未取得逐次呼叫實際 token 用量，以此估算區間入帳，Phase 5 起補齊實際用量記錄機制
+  - **作者驗收過程**（2026-07-20，含多輪真實 CLI 測試，非我方單方面宣稱）：
+    - 作者親自用 CLI 測試同一題「阿嬤請看護政府有補助嗎」across 三個 provider，逐句對照 laws.json 原文查證：
+      - ollama（taide-12b）：2 句話，1 句有引用且準確、1 句內容準確但漏標引用——**引用覆蓋率約 50%，內容未發現瞎掰**
+      - gemini（gemini-3.1-flash-lite）：3 句話全部有引用，逐字比對 L0070059§10 原文完全準確
+      - openai（gpt-5-mini）：8 句話全部有引用（含雙引用句），逐句比對 §8/§2/§10/§64/老人福利法§15 原文全部準確，回答最完整
+    - 此為 Phase 5 正式盲測（taide-12b vs 雲端模型）的**非正式預覽**，不能取代 Phase 5 的完整流程（30 題測試集、人工校對、deepeval 指標）；作者已確認 Phase 5 仍要正式做一次
+    - 過程中另有作者實測抓到的 prompt 品質問題（見上「完成內容」的 SYSTEM_PROMPT 迭代記錄）：兩版加強版 prompt 皆讓 taide-12b 引用覆蓋率不升反降（3/3→0/2），最終回退為最小修正版本
+    - 驗收結論：地端模型引用覆蓋率有限但未觀察到內容捏造；此限制已知且轉入 PLAN 風險表，留待 Phase 3 grounding 查核與 Phase 5 正式評估分別處理
