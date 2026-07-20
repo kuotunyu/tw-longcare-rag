@@ -1,0 +1,185 @@
+{
+ "meta": {
+  "seed": 42,
+  "n_questions": 10,
+  "judge": "gpt-5-mini",
+  "temperature": 0,
+  "grounding": false
+ },
+ "tally": {
+  "taide vs gemini": {
+   "taide": 2,
+   "gemini": 8,
+   "gemma3": 0,
+   "tie": 0
+  },
+  "taide vs gemma3": {
+   "taide": 2,
+   "gemini": 0,
+   "gemma3": 8,
+   "tie": 0
+  }
+ },
+ "verdicts": [
+  {
+   "qid": 21,
+   "question": "長照中心的設立許可證書不見了要怎麼補辦？",
+   "pairing": "taide vs gemini",
+   "order": "A=taide, B=gemini",
+   "winner": "gemini",
+   "reason": "B 將第15條要件條列為可執行步驟且在句尾以正確格式標註法源，資訊完整且表達清晰。"
+  },
+  {
+   "qid": 21,
+   "question": "長照中心的設立許可證書不見了要怎麼補辦？",
+   "pairing": "taide vs gemma3",
+   "order": "A=gemma3, B=taide",
+   "winner": "gemma3",
+   "reason": "A 明確且忠實指出「毀損者才須檢附原設立許可證書」並提示應於事實發生之日起十五日內申請，B 開頭敘述易讓人誤以為須無條件附原證書。"
+  },
+  {
+   "qid": 4,
+   "question": "我開的私立老人安養中心，名字是不是一定要加上私立兩個字？",
+   "pairing": "taide vs gemini",
+   "order": "A=gemini, B=taide",
+   "winner": "gemini",
+   "reason": "兩者法意均正確且流暢，但 A 在句尾以 [老人福利法 §35] 完整標註出處（引用品質更佳），而 B 雖較完整提及公設民營及行政區域冠名，卻未以規定格式在句尾標示法條來源。"
+  },
+  {
+   "qid": 4,
+   "question": "我開的私立老人安養中心，名字是不是一定要加上私立兩個字？",
+   "pairing": "taide vs gemma3",
+   "order": "A=gemma3, B=taide",
+   "winner": "gemma3",
+   "reason": "A 明確回答需冠「私立」並在句尾以規定格式標示法源 [老人福利法 §35]，B 雖內容正確但未在句尾以 brackets 標註條文出處。"
+  },
+  {
+   "qid": 1,
+   "question": "長照中心拿到了設立許可卻一直沒有開張，政府會把許可證收回去嗎？",
+   "pairing": "taide vs gemini",
+   "order": "A=taide, B=gemini",
+   "winner": "gemini",
+   "reason": "B 比 A 更完整且有條文標註：明確說明是對『經許可之服務項目三年內未開始營運可廢止、或服務規模未全數開放可核減』，並指出主管機關廢止許可時應註銷許可證書，較忠實反映§27 內容。"
+  },
+  {
+   "qid": 1,
+   "question": "長照中心拿到了設立許可卻一直沒有開張，政府會把許可證收回去嗎？",
+   "pairing": "taide vs gemma3",
+   "order": "A=taide, B=gemma3",
+   "winner": "gemma3",
+   "reason": "B 在句尾標註法源並較完整且精確地說明第27條可廢止未於三年內開始營運之服務項目及得核減服務規模；A 則過度籠統表示會「收回許可證」且未標示出處。"
+  },
+  {
+   "qid": 24,
+   "question": "長照機構的負責人如果請假太久，可以找誰代理以及有規定期限嗎？",
+   "pairing": "taide vs gemini",
+   "order": "A=taide, B=gemini",
+   "winner": "gemini",
+   "reason": "B 明確說明應指定符合資格者代理、超過三十日須報主管機關核定且代理期間不得逾一年，並提醒未依規定可能受罰；A 則未提及不得逾一年與罰則。"
+  },
+  {
+   "qid": 24,
+   "question": "長照機構的負責人如果請假太久，可以找誰代理以及有規定期限嗎？",
+   "pairing": "taide vs gemma3",
+   "order": "A=gemma3, B=taide",
+   "winner": "gemma3",
+   "reason": "A 回答簡潔且正確引用條文（以 [長期照顧服務法 §31] 在句尾標註），B 雖補充資格來源較完整，但未以句尾方括號形式明確標示出處。"
+  },
+  {
+   "qid": 9,
+   "question": "非營利長照機構要租用政府閒置的房子，租金是怎麼算的？",
+   "pairing": "taide vs gemini",
+   "order": "A=gemini, B=taide",
+   "winner": "taide",
+   "reason": "B 對第17條引用更精確（明示第1項），且補充指出第3項授權中央主管機關訂定申請程序，較完整且引用品質較佳。"
+  },
+  {
+   "qid": 9,
+   "question": "非營利長照機構要租用政府閒置的房子，租金是怎麼算的？",
+   "pairing": "taide vs gemma3",
+   "order": "A=gemma3, B=taide",
+   "winner": "taide",
+   "reason": "B 引用更精確（標示第1項）且補充說明中央主管機關得訂定申請程序與要件，對法源內容的呈現較完整正確。"
+  },
+  {
+   "qid": 8,
+   "question": "長照審議委員會在開會時，如果討論到跟委員自己利益相關的案子，應該要怎麼處理？",
+   "pairing": "taide vs gemini",
+   "order": "A=gemini, B=taide",
+   "winner": "taide",
+   "reason": "B 的回答較為簡潔明確，直接指出應依行政程序法規定主動迴避以維護審議公正；A 則加入不相關的聯絡資訊，表述較冗。"
+  },
+  {
+   "qid": 8,
+   "question": "長照審議委員會在開會時，如果討論到跟委員自己利益相關的案子，應該要怎麼處理？",
+   "pairing": "taide vs gemma3",
+   "order": "A=taide, B=gemma3",
+   "winner": "taide",
+   "reason": "A 正確引用《長期照顧服務法施行細則》第13條並指出應依行政程序法規定迴避；B 將該義務誤標為第12條，法源標示不正確。"
+  },
+  {
+   "qid": 25,
+   "question": "政府補助的長照額度用完之後，剩下的費用要自己出嗎？",
+   "pairing": "taide vs gemini",
+   "order": "A=gemini, B=taide",
+   "winner": "gemini",
+   "reason": "A 較完整且直接依據並列出《長期照顧服務申請及給付辦法》第15條所列需自行負擔的具體情形，並說明須由長照特約單位報地方主管機關核定；B 比較籠統且未詳列各種情形。"
+  },
+  {
+   "qid": 25,
+   "question": "政府補助的長照額度用完之後，剩下的費用要自己出嗎？",
+   "pairing": "taide vs gemma3",
+   "order": "A=gemma3, B=taide",
+   "winner": "gemma3",
+   "reason": "A 以條文要點直接回答並在句尾標註了《長期照顧服務申請及給付辦法》第15條，較符合引用格式；B 雖內容正確但未在句尾以 [法規名 §條號] 明確標註出處。"
+  },
+  {
+   "qid": 5,
+   "question": "本來就在經營長照服務的機構，現在要正式轉型申請設立許可的話，需要準備哪些文件呢？",
+   "pairing": "taide vs gemini",
+   "order": "A=taide, B=gemini",
+   "winner": "gemini",
+   "reason": "B 對不同情況（社區式與機構住宿式）分別列出所需文件並逐項對應法條出處，較完整且有引用標註；A 只列出第35條項目且未在句尾標註出處。"
+  },
+  {
+   "qid": 5,
+   "question": "本來就在經營長照服務的機構，現在要正式轉型申請設立許可的話，需要準備哪些文件呢？",
+   "pairing": "taide vs gemma3",
+   "order": "A=taide, B=gemma3",
+   "winner": "gemma3",
+   "reason": "B 明確指出「於106年6月3日前已提供社區式服務者免申請籌設許可」的要件，並逐項對應列出 §35 的文件且有來源標註；A 則誤引條目並未說明免籌設許可的前提。"
+  },
+  {
+   "qid": 29,
+   "question": "長照機構的收費標準是他們自己決定的嗎，還是政府有規定？",
+   "pairing": "taide vs gemini",
+   "order": "A=gemini, B=taide",
+   "winner": "gemini",
+   "reason": "A 不僅指出《長期照顧服務法》第35條規定收費項目及金額須報主管機關核定，還補述並標註機構設立計畫書須載明收費基準（設立許可及管理辦法第11條第2款），在法源對應與完整性上較為明確。"
+  },
+  {
+   "qid": 29,
+   "question": "長照機構的收費標準是他們自己決定的嗎，還是政府有規定？",
+   "pairing": "taide vs gemma3",
+   "order": "A=taide, B=gemma3",
+   "winner": "gemma3",
+   "reason": "B 正確反映第35條規定並於句尾標註法條出處，引用品質優於未標註出處的 A。"
+  },
+  {
+   "qid": 18,
+   "question": "長照評估等級幾級以上才會有政府提供的服務補助呢？",
+   "pairing": "taide vs gemini",
+   "order": "A=taide, B=gemini",
+   "winner": "gemini",
+   "reason": "B 明確且正確指出經評估為第二級至第八級者才納入給付（可獲政府補助）並引用《長期照顧服務申請及給付辦法》第7條；A 則未直接回答問題且錯誤引用第8條第5項並含模糊描述。"
+  },
+  {
+   "qid": 18,
+   "question": "長照評估等級幾級以上才會有政府提供的服務補助呢？",
+   "pairing": "taide vs gemma3",
+   "order": "A=gemma3, B=taide",
+   "winner": "gemma3",
+   "reason": "A 直接引用第7條指出第二級至第八級為給付範圍，明確回答「第二級以上」可獲政府提供的服務（並提及補助仍視其他條件），而B 未明確說明等級範圍且重點不在等級資格上。"
+  }
+ ]
+}
