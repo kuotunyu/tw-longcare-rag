@@ -28,6 +28,7 @@
 | D5 | 2026-07-20 | TAIDE 12B 地端化：**直接走 llama.cpp 官方 Windows release 轉 GGUF Q4_K_M**（不再嘗試 `ollama create` 直接從 safetensors 量化匯入）；**GGUF 僅留本地不上傳** | TAIDE 無官方 GGUF（hf-models.json）；TAIDE 自訂授權對再散布有限制。**D5 修正（同日）**：實測 `ollama create -q` 從 safetensors 匯入時，client 端工具呼叫被拒絕/中止後，`ollama serve` 仍在背景繼續轉檔約 10 分鐘、燒掉 ~33GB 暫存且未產出可用模型——因為該指令是送 HTTP 請求給常駐服務，client 端中止不保證 server 端停止。改為只對「已完成量化的 GGUF 檔」做 `ollama create`（輕量匯入，無現場轉檔），可控性高很多 |
 | D6 | 2026-07-20 | 法規資料走官方 Open API 整包 ZIP（月更），以 UpdateDate 記錄資料版本；**P1 驗收後資料凍結**，中途重抓＝回到 P1 gate 重走 | Open API 已實測可用（law-data.json）；長照給付法規修法頻繁，凍結版本才能保證評估可比性 |
 | D7 | 2026-07-20 | 檢索管線預設寫死保證可重現：BM25 top-20 + 向量 top-20 → RRF(k=60) → reranker 前 20 → top-5；圖譜擴展在 rerank 之後、上限 +5 | 評估矩陣需要固定 baseline；參數進 config 不進散落常數 |
+| D8 | 2026-07-20 | 全案 Gemini 呼叫統一為單一模型 `gemini-3.1-flash-lite`：**supersedes D2** 的雙模型分工（GEMINI_LITE_MODEL 原為 gemini-2.5-flash-lite）。GEMINI_MODEL 不變、GEMINI_LITE_MODEL 改與其相同 | 作者要求全案模型單一化，簡化維護與行為一致性優先於邊際成本差；定價由 $0.10/$0.40 變 $0.25/$1.50（約 2.5 倍），總預算仍遠低於 $1（見下方成本估算）。**已執行的 Phase 2 contextual 摘要批次（208 chunks）沿用呼叫當下的舊設定 gemini-2.5-flash-lite（作者已確認執行、屬沉沒成本，不重跑）；D8 生效於此批次之後的所有呼叫**（testset 生成、圖譜 LLM 補抽、grounding 判定、盲測） |
 
 ## 模型分工總表（防「地端模式偷打雲端」）
 
@@ -150,12 +151,12 @@ tw-longcare-rag/
 
 | 項目 | 模型 | 估算 | 實績 |
 |---|---|---|---|
-| Contextual 摘要（~250-500 chunks） | GEMINI_LITE（$0.10/$0.40 per 1M） | ≈ $0.09（Batch 半價 $0.04；免費層可能 $0） | — |
-| 測試集生成 30 題 | GEMINI_LITE | < $0.05 | — |
-| 圖譜 LLM 補抽 | GEMINI_LITE | < $0.05 | — |
+| Contextual 摘要（205 條、208 chunks） | GEMINI_LITE（D8 前：gemini-2.5-flash-lite $0.10/$0.40） | ≈ $0.05〜0.16 | 見 PROGRESS Phase 2 |
+| 測試集生成 30 題 | GEMINI_LITE（D8：gemini-3.1-flash-lite $0.25/$1.50） | < $0.15 | — |
+| 圖譜 LLM 補抽 | GEMINI_LITE（同上，D8） | < $0.15 | — |
 | 評估 judge（one-factor 設計） | OPENAI_MODEL（$0.25/$2.00） | ≈ $0.18（reasoning tokens 可能上浮數倍，量級仍 <$1） | — |
-| grounding 批次判定、盲測 | LITE / GEMINI_MODEL | < $0.3 | — |
-| **全程合計** | | **< $1**（快取齊全，重跑不重複計費） | — |
+| grounding 批次判定、盲測 | GEMINI_MODEL（gemini-3.1-flash-lite） | < $0.3 | — |
+| **全程合計** | | **< $1**（快取齊全，重跑不重複計費；D8 起 GEMINI_LITE 呼叫成本約為原估 2.5 倍，總量級不變） | — |
 
 時間成本另計：評估矩陣地端 12B 生成 30 題 × 多 config 需數小時。跑 Gemini 免費層批次前先到 AI Studio 查該專案實際 RPM/RPD（官方已改按專案顯示）。
 

@@ -17,9 +17,9 @@ from pathlib import Path
 
 from .chunking import Chunk, TokenCounter
 
-# 官方牌價（USD / 1M tokens，2026-07 查證：gemini-2.5-flash-lite）
-PRICE_IN_PER_M = 0.10
-PRICE_OUT_PER_M = 0.40
+# 官方牌價（USD / 1M tokens，2026-07 查證：gemini-3.1-flash-lite；D8 全案模型統一）
+PRICE_IN_PER_M = 0.25
+PRICE_OUT_PER_M = 1.50
 EST_INSTRUCTION_TOKENS = 160
 EST_OUTPUT_TOKENS_PER_CHUNK = 60
 
