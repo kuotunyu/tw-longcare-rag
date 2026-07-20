@@ -39,4 +39,6 @@ uv run python -m twlongcare.cli "問題" --provider ollama         # CLI 問答�
 - `resume-context`：隔段時間回來的第一個動作（恢復脈絡，不動手改東西）
 - `public-copy-check`：任何公開文字/截圖產出前的守門程序
 - `fetch-laws`：抓取/重抓五法資料的標準程序（含 D6 凍結判斷與重抓後 checklist）
-- （隨 Phase 陸續加入：rebuild-index、ask-cli、run-eval、deploy-space）
+- `rebuild-index`：重建 chroma/bm25s 索引（含 contextual 成本 gate 與多索引建置）
+- `ask-cli`：CLI 問答展示/除錯程序（三 provider、驗收題組、拒答陷阱題）
+- （隨 Phase 陸續加入：run-eval、deploy-space）
