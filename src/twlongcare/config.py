@@ -33,7 +33,7 @@ class Settings:
 def get_settings() -> Settings:
     load_dotenv(REPO_ROOT / ".env")
     return Settings(
-        google_api_key=os.getenv("GOOGLE_API_KEY", ""),
+        google_api_key=os.getenv("GOOGLE_API_KEY", "") or os.getenv("GEMINI_API_KEY", ""),
         openai_api_key=os.getenv("OPENAI_API_KEY", ""),
         hf_token=os.getenv("HF_TOKEN", ""),
         discord_webhook_url=os.getenv("DISCORD_WEBHOOK_URL", ""),
