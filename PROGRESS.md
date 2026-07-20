@@ -2,18 +2,18 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：**Phase 2 已完成並經作者驗收（tag `phase-2`）**——索引管線與三 provider CLI 全部跑通；開始 Phase 3（防幻覺）。
+- **現在做到哪**：Phase 3（防幻覺）**實作與驗證完成，待作者驗收**——分句 splitter、CRAG 逐句 judge、拒答門檻校準、CLI 整合全部跑通並實測過。
 - **下一步**：
-  1. `src/twlongcare/grounding.py`：分句 splitter（核心賣點，見 CLAUDE.md 分句規則）——先按換行切、行內再按「。！？」切；跳過「」『』（）內句號；句尾 citation `[...]` 併回前句；<8 字/純標點/樣板句跳過。獨立 pytest 覆蓋三類案例（列舉、引號、citation 併回）
-  2. CRAG 式逐句 groundedness 批次判定：一次 call 送全部句子 + top-5 條文，judge 回 JSON verdict array + 支持之 article_no（同時驗 citation 指向是否正確——**Phase 2 驗收已實測到「citation 指向正確條文、但句子本文誤植法規名」與「句子內容正確、但漏標 citation」兩種真實案例，judge prompt 設計要涵蓋這兩種**）；不被支持的句子刪除或改寫，log 記錄修正差異於 `logs/grounding/*.jsonl`
-  3. 拒答門檻校準：用陷阱題 dev set 掃 rerank 分數 0.1~0.5（Phase 2 已觀察到陷阱題 rerank 分數普遍 ~0.50、顯著低於正常題 ~0.7，可作校準起點），門檻值進 config
-  4. DoD：splitter 三類案例 pytest；5 題誘導幻覺開/關對照 log；門檻已校準進 config（完整規格見 PLAN.md Phase 3）
+  1. 作者驗收 Phase 3 → `git tag phase-3`
+  2. Phase 4（法條引用圖譜 GraphRAG-lite）開工：regex 為主力抽取引用關係（中文數字轉換、範圍展開、each 法 alias table）→ networkx 有向圖 `data/law_graph.json` → 檢索 rerank 之後做一階擴展（規格見 PLAN Phase 4）
 - **未決問題**：
   - LICENSE 著作權人為佔位字串（作者決定：公開前再填）
   - README 動機段為草稿，待作者潤飾
 - **待使用者人工處理**：
   - https://huggingface.co/google/gemma-3-12b-it （**manual** 人工核准，可能不即時；P5 基準對照才用到，先點不擋路）
-- **⚠️ 已知坑**：（無——收 Phase 2 時清空：地端模型引用覆蓋率限制已轉入 PLAN.md 風險表；Phase 5 正式盲測待辦已在 PLAN 既有規劃中，本次僅為非正式預覽，不算完成）
+- **⚠️ 已知坑**：
+  - grounding judge 本身並非完美：地端 12B 實測有假陰性（把條文中確實存在的內容誤判不支持，且引用了根本不在檢索結果中的條號當理由）；雲端 judge（gemini/openai）交叉驗證同一案例皆正確且理由精準。此為已知模型能力落差，同一類問題（地端引用覆蓋率、地端 grounding 準確度）已記入 PLAN 風險表，Phase 5 blind test 會正式量化
+  - `should_refuse_before_generation` 的門檻（0.644）僅用 5+5 題小樣本校準，Phase 5 應擴大樣本重新驗證
 
 ## 📜 Phase 日誌（append-only）
 
@@ -113,3 +113,25 @@
     - 此為 Phase 5 正式盲測（taide-12b vs 雲端模型）的**非正式預覽**，不能取代 Phase 5 的完整流程（30 題測試集、人工校對、deepeval 指標）；作者已確認 Phase 5 仍要正式做一次
     - 過程中另有作者實測抓到的 prompt 品質問題（見上「完成內容」的 SYSTEM_PROMPT 迭代記錄）：兩版加強版 prompt 皆讓 taide-12b 引用覆蓋率不升反降（3/3→0/2），最終回退為最小修正版本
     - 驗收結論：地端模型引用覆蓋率有限但未觀察到內容捏造；此限制已知且轉入 PLAN 風險表，留待 Phase 3 grounding 查核與 Phase 5 正式評估分別處理
+
+### Phase 3 — 防幻覺（實作完成 2026-07-20，待驗收）
+
+- **2026-07-20**：
+  - 完成內容：
+    - `src/twlongcare/grounding.py`：分句 splitter（段落切→句尾標點切，跳過「」『』（）內→citation 併回前句→過濾短句/樣板句）、CRAG 逐句 judge、`should_refuse_before_generation`（rerank 門檻拒答）、`apply_grounding`（移除不支持句、保留段落結構、log_grounding 稽核記錄）
+    - `generate.py` 拆出 `dedup_articles()`（供 judge 建編號 context 共用，`build_context` 改呼叫它）
+    - `scripts/calibrate_grounding.py`：5 正常題+5 陷阱題（**含 query 改寫，與 cli.py 實際流程一致**——首次校準漏了這步導致分數分佈失真，修正後才用）實測 rerank top-1 分數，兩組完全分離（正常 0.697〜0.731、陷阱 0.504〜0.592），取中點 0.644 為門檻
+    - `scripts/demo_grounding_diff.py` + `docs/examples/grounding_diff.md`：5 題誘導幻覺問題的開/關對照 transcript（Phase 3 DoD）
+    - `cli.py` 整合：`[3/4]` 拒答門檻檢查（省一次生成呼叫）→ `[4/4]` grounding 查核 → log 寫入 `logs/grounding/{provider}.jsonl`；新增 `--no-grounding` 對照旗標
+    - **三個實戰 bug 修正**（皆真實跑出來才發現，非預先猜測）：
+      1. judge 要求模型在 JSON 欄位重打「法規名 §條號」完整字串，長法規名（如「長期照顧服務機構設立許可及管理辦法」）誘發地端 12B 陷入字元重複輸出迴圈、JSON 陣列永不收尾且可重現；Ollama `format` schema 約束也治不好（只保證結構合法、不限制字串內容）。根本修正：judge 改引用參考條文的整數編號（`context_no`），呼叫端對應回法規名——模型完全不需生成長字串，且不可能編出不存在的法規名
+      2. 上述修正後仍有 judge 提早收尾陣列、漏判部分句子的問題（fallback 保守視為不支持，誤刪誠實句而非幻覺句）；修正：prompt 明確要求陣列長度＝句數 + schema 加 `minItems`/`maxItems` 解碼層級硬性約束，5 題對照重跑後漏判訊息完全消失
+      3. judge 呼叫/解析失敗時原本會讓整個 CLI 崩潰；改為重試一次 + 優雅降級（改拒答，信任優先於可用性），並記錄 log
+  - 驗證證據（實跑）：
+    - `uv run pytest -q` → `61 passed`；`tests/test_grounding.py` 涵蓋 PLAN DoD 要求的三類 splitter 案例（列舉/引號/citation 併回）+ 拒答門檻 + apply_grounding 重組邏輯（含 context_no 超出範圍防呆）
+    - 校準：`scripts/calibrate_grounding.py` 實跑輸出見上，正常/陷阱題分數完全分離
+    - 5 題開/關對照（`docs/examples/grounding_diff.md`）：其中「申請長照服務要準備哪些文件」一題最具代表性——模型原始生成腦補出 9 項文件，條文實際只有 5 項，查核後正確移除 4 項腦補內容
+    - Judge 準確度交叉驗證：地端 taide-12b 對某案例（老人福利法§48「法人得令解散」）誤判不支持、且引用了不存在於檢索結果中的條號當理由（假陰性）；gemini/openai 兩個雲端 judge 對同一案例皆正確判定支持、理由精準（openai 還額外抓到一個地端 judge 漏抓的法規混用錯誤）
+  - 相關 commit：`44a82f8` 分句+judge+apply_grounding、`9c43b7b` 門檻校準、`50c1922` context_no 修正、`1e33a4d` minItems/maxItems 修正、`a2be14e` README（cli.py 整合與 PROGRESS 本條目待補充 commit）
+  - 決策變更：無新 D 決策（照 PLAN Phase 3 執行）；已知限制記入下方快速回憶區
+  - 實際成本：$0（grounding judge 用 ollama 全地端；雲端交叉驗證僅 4 次小量呼叫，量級可忽略）

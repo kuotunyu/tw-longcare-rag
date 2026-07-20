@@ -179,7 +179,7 @@ tw-longcare-rag/
 | Windows cp950 亂碼 | PYTHONUTF8=1（含 git hooks 內）；見 CLAUDE.md |
 | 開發機 GPU 被其他工作佔用 | 載模型前 nvidia-smi；embedding/reranker 可退 CPU |
 | gradio 6.x 與網路教學不相容 | 以官方 6.x 文件為準；sdk_version 釘 6.x |
-| taide-12b（12B 地端）引用格式遵循能力有限 | Phase 2 驗收實測：句尾 citation 覆蓋率約 50%（漏標非捏造內容）；prompt 層加強規則反而讓覆蓋率降至 0（規則超出小模型負荷），已回退最小修正版。**不再嘗試靠 prompt 根治**，改由 Phase 3 grounding 查核在生成後補強（無引用的句子視同不受支持、依 P3 規則處理）；Phase 5 blind test 正式量化地端 vs 雲端差距 |
+| taide-12b（12B 地端）引用格式遵循能力有限，grounding judge 準確度亦有限 | Phase 2 驗收實測：句尾 citation 覆蓋率約 50%（漏標非捏造內容）；prompt 層加強規則反而讓覆蓋率降至 0（規則超出小模型負荷），已回退最小修正版。Phase 3 grounding 查核本身也實測到地端 judge 假陰性（誤判條文中確實存在的內容為不支持、且引用不存在的條號當理由），雲端 judge 交叉驗證同案例皆正確。**不再嘗試靠 prompt 根治這類地端模型能力限制**，Phase 5 blind test 正式量化地端 vs 雲端差距，README 誠實揭露此已知限制 |
 
 ## 進度管理與專案級 skills
 
