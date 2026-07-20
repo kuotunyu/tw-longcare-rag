@@ -2,14 +2,15 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：Phase 4（法條引用圖譜 GraphRAG-lite）**作者驗收通過，已打 tag `phase-4`**。作者親自實跑 CLI（含 `--no-graph` 對照）與互動圖譜圖例說明確認後接受。
+- **現在做到哪**：Phase 5（評估）進行中。30 題測試集已生成並經作者確認校對完成（`data/testset.json` meta.human_reviewed=true）。
 - **下一步**：
-  1. 詢問作者是否要開始 Phase 5（評估）——若同意，第一步是 `uv run python scripts/gen_testset.py`（GEMINI_LITE 生成 30 題含預期條號，**執行前先印成本估算給作者確認**）
-  2. 30 題生成後：**人工校對是硬 gate**，校對完才進 deepeval-first 對照矩陣（純向量vs hybrid vs hybrid+rerank；GTAIDE vs bge-m3；contextual開/關；圖譜開/關；MRL 768vs256）→ 生成端盲測 taide-12b vs GEMINI_MODEL + vs gemma3:12b（完整規格見 PLAN.md Phase 5；跑前檢查 OPENAI_MODEL 落日）
-- **未決問題**：（無；LICENSE 著作權人與 README 動機段已於 2026-07-20 定案）
-- **待使用者人工處理**：
-  - `gen_testset.py` 生成的 30 題測試集人工校對（P5 硬 gate，屆時提醒）
-- **⚠️ 已知坑**：（Phase 4 收尾已清空；grounding judge 地端準確度落差、拒答門檻/改寫 dev set 樣本小、pyvis 截圖工具限制皆已轉入 PLAN.md 風險與對策表，非隱藏遺留）
+  1. 建 `scripts/run_eval.py`（deepeval-first，D3）：retrieval 指標（hit@k / MRR）框架，可 `--config` 執行、輸出 jsonl cache
+  2. one-factor-at-a-time 對照矩陣（約 9 config，baseline=hybrid+rerank/GTAIDE-768/contextual on/graph on）：純向量vs hybrid vs hybrid+rerank；GTAIDE vs bge-m3；contextual開/關；圖譜開/關；MRL 768vs256
+  3. 生成端盲測 10 題：taide-12b vs GEMINI_MODEL、taide-12b vs gemma3:12b（跑前檢查 OPENAI_MODEL 落日 2026-12-11、印成本估算給作者確認）
+  4. 收尾：`docs/eval.md` 正本 + README 同步 + 建 `run-eval` skill + 作者驗收 → `git tag phase-5`
+- **未決問題**：（無）
+- **待使用者人工處理**：（無）
+- **⚠️ 已知坑**：（無）
 
 ## 📜 Phase 日誌（append-only）
 
@@ -233,3 +234,29 @@
   - 相關 commit：`740e957` LICENSE+README、`872bed3` PROGRESS 未決問題清空
   - 決策變更：無
   - 實際成本：$0
+
+### Phase 5 — 評估（進行中）
+
+- **2026-07-20**：
+  - 完成內容：
+    - `scripts/gen_testset.py`：依五法條文數比例分層抽樣（固定 seed=42，30 題，
+      各法規分布 11/8/6/3/2）、`_is_trivial()` regex 過濾純程序性條文（施行
+      日期宣告、單純法源訂定依據——含一次迭代修正：初版 window 太短漏放過
+      L0070044§1 這種「本辦法依...訂定之」的長句，擴大 window 後正確過濾）、
+      成本估算（GTAIDE tokenizer 計 token）
+    - 實跑生成：GEMINI_LITE 出題，30 題全部成功，每題問題文字口語自然、
+      緊扣抽樣到的單一條文（未讓 LLM 自己猜條號，避免多一層錯誤標籤來源）
+    - 作者人工校對：作者確認測試集完成（回覆「OK 請繼續」），`data/testset.json`
+      meta.human_reviewed 與各題 reviewed 已設為 true
+    - `tests/test_gen_testset.py` 8 個測試：程序性條文過濾（3正3反例）、
+      抽樣總數/可重現性/五法皆涵蓋/排除程序性條文/無重複
+  - 驗證證據（實跑）：
+    - `uv run pytest -q` → `92 passed`
+    - 乾跑（未確認成本）：抽樣分布 11/8/6/3/2=30，成本估算 US$0.003
+    - 實跑出題：`uv run python scripts/gen_testset.py --confirm-cost` → 30/30
+      成功，實際成本量級與估算一致（<$0.01，未逐次量測確切 token 用量）
+    - 抽驗 4 題對照 laws.json 原文全文（L0070044§27/L0070040§17/L0070043§5/
+      L0070044§29）：問題與條文內容皆對應正確
+  - 相關 commit：`1cd6171` gen_testset.py+測試、本條目 PROGRESS（待 commit）
+  - 決策變更：無新 D 決策（照 PLAN Phase 5 執行）
+  - 實際成本：<$0.01（gemini-3.1-flash-lite，30 題出題）
