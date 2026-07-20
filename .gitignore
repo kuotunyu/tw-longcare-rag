@@ -8,6 +8,7 @@
 # 大型資料與產出物（由腳本重建）；Modelfile 為可重現設定，例外入版控
 data/raw/
 data/chroma/
+data/bm25s/
 models/*
 !models/Modelfile
 logs/
