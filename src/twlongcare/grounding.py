@@ -1,0 +1,265 @@
+"""逐句 groundedness 查核（CRAG 式，Phase 3）：生成後對每句話核對「參考條文是否
+真的支持這句話」，不受支持者刪除，log 可稽核。
+
+分句規則（核心賣點，改動必須同步改 tests/test_grounding.py）：
+1. 先按換行切段落，段落間互不影響分句
+2. 段落內按「。！？」切句，但跳過「」『』（）巢狀引號/括號內的標點（不切）
+3. 句尾的方括號引用 [...]（可能多個相連、可能夾雜多餘句號，如
+   "……補助。[老人福利法 §15]。"）一律併回前一個真句子，不獨立成句
+4. 過濾：<8 字的片段（citation 不計入字數）、無中文內容的片段、
+   樣板句（拒答語、「請撥打1966」轉介語）不送查核——這些不含法律主張
+
+Judge 設計：一次呼叫送出全部候選句 + top-5 條文全文，回 JSON verdict array，
+每句附「真正支持它的 article_no」。Phase 2 驗收實測到兩種真實案例，judge
+prompt 明確要求涵蓋：(a) 句尾引用格式對，但內文提及的法規名跟引用不符；
+(b) 句子內容正確，但完全沒有句尾引用（漏標）。兩者皆判定為不支持並移除。
+"""
+
+from __future__ import annotations
+
+import json
+import re
+from dataclasses import dataclass, field
+from pathlib import Path
+
+from .generate import REFUSAL_TEXT, LawsLookup, build_context
+from .llm_text import extract_text
+from .retriever import RetrievedChunk
+
+# ---------- 分句 ----------
+
+_OPEN_QUOTES = "「『（"
+_CLOSE_QUOTES = "」』）"
+_SENTENCE_END = "。！？"
+
+_CITATION_ONLY_RE = re.compile(r"^(?:\[[^\[\]]+\][。！？]?)+$")
+_CITATION_STRIP_RE = re.compile(r"\[[^\[\]]+\]")
+_HAN_RE = re.compile(r"[一-鿿]")
+_REFUSAL_PREFIXES = (REFUSAL_TEXT,)
+_HOTLINE_RE = re.compile(r"1966")
+_REFERRAL_HINT_RE = re.compile(r"建議|洽詢|撥打|專人")
+
+MIN_SENTENCE_CHARS = 8
+
+
+def _raw_split(paragraph: str) -> list[str]:
+    """段落內依句尾標點切分，跳過引號/括號內的標點；標點併入前一片段。
+
+    已知限制：若句尾引用與下一句完全無分隔（無空白/換行）直接相連
+    （如「...結束[甲法§1]接著下一句」），下一句會被誤併入引用所在片段。
+    實測所有真實生成輸出的引用後面都接空白或換行，未觀察到此情況，
+    故不特別處理；若未來實測發現真實案例，回來加解析。
+    """
+    parts: list[str] = []
+    buf: list[str] = []
+    depth = 0
+    for ch in paragraph:
+        buf.append(ch)
+        if ch in _OPEN_QUOTES:
+            depth += 1
+        elif ch in _CLOSE_QUOTES:
+            depth = max(0, depth - 1)
+        elif ch in _SENTENCE_END and depth == 0:
+            parts.append("".join(buf))
+            buf = []
+    if buf:
+        parts.append("".join(buf))
+    return parts
+
+
+def _merge_citation_tails(parts: list[str]) -> list[str]:
+    """「純由方括號引用（可能夾句號）組成」的片段併回前一個真句子。"""
+    merged: list[str] = []
+    for part in parts:
+        stripped = part.strip()
+        if merged and stripped and _CITATION_ONLY_RE.match(stripped):
+            merged[-1] = merged[-1].rstrip() + stripped
+        else:
+            merged.append(part)
+    return merged
+
+
+def _is_template_sentence(text: str) -> bool:
+    stripped = text.strip()
+    if any(stripped.startswith(p) for p in _REFUSAL_PREFIXES):
+        return True
+    if _HOTLINE_RE.search(stripped) and _REFERRAL_HINT_RE.search(stripped):
+        return True
+    return False
+
+
+def _is_substantive(text: str) -> bool:
+    content_only = _CITATION_STRIP_RE.sub("", text).strip()
+    if len(content_only) < MIN_SENTENCE_CHARS:
+        return False
+    if not _HAN_RE.search(content_only):
+        return False
+    return not _is_template_sentence(text)
+
+
+def _split_with_paragraphs(text: str) -> list[tuple[int, str]]:
+    """回傳 (paragraph_index, sentence)；供需保留段落換行的呼叫端使用。"""
+    result: list[tuple[int, str]] = []
+    for p_idx, paragraph in enumerate(text.split("\n")):
+        if not paragraph.strip():
+            continue
+        merged = _merge_citation_tails(_raw_split(paragraph))
+        for s in merged:
+            s = s.strip()
+            if s and _is_substantive(s):
+                result.append((p_idx, s))
+    return result
+
+
+def split_sentences(text: str) -> list[str]:
+    """核心分句函式（公開 API）：見模組 docstring 規則。回傳已過濾候選句清單。"""
+    return [s for _, s in _split_with_paragraphs(text)]
+
+
+# ---------- judge ----------
+
+GROUNDING_JUDGE_PROMPT = """你是法規回答的查核員。以下是「候選句清單」與「參考條文」。
+針對每一句話，判斷它的內容是否被參考條文中「某一條」的原文實際支持——不能只因為
+句尾寫了引用標記就算數，必須確認條文原文真的講了這件事。若句子本文提及了法規
+名稱或條號，也要確認跟真正支持它的條文是否一致（若不一致，視為不支持）。
+
+參考條文：
+{context}
+
+候選句清單（依序編號）：
+{numbered_sentences}
+
+請只輸出 JSON 陣列，每個元素對應一句話，格式：
+[{{"index": 1, "supported": true, "article_no": "法規名 §條號", "reason": "一句話理由"}}]
+- supported：這句話是否被參考條文中某一條的原文實際支持
+- article_no：supported 為 true 時，寫出真正支持它的「法規名 §條號」；否則為 null
+- reason：一句話說明理由（判定不支持時，說明句子跟條文哪裡兜不起來）
+不要輸出 JSON 以外的文字，不要用 markdown code fence。"""
+
+
+@dataclass
+class SentenceVerdict:
+    sentence: str
+    supported: bool
+    article_no: str | None
+    reason: str
+
+
+def _parse_json_array(text: str) -> list[dict]:
+    cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", text.strip())
+    start, end = cleaned.find("["), cleaned.rfind("]")
+    if start == -1 or end == -1 or end < start:
+        raise ValueError(f"judge 回覆內找不到 JSON 陣列：{cleaned[:200]!r}")
+    return json.loads(cleaned[start : end + 1])
+
+
+def judge_sentences(
+    sentences: list[str],
+    retrieved: list[RetrievedChunk],
+    lookup: LawsLookup,
+    model,
+) -> list[SentenceVerdict]:
+    """一次呼叫批次判定全部候選句；judge 沒回覆到的句子保守視為不支持。"""
+    if not sentences:
+        return []
+    from langchain_core.messages import HumanMessage
+
+    context = build_context(retrieved, lookup)
+    numbered = "\n".join(f"{i}. {s}" for i, s in enumerate(sentences, start=1))
+    prompt = GROUNDING_JUDGE_PROMPT.format(context=context, numbered_sentences=numbered)
+    reply = model.invoke([HumanMessage(content=prompt)])
+    raw = extract_text(reply.content)
+    items = _parse_json_array(raw)
+    by_index = {int(item["index"]): item for item in items if "index" in item}
+
+    verdicts: list[SentenceVerdict] = []
+    for i, s in enumerate(sentences, start=1):
+        item = by_index.get(i)
+        if item is None:
+            verdicts.append(SentenceVerdict(s, False, None, "judge 未回覆此句判定"))
+            continue
+        verdicts.append(SentenceVerdict(
+            sentence=s,
+            supported=bool(item.get("supported", False)),
+            article_no=item.get("article_no"),
+            reason=str(item.get("reason", "")),
+        ))
+    return verdicts
+
+
+# ---------- 拒答門檻 ----------
+
+# TODO(Phase 3c)：尚未校準，暫用 Phase 2 驗收觀察到的粗略值
+# （陷阱題 rerank ~0.50〜0.56、正常題 ~0.57〜0.73）。正式校準跑
+# scripts/calibrate_grounding.py 後回填，完整數據記入 PROGRESS.md。
+REFUSAL_RERANK_THRESHOLD = 0.56
+
+
+def should_refuse_before_generation(retrieved: list[RetrievedChunk]) -> bool:
+    """檢索分數過低時，跳過生成直接拒答（省一次 LLM 呼叫，且更保守）。"""
+    if not retrieved:
+        return True
+    top_score = retrieved[0].rerank_score
+    if top_score is None:
+        return False  # --no-rerank 模式不套用此規則
+    return top_score < REFUSAL_RERANK_THRESHOLD
+
+
+# ---------- 套用 ----------
+
+@dataclass
+class GroundingResult:
+    original_text: str
+    final_text: str
+    verdicts: list[SentenceVerdict] = field(default_factory=list)
+    removed_count: int = 0
+
+
+REFUSAL_FINAL_TEXT = f"{REFUSAL_TEXT}。建議撥打 1966 長照服務專線洽詢。"
+
+
+def apply_grounding(
+    text: str, retrieved: list[RetrievedChunk], lookup: LawsLookup, model
+) -> GroundingResult:
+    """生成後查核：不受支持的句子從最終回答中移除，保留段落結構。"""
+    pairs = _split_with_paragraphs(text)
+    sentences = [s for _, s in pairs]
+    verdicts = judge_sentences(sentences, retrieved, lookup, model)
+
+    kept_by_para: dict[int, list[str]] = {}
+    for (p_idx, _s), v in zip(pairs, verdicts):
+        if v.supported:
+            kept_by_para.setdefault(p_idx, []).append(v.sentence)
+
+    paragraphs = ["".join(kept_by_para[k]) for k in sorted(kept_by_para)]
+    final_text = "\n".join(p for p in paragraphs if p) or REFUSAL_FINAL_TEXT
+    removed = sum(1 for v in verdicts if not v.supported)
+    return GroundingResult(text, final_text, verdicts, removed)
+
+
+def log_grounding(
+    log_path: Path, question: str, provider: str, result: GroundingResult
+) -> None:
+    """差異記錄，供事後稽核（logs/grounding/*.jsonl，不進 git）。"""
+    import datetime
+
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    record = {
+        "timestamp": datetime.datetime.now().isoformat(timespec="seconds"),
+        "question": question,
+        "provider": provider,
+        "original_text": result.original_text,
+        "final_text": result.final_text,
+        "removed_count": result.removed_count,
+        "verdicts": [
+            {
+                "sentence": v.sentence,
+                "supported": v.supported,
+                "article_no": v.article_no,
+                "reason": v.reason,
+            }
+            for v in result.verdicts
+        ],
+    }
+    with log_path.open("a", encoding="utf-8", newline="\n") as f:
+        f.write(json.dumps(record, ensure_ascii=False) + "\n")
