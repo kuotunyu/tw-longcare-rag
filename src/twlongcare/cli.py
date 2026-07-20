@@ -1,22 +1,24 @@
-"""CLI 問答：口語問題 → 改寫 → hybrid 檢索 → 含引用回答。
+"""CLI 問答：口語問題 → 改寫 → hybrid 檢索 → 拒答門檻 → 含引用回答 → 逐句查核。
 
 用法：
     uv run python -m twlongcare.cli "阿嬤請看護政府有補助嗎" --provider ollama
     uv run python -m twlongcare.cli "問題" --provider gemini
     uv run python -m twlongcare.cli "問題" --provider openai --no-rerank
     uv run python -m twlongcare.cli "問題" --embedding bge-m3
+    uv run python -m twlongcare.cli "問題" --no-grounding   # 關閉 Phase 3 查核（對照用）
 
-模型分工（PLAN 分工總表）：主生成用該 provider 主模型；query 改寫在
-ollama 模式用同一地端模型（零成本）、gemini 模式用 GEMINI_LITE、
-openai 模式維持供應商純度用 OPENAI_MODEL。
+模型分工（PLAN 分工總表）：主生成用該 provider 主模型；query 改寫與
+grounding 判定在 ollama 模式用同一地端模型（零成本）、gemini 模式用
+GEMINI_LITE、openai 模式維持供應商純度用 OPENAI_MODEL。
 """
 
 from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
-from .config import get_settings
+from .config import LOGS_DIR, get_settings
 
 OLLAMA_NUM_CTX = 8192  # 鐵律：顯式傳遞，預設 4096 會靜默截斷 prompt 開頭
 
@@ -69,16 +71,23 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--no-rerank", action="store_true")
     parser.add_argument("--no-contextual", action="store_true",
                         help="使用 noctx 索引（需先以 --no-contextual 建索引）")
+    parser.add_argument("--no-grounding", action="store_true",
+                        help="關閉 Phase 3 逐句 groundedness 查核（對照展示用）")
     parser.add_argument("--show-chunks", action="store_true",
                         help="顯示檢索到的 chunk 與分數（除錯用）")
     args = parser.parse_args(argv)
 
     settings = get_settings()
     from .generate import LawsLookup, answer
+    from .grounding import (
+        apply_grounding,
+        log_grounding,
+        should_refuse_before_generation,
+    )
     from .retriever import HybridRetriever
     from .rewrite import rewrite_query
 
-    print("[1/3] 檢索器載入與 query 改寫…", file=sys.stderr)
+    print("[1/4] 檢索器載入與 query 改寫…", file=sys.stderr)
     retriever = HybridRetriever(
         embedding_key=args.embedding,
         dim=args.dim,
@@ -90,23 +99,50 @@ def main(argv: list[str] | None = None) -> None:
     if query != args.question:
         print(f"    改寫：{query}", file=sys.stderr)
 
-    print("[2/3] hybrid 檢索…", file=sys.stderr)
+    print("[2/4] hybrid 檢索…", file=sys.stderr)
     retrieved = retriever.retrieve(query)
     for c in retrieved:
         rs = f" rerank={c.rerank_score:.3f}" if c.rerank_score is not None else ""
         print(f"    {c.chunk_id}（{'+'.join(c.sources)}{rs}）", file=sys.stderr)
 
-    print("[3/3] 生成回答…", file=sys.stderr)
-    model = make_chat_model(args.provider, settings, args.ollama_model)
     lookup = LawsLookup()
-    result = answer(args.question, retrieved, lookup, model)
+    if not args.no_grounding and should_refuse_before_generation(retrieved):
+        print("[3/4] 檢索分數低於拒答門檻，略過生成…", file=sys.stderr)
+        from .grounding import REFUSAL_FINAL_TEXT
+
+        result = REFUSAL_FINAL_TEXT
+        retrieved_for_display: list = []
+    else:
+        print("[3/4] 生成回答…", file=sys.stderr)
+        model = make_chat_model(args.provider, settings, args.ollama_model)
+        result = answer(args.question, retrieved, lookup, model)
+        retrieved_for_display = retrieved
+
+        if not args.no_grounding:
+            print("[4/4] 逐句 groundedness 查核…", file=sys.stderr)
+            from .grounding import GroundingResult, JudgeUnavailable, REFUSAL_FINAL_TEXT
+
+            try:
+                grounding_result = apply_grounding(result, retrieved, lookup, rewrite_model)
+            except JudgeUnavailable as e:
+                # 查核本身失敗時，寧可拒答也不放行未查核內容（信任優先於可用性）
+                print(f"    ⚠️ judge 失敗，改為拒答：{e}", file=sys.stderr)
+                grounding_result = GroundingResult(result, REFUSAL_FINAL_TEXT, [], -1)
+            if grounding_result.removed_count > 0:
+                print(f"    移除 {grounding_result.removed_count} 句不受支持的內容",
+                      file=sys.stderr)
+            log_grounding(
+                LOGS_DIR / "grounding" / f"{args.provider}.jsonl",
+                args.question, args.provider, grounding_result,
+            )
+            result = grounding_result.final_text
 
     print("\n" + "=" * 60)
     print(result)
     print("=" * 60)
     print("\n引用條文出處：")
     seen = set()
-    for c in retrieved:
+    for c in retrieved_for_display:
         if c.parent_id in seen:
             continue
         seen.add(c.parent_id)

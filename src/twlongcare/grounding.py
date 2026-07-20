@@ -22,7 +22,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .generate import REFUSAL_TEXT, LawsLookup, build_context
+from .generate import REFUSAL_TEXT, LawsLookup, dedup_articles
 from .llm_text import extract_text
 from .retriever import RetrievedChunk
 
@@ -118,23 +118,45 @@ def split_sentences(text: str) -> list[str]:
 
 # ---------- judge ----------
 
-GROUNDING_JUDGE_PROMPT = """你是法規回答的查核員。以下是「候選句清單」與「參考條文」。
+GROUNDING_JUDGE_PROMPT = """你是法規回答的查核員。以下是「參考條文」（依序編號）與「候選句清單」。
 針對每一句話，判斷它的內容是否被參考條文中「某一條」的原文實際支持——不能只因為
 句尾寫了引用標記就算數，必須確認條文原文真的講了這件事。若句子本文提及了法規
 名稱或條號，也要確認跟真正支持它的條文是否一致（若不一致，視為不支持）。
 
-參考條文：
+參考條文（依序編號）：
 {context}
 
 候選句清單（依序編號）：
 {numbered_sentences}
 
 請只輸出 JSON 陣列，每個元素對應一句話，格式：
-[{{"index": 1, "supported": true, "article_no": "法規名 §條號", "reason": "一句話理由"}}]
+[{{"index": 1, "supported": true, "context_no": 3, "reason": "一句話理由"}}]
 - supported：這句話是否被參考條文中某一條的原文實際支持
-- article_no：supported 為 true 時，寫出真正支持它的「法規名 §條號」；否則為 null
+- context_no：supported 為 true 時，填入真正支持它的參考條文編號（上方
+  參考條文的編號，一個整數）；否則為 null。**不要輸出法規名稱本身**，
+  只填編號數字。
 - reason：一句話說明理由（判定不支持時，說明句子跟條文哪裡兜不起來）
 不要輸出 JSON 以外的文字，不要用 markdown code fence。"""
+
+# Ollama 原生 format 參數用：直接約束輸出為此形狀的陣列（解碼層級強制，
+# 比純 prompt 要求可靠得多）。article_no 原本要求模型重打完整「法規名
+# §條號」字串，實測長法規名（如「長期照顧服務機構設立許可及管理辦法」）
+# 會誘發地端 12B 陷入字元重複輸出、陣列永不收尾——JSON 語法約束只保證
+# 結構合法，不保證字串「內容」不失控。改用 context_no 純整數索引後
+# （呼叫端自行對應回法規名），此問題消失。
+_JUDGE_JSON_SCHEMA = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "index": {"type": "integer"},
+            "supported": {"type": "boolean"},
+            "context_no": {"type": ["integer", "null"]},
+            "reason": {"type": "string"},
+        },
+        "required": ["index", "supported"],
+    },
+}
 
 
 @dataclass
@@ -153,23 +175,60 @@ def _parse_json_array(text: str) -> list[dict]:
     return json.loads(cleaned[start : end + 1])
 
 
+class JudgeUnavailable(RuntimeError):
+    """judge 呼叫失敗或回覆無法解析（實測過地端小模型在長 prompt 下偶發
+    輸出陷入重複迴圈、JSON 陣列不收尾）；由呼叫端決定降級策略。"""
+
+
 def judge_sentences(
     sentences: list[str],
     retrieved: list[RetrievedChunk],
     lookup: LawsLookup,
     model,
+    retries: int = 1,
 ) -> list[SentenceVerdict]:
-    """一次呼叫批次判定全部候選句；judge 沒回覆到的句子保守視為不支持。"""
+    """一次呼叫批次判定全部候選句；judge 沒回覆到的句子保守視為不支持。
+
+    重試一次後仍解析失敗則拋 JudgeUnavailable（不吞錯，讓呼叫端決定
+    要拒答還是放行未查核內容——這是信任層級的決策，不該在此處預設）。
+    """
     if not sentences:
         return []
     from langchain_core.messages import HumanMessage
 
-    context = build_context(retrieved, lookup)
+    try:
+        from langchain_ollama import ChatOllama
+
+        if isinstance(model, ChatOllama):
+            # 實測地端 12B 在較長 context 下，純靠 prompt 要求 JSON 會偶發
+            # 陷入重複輸出迴圈、陣列永不收尾；Ollama 原生 format 是解碼層級
+            # 約束（強制每個 token 都合法、且符合此 schema 形狀），而非僅是
+            # 提示詞要求，可根治此類退化。
+            model = model.bind(format=_JUDGE_JSON_SCHEMA)
+    except ImportError:
+        pass
+
+    articles = dedup_articles(retrieved, lookup)
+    context = "\n\n".join(
+        f"[{i}] 《{name}》第 {no} 條：\n{content}"
+        for i, (name, no, content) in enumerate(articles, start=1)
+    )
     numbered = "\n".join(f"{i}. {s}" for i, s in enumerate(sentences, start=1))
     prompt = GROUNDING_JUDGE_PROMPT.format(context=context, numbered_sentences=numbered)
-    reply = model.invoke([HumanMessage(content=prompt)])
-    raw = extract_text(reply.content)
-    items = _parse_json_array(raw)
+
+    last_err: Exception | None = None
+    items: list[dict] | None = None
+    for attempt in range(retries + 1):
+        try:
+            reply = model.invoke([HumanMessage(content=prompt)])
+            raw = extract_text(reply.content)
+            items = _parse_json_array(raw)
+            break
+        except Exception as e:  # noqa: BLE001 - 涵蓋解析錯誤與呼叫例外，統一重試
+            last_err = e
+    if items is None:
+        raise JudgeUnavailable(f"judge 呼叫/解析連續失敗（重試 {retries} 次）：{last_err}")
+
     by_index = {int(item["index"]): item for item in items if "index" in item}
 
     verdicts: list[SentenceVerdict] = []
@@ -178,10 +237,18 @@ def judge_sentences(
         if item is None:
             verdicts.append(SentenceVerdict(s, False, None, "judge 未回覆此句判定"))
             continue
+        supported = bool(item.get("supported", False))
+        article_no = None
+        if supported:
+            try:
+                name, no, _content = articles[int(item.get("context_no")) - 1]
+                article_no = f"{name} §{no}"
+            except (TypeError, ValueError, IndexError):
+                supported = False  # context_no 指到不存在的條文，視同無支持
         verdicts.append(SentenceVerdict(
             sentence=s,
-            supported=bool(item.get("supported", False)),
-            article_no=item.get("article_no"),
+            supported=supported,
+            article_no=article_no,
             reason=str(item.get("reason", "")),
         ))
     return verdicts

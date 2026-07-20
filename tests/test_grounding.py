@@ -153,19 +153,26 @@ class _FakeModel:
         return _Reply()
 
 
+_FAKE_ARTICLES = [
+    ("甲法", "1", "甲法第一條內容"),
+    ("乙法", "2", "乙法第二條內容"),
+    ("丙法", "3", "丙法第三條內容"),
+]
+
+
 def test_apply_grounding_removes_unsupported_and_keeps_paragraph_shape(monkeypatch) -> None:
     import twlongcare.grounding as g
 
-    monkeypatch.setattr(g, "build_context", lambda *_a, **_k: "（測試用參考條文）")
+    monkeypatch.setattr(g, "dedup_articles", lambda *_a, **_k: _FAKE_ARTICLES)
 
     text = (
         "第一段第一句內容足夠長且正確。[甲法 §1]\n"
         "第二段第一句內容捏造亂講一通。[乙法 §2]\n第二段第二句正確且保留。[丙法 §3]"
     )
     fake_verdicts = (
-        '[{"index":1,"supported":true,"article_no":"甲法 §1","reason":"ok"},'
-        '{"index":2,"supported":false,"article_no":null,"reason":"條文未提及"},'
-        '{"index":3,"supported":true,"article_no":"丙法 §3","reason":"ok"}]'
+        '[{"index":1,"supported":true,"context_no":1,"reason":"ok"},'
+        '{"index":2,"supported":false,"context_no":null,"reason":"條文未提及"},'
+        '{"index":3,"supported":true,"context_no":3,"reason":"ok"}]'
     )
     model = _FakeModel(fake_verdicts)
 
@@ -183,11 +190,27 @@ def test_apply_grounding_removes_unsupported_and_keeps_paragraph_shape(monkeypat
 def test_apply_grounding_all_unsupported_falls_back_to_refusal(monkeypatch) -> None:
     import twlongcare.grounding as g
 
-    monkeypatch.setattr(g, "build_context", lambda *_a, **_k: "（測試用參考條文）")
+    monkeypatch.setattr(g, "dedup_articles", lambda *_a, **_k: _FAKE_ARTICLES)
 
     text = "整句都被判定不支持的內容足夠長。[甲法 §1]"
     model = _FakeModel(
-        '[{"index":1,"supported":false,"article_no":null,"reason":"查無支持"}]'
+        '[{"index":1,"supported":false,"context_no":null,"reason":"查無支持"}]'
+    )
+    result = apply_grounding(text, retrieved=[], lookup=None, model=model)
+    assert result.final_text == REFUSAL_FINAL_TEXT
+    assert result.removed_count == 1
+
+
+def test_apply_grounding_context_no_out_of_range_treated_as_unsupported(monkeypatch) -> None:
+    """judge 若填了不存在的 context_no（超出參考條文編號範圍），視為不支持
+    而非硬解出錯——防止指到不存在條文卻被當成有效引用放行。"""
+    import twlongcare.grounding as g
+
+    monkeypatch.setattr(g, "dedup_articles", lambda *_a, **_k: _FAKE_ARTICLES)
+
+    text = "這句話宣稱有支持但編號其實超出範圍不存在。[某法 §99]"
+    model = _FakeModel(
+        '[{"index":1,"supported":true,"context_no":99,"reason":"（模型誤指）"}]'
     )
     result = apply_grounding(text, retrieved=[], lookup=None, model=model)
     assert result.final_text == REFUSAL_FINAL_TEXT
@@ -219,12 +242,8 @@ def test_refuse_before_generation_no_rerank_score_skips_rule() -> None:
     assert should_refuse_before_generation([_rc(None)]) is False
 
 
-def test_apply_grounding_missing_verdict_index_defaults_unsupported(monkeypatch) -> None:
+def test_apply_grounding_missing_verdict_index_defaults_unsupported() -> None:
     """judge 漏判某句時，保守視為不支持而非預設通過（避免放行未查核的幻覺）。"""
-    import twlongcare.grounding as g
-
-    monkeypatch.setattr(g, "build_context", lambda *_a, **_k: "（測試用參考條文）")
-
     text = "這句話沒有出現在 judge 回覆的索引清單裡足夠長。[甲法 §1]"
     model = _FakeModel("[]")
     result = apply_grounding(text, retrieved=[], lookup=None, model=model)

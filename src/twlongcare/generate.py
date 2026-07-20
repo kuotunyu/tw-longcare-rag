@@ -53,18 +53,28 @@ class LawsLookup:
         return self.by_key.get((pcode, article_no))
 
 
-def build_context(retrieved: list[RetrievedChunk], lookup: LawsLookup) -> str:
-    """檢索結果 → 參考條文區塊；sub-chunk 還原整條，去重後保序。"""
+def dedup_articles(
+    retrieved: list[RetrievedChunk], lookup: LawsLookup
+) -> list[tuple[str, str, str]]:
+    """檢索結果去重（sub-chunk 還原整條）並保序，回傳 (law_name, article_no, content)。"""
     seen: set[str] = set()
-    blocks: list[str] = []
+    out: list[tuple[str, str, str]] = []
     for c in retrieved:
         if c.parent_id in seen:
             continue
         seen.add(c.parent_id)
         record = lookup.full_article(c.pcode, c.article_no)
         content = record["content"] if record else c.text
-        blocks.append(f"《{c.law_name}》第 {c.article_no} 條：\n{content}")
-    return "\n\n".join(blocks)
+        out.append((c.law_name, c.article_no, content))
+    return out
+
+
+def build_context(retrieved: list[RetrievedChunk], lookup: LawsLookup) -> str:
+    """檢索結果 → 參考條文區塊；sub-chunk 還原整條，去重後保序。"""
+    return "\n\n".join(
+        f"《{name}》第 {no} 條：\n{content}"
+        for name, no, content in dedup_articles(retrieved, lookup)
+    )
 
 
 def build_messages(question: str, retrieved: list[RetrievedChunk], lookup: LawsLookup):
