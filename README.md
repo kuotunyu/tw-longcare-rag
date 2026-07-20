@@ -12,22 +12,43 @@
 
 ## 系統架構
 
-> Phase 2 已實作 Query 改寫 → hybrid 檢索 → RRF → rerank → 生成（含引用）；
-> 引用圖譜擴展（Phase 4）與逐句 groundedness 查核（Phase 3）尚待實作。
+> Phase 0〜3 已實作（索引建置、hybrid 檢索、生成、逐句查核）；
+> 引用圖譜擴展（Phase 4，圖中虛線）尚待實作。
+
+**索引建置**（離線，`scripts/build_index.py`）：
 
 ```mermaid
 flowchart LR
-    Q[口語問題] --> RW[Query 改寫<br/>口語→法規用語]
-    RW --> BM25[BM25 檢索<br/>bm25s + jieba]
-    RW --> VEC[向量檢索<br/>GTAIDE embedding + chromadb]
-    BM25 --> RRF[RRF 融合]
-    VEC --> RRF
-    RRF --> RR[bge-reranker-v2-m3<br/>重排取 top-5]
-    RR --> GE[引用圖譜一階擴展<br/>關聯條文]
-    GE --> GEN[LLM 生成<br/>每句附法條引用]
-    GEN --> GND[逐句 groundedness 查核<br/>不被條文支持者刪改]
-    GND --> A[回答 + 法條引用]
+    LAW[laws.json<br/>五法205條] --> CHUNK[Chunking<br/>以條為單位<br/>>512 token 才切段]
+    CHUNK --> CTX[Contextual Retrieval<br/>LLM 生成定位摘要並前置<br/>解決片段脫離上下文的問題]
+    CTX --> EMB[GTAIDE embedding<br/>encode_document]
+    CTX --> BM25IDX[bm25s 索引<br/>jieba + 法律詞彙 userdict]
+    EMB --> CHROMA[(chromadb<br/>向量索引)]
+    BM25IDX --> BM25STORE[(bm25s<br/>關鍵詞索引)]
 ```
+
+**問答查詢**（線上，`twlongcare.cli`）：
+
+```mermaid
+flowchart LR
+    Q[口語問題] --> RW[Query 改寫<br/>口語→法規用語<br/>解決用詞對不上]
+    RW --> BM25[BM25 檢索 top-20<br/>解決精確字詞/條號]
+    RW --> VEC[向量檢索 top-20<br/>解決語意/換句話說]
+    BM25 --> RRF[RRF 融合<br/>公平合併兩套排名]
+    VEC --> RRF
+    RRF --> RR[bge-reranker-v2-m3<br/>重排取 top-5<br/>更精準的第二輪篩選]
+    RR -.Phase 4.-> GE[引用圖譜一階擴展<br/>關聯條文]
+    RR --> GATE1{top-1 分數<br/>< 門檻 0.644?}
+    GATE1 -->|是，跳過生成| A2[查無明確法源<br/>+ 1966 專線]
+    GATE1 -->|否| GEN[LLM 生成<br/>每句附法條引用]
+    GE -.-> GEN
+    GEN --> GND[CRAG 逐句 groundedness 查核<br/>不受支持者刪除/改寫]
+    GND --> GATE2{全部句子<br/>皆不支持?}
+    GATE2 -->|是| A2
+    GATE2 -->|否| A[回答 + 法條引用]
+```
+
+技術選型與各階段解決的問題，詳見 [開發藍圖 PLAN.md](PLAN.md) 與 [進度日誌 PROGRESS.md](PROGRESS.md)。
 
 ## 模型選型（台灣模型 vs 基準模型）
 
