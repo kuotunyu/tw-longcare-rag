@@ -2,10 +2,10 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：**Phase 0 已完成並經作者驗收（tag `phase-0`）**——taide-gemma3-12b（Q4_K_M、num_ctx 8192）已入 Ollama、三輪中文 smoke test 通過；接著開 Phase 1（法規資料）。
+- **現在做到哪**：Phase 1（法規資料）實作與驗證完成，**待作者驗收**——`data/laws.json` 五法 205 條（資料版本 2026-07-10）、三層來源全實測、18 個 pytest 全綠、條數與官網逐法核對一致。
 - **下一步**：
-  1. 寫 `scripts/fetch_laws.py`：官方 Open API 整包 ZIP（`/api/ch/law/json` 取 L0070040、D0050037；`/api/ch/order/json` 取 L0070043、L0070044、L0070059）→ ZIP 快取 `data/raw/`（檔名帶 UpdateDate）→ 解析存 `data/laws.json`（utf-8-sig、以 LawURL pcode 過濾、ArticleType=='A' 條文/'C' 章節、flno 正規化；完整規格見 PLAN Phase 1）
-  2. pytest（schema、條號完整性）→ 五法條數對官網 + 抽 3 條對原文 → 建 `fetch-laws` skill → README 補資料快照日期 → 驗收 → tag phase-1
+  1. 作者驗收 Phase 1 → `git tag phase-1`
+  2. Phase 2（索引管線 + CLI）：chunking（以條為單位、>512 token 段落切）→ Contextual Retrieval（**先印成本估算給作者確認**）→ GTAIDE embedding + chromadb + bm25s + RRF + bge-reranker → 三 provider CLI（完整規格見 PLAN Phase 2；開工前依 CLAUDE.md 用 Context7 查 LangChain 1.x 現行 API）
 - **未決問題**：
   - LICENSE 著作權人為佔位字串（作者決定：公開前再填）
   - README 動機段為草稿，待作者潤飾
@@ -58,3 +58,23 @@
   - 相關 commit：見本條目後續 commit（Modelfile 入版控 + 本檔更新）
   - 決策變更：無新決策（D5 路線首次完整執行到驗收）；PLAN 風險表新增「TAIDE 重建」一列（三個 Windows 陷阱對策）
   - 實際成本：$0（全地端，無 API 呼叫）
+
+### Phase 1 — 法規資料（實作完成 2026-07-20，待驗收）
+
+- **2026-07-20**：
+  - 完成內容：
+    - 寫 `scripts/fetch_laws.py`：三層來源策略（官方 Open API 整包 ZIP → sendlaw XML → LawAll.aspx HTML），內建下載重試（官方伺服器實測偶發整包「檔案使用中」鎖定）；ZIP 快取 `data/raw/` 檔名帶 UpdateDate；預設吃快取落實 D6 資料凍結，`--refresh` 才重下載
+    - 產出 `data/laws.json`：五法 205 條，schema 照 PLAN（law_name/pcode/chapter/article_no/content/url/law_modified_date/fetched_at/source_update_date），meta 含逐法統計與 L0070059 分階段施行註記
+    - 寫 `tests/test_laws.py` 14 個測試：正規化、chapter 狀態機、sendlaw/HTML 備援 parser（樣本取自實測結構）、laws.json schema/條數/條號唯一性守門
+    - 修 tier-3 HTML parser 一個實戰 bug：有附表的條文 col-no 內有迴紋針圖示（`<i class="fa fa-paperclip">`）致 regex 漏抓（L0070059 22 條只抓到 11），修正後全對；測試樣本已固定此案例
+    - 建 `fetch-laws` skill（含 D6 凍結判斷與重抓後 checklist）；CLAUDE.md 索引同步；README 補資料快照版本 2026-07-10 與五法統計表
+  - 驗證證據（實跑）：
+    - `uv run python scripts/fetch_laws.py` → 來源 api，五法 72/58/15/38/22 共 205 條，快取 ChLaw-2026-07-10.zip + ChOrder-2026-07-10.zip
+    - `uv run pytest -q` → `18 passed`
+    - 官網 LawAll.aspx 逐法交叉核對（獨立於 ZIP 的第二來源）：五法條數全部一致 ✓
+    - 抽 3 條對原文（LawSingle）：L0070040 §8-1（帶連字號實測）、L0070059 §10、D0050037 §1 全部逐字一致 ✓
+    - sendlaw 備援實測（CF 包）：L0070040/D0050037 條數與主來源一致、UpdateDate 同版 ✓
+    - L0070059 為 114-06-19 修正後現行文字（LawModifiedDate=20250619、LawEffectiveDate=20260701、EffectiveNote 記部分條文 115 年施行）✓
+  - 相關 commit：見後續 commit hash（驗收後補）
+  - 決策變更：無（照 PLAN Phase 1 與 D6 執行）
+  - 實際成本：$0（無 API 呼叫）
