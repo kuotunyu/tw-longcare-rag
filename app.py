@@ -105,13 +105,43 @@ def render_citation(law_name: str, article_no: str) -> str:
     )
 
 
+_NOISE_ONLY_RE = re.compile(
+    r"^[\s，。、；：！？!?,.\"'「」『』（）()\[\]【】《》<>]*$"
+)
+
+
 def render_answer_html(answer_text: str) -> str:
     """把回答文字裡的 [法規名 §條號] 換成可展開原文的 <details>；
     先 html.escape 整段文字（防生成內容意外含 HTML），escape 不影響方括號，
-    citation regex 仍可在跳脫後的文字上正確比對。"""
-    paragraphs = [p for p in answer_text.replace("\r\n", "\n").split("\n") if p.strip()]
-    if not paragraphs:
-        return "<p>（無回答內容）</p>"
+    citation regex 仍可在跳脫後的文字上正確比對。
+
+    分段規則：grounding.py 的逐句查核管線內部本來就是逐行（單一 \\n）當
+    獨立單位查核，且重組時一律用單一 \\n 銜接（見 `apply_grounding`）——
+    不會保留原始是單換行還是空白行，所以這裡沒辦法用「是不是空白行」判斷
+    是否為真的分段。改用內容判斷：某一行拿掉引用括號、標點後完全沒有實質
+    文字（LLM 常把引用括號或句尾標點自己斷成一行），視為附屬於前一行、
+    直接接上去，不獨立成一段；真正有實質內容的一行，才維持獨立成段。
+
+    段落容器刻意用 <div class="answer-para"> 而不是 <p>：實測發現瀏覽器
+    HTML 解析規則會把 <details>（<p> 的「隱式結束」清單裡的元素之一）當成
+    強制關閉 <p> 的訊號——citation 展開用的 <details> 只要不是段落最後一個
+    元素，後面的文字就會被解析器擠出 <p> 之外變成裸露節點，殘留的
+    </p> 還會被瀏覽器補插入一個空的 <p></p>（帶著瀏覽器預設的 margin），
+    這是先前「畫面上一堆無效空白」的真正主因之一（過去每次答案裡有引用
+    展開就會發生，只是沒被發現）。<div> 沒有這個限制，改用 <div> 包段落、
+    版面間距自己在 CSS 用 .answer-para 控制，不依賴 Gradio .prose p 的
+    預設樣式。"""
+    raw_lines = [ln.strip() for ln in answer_text.replace("\r\n", "\n").split("\n") if ln.strip()]
+    if not raw_lines:
+        return '<div class="answer-para">（無回答內容）</div>'
+
+    paragraphs: list[str] = []
+    for line in raw_lines:
+        bare = CITATION_RE.sub("", line)
+        if paragraphs and _NOISE_ONLY_RE.match(bare):
+            paragraphs[-1] += line
+        else:
+            paragraphs.append(line)
 
     def _sub(m: re.Match) -> str:
         return render_citation(m.group(1).strip(), m.group(2))
@@ -126,7 +156,7 @@ def render_answer_html(answer_text: str) -> str:
         rendered = url_re.sub(
             lambda m: f'<a href="{m.group(0)}" target="_blank">{m.group(0)}</a>', rendered
         )
-        parts.append(f"<p>{rendered}</p>")
+        parts.append(f'<div class="answer-para">{rendered}</div>')
     return "\n".join(parts)
 
 
@@ -217,28 +247,61 @@ def handle_question(question: str, provider: str, embedding: str, session_count:
 # 字級：Gradio 預設 --text-md 只有 14px，一般網頁 body 文字建議至少 16px
 # （尤其考慮到使用者可能含年長者），這裡整體上調一階，所有用到這組變數
 # 的原生 Gradio 元件（label、輸入框、按鈕、下拉選單…）都會跟著變大，
-# 不必逐一手改每個元件。
+# 不必逐一手改每個元件。作者測試後反饋仍然偏小，再往上調一階。
 CUSTOM_CSS = """
 .gradio-container {
-    --text-sm: 0.875rem !important;
-    --text-md: 1rem !important;
-    --text-lg: 1.125rem !important;
+    --text-sm: 1rem !important;
+    --text-md: 1.25rem !important;
+    --text-lg: 1.5rem !important;
 }
 /* Textbox/Dropdown 的實際輸入框字級不是直接綁 --text-md（量測後發現的落差，
-   單改變數不夠），直接補上避免看起來字太小。 */
+   單改變數不夠），直接補上避免看起來字太小。按鈕與 Accordion 標題也是各自
+   走獨立的 --button-*-text-size / 標題字級 token，不會跟著 --text-md 變動，
+   量測後一併補上（不然文字都放大了、按鈕和收合標題卻沒變，反而顯得更小）。 */
 .gradio-container textarea,
 .gradio-container input[type="text"],
 .gradio-container input[type="number"],
 .gradio-container .wrap-inner,
 .gradio-container ul.options li,
 .gradio-container label span,
-.gradio-container table {
+.gradio-container table,
+.gradio-container button.primary,
+.gradio-container button.secondary,
+.gradio-container .label-wrap span {
     font-size: var(--text-md) !important;
 }
 /* 作者反饋「整個版面太多框框」——第二輪只用邊框卡片凸顯答案，結果跟
    本來就有的提示框疊在一起變成滿版是框。改用「次要區塊拿掉邊框、只留
    淺底色」＋「答案不用邊框、改用底色塊+放大字級」，框線只留給真正
    重要的東西，其餘用背景色與留白做層次（不是不管重要性一律套用卡片）。 */
+/* 作者反饋「圈起來的空白很浪費空間」——量測後發現 gr.HTML 元件外層疊了
+   兩層 Gradio 自己的 padding（`.block` 本身 + 內層 `.html-container`
+   wrapper，各約 10px/12px），跟 .notice 自己的 padding 疊加，等於同一則
+   提示上下各多墊了兩次，是這兩段之間空白特別大的主因。`.block` 的
+   padding 可以直接用 :has() 蓋掉；`.html-container` 那層改用「負 margin」
+   讓 .notice 自己的框反向撐出去抵銷。**這裡踩了一個大坑**：本機開發伺服器
+   量測負 margin 有生效，但實際部署到 Space 後完全沒改善——追查發現正式
+   環境的 Gradio 樣式多了 `.prose > :first-child { margin-top: 0 }` 和
+   `.prose :last-child { margin-bottom: 0 !important }`，.notice 是它那層
+   `.prose` 唯一的子元素、同時是 first 也是 last child，兩條規則的特異度
+   都比單純 `.notice { margin: ... }` 高，直接蓋掉了負 margin（本機開發
+   伺服器的樣式包沒有這兩條規則，才會本機測有效、上線後沒用）。改成
+   `.html-container .prose .notice` 這種疊更多層 class 的選擇器＋
+   !important，特異度確保比 Gradio 那兩條規則高，兩邊環境都能生效。
+
+   消除雙重 padding 後間距回到跟全頁其他區塊一致的 16px——但作者換瀏覽器
+   再測仍反饋「還是浪費很多空間」，代表訴求不只是修掉雙重 padding 的 bug，
+   而是這幾則提示文字本身希望比一般區塊更緊湊（次要資訊，不需要跟主要
+   操作區一樣寬鬆）。在線上 Space 直接量測不同負 margin 值的實際效果
+   （-14px→12px/8px，-16px→10px/4px，-18px→8px/0px 兩則提示會貼在一起），
+   -15px 得到 11px/6px，比全頁基準 16px 明顯更緊，兩則提示之間也還留一點
+   可辨識的分隔，不會糊成一塊。 */
+.gradio-container .block:has(.notice) {
+    padding: 0 !important;
+}
+.gradio-container .html-container .prose .notice {
+    margin: -15px -12px !important;
+}
 .notice {
     padding: 10px 4px;
     border: none;
@@ -283,6 +346,12 @@ CUSTOM_CSS = """
     font-size: var(--text-lg);
     line-height: 1.75;
 }
+/* 每個答案段落刻意用 <div> 而非 <p>（見 render_answer_html docstring：
+   <details> 會強制關閉外層 <p>，造成裸露節點與瀏覽器補插入的空 <p>，這才
+   是版面出現大量無效空白的真正主因）；間距自己控制，不依賴 Gradio
+   .prose p 只設 margin-bottom、margin-top 靠瀏覽器預設殘留的不對稱寫法。 */
+.answer-para { margin: 0 0 0.6em; }
+.answer-para:last-child { margin-bottom: 0; }
 .hint-loading {
     font-weight: 600;
     animation: hint-loading-pulse 1.6s ease-in-out infinite;
@@ -317,6 +386,25 @@ CUSTOM_CSS = """
 .article-list { margin-top: 0.3em; }
 .article-list li { margin: 0.25em 0; line-height: 1.6; font-size: var(--text-md); }
 .error { color: var(--error-text-color); }
+/* 作者反饋「進階設定展開後字太小、框太多、沒善用空間」——量測後發現：
+   (1) Dropdown 的 combobox input 沒有 type="text" 屬性，原本的
+   input[type="text"] 選擇器吃不到，字級卡在瀏覽器預設的 14px；
+   (2) 下拉的 info 提示文字走 .info-text class，固定 12px，比全頁其他
+   文字明顯小一截；
+   (3) Accordion 本身、外層 .form 分組框、每個下拉自己的輸入框，三層
+   邊框疊在一起——.form 純粹是 Gradio 內部分組用、不帶語意，但同樣的
+   .form class 也用在最上面「你的問題」輸入框（不該動），所以特別限定在
+   `.gr-accordion` 之內才拿掉，只留 Accordion 自己的框和下拉本身的框。 */
+.gradio-container .wrap-inner input {
+    font-size: var(--text-md) !important;
+}
+.gradio-container .info-text {
+    font-size: var(--text-sm) !important;
+}
+.gr-accordion .form {
+    border: none !important;
+    background: none !important;
+}
 """
 
 def build_examples(default_provider: str) -> list[list[str]]:
@@ -383,8 +471,9 @@ def build_app() -> gr.Blocks:
         with gr.Accordion("進階設定（一般不需要更改）", open=False):
             p_choices, p_default, p_info = provider_choices()
             e_choices, e_default, e_info = embedding_choices()
-            provider = gr.Dropdown(p_choices, value=p_default, label="回答模型", info=p_info)
-            embedding = gr.Dropdown(e_choices, value=e_default, label="檢索模型", info=e_info)
+            with gr.Row():
+                provider = gr.Dropdown(p_choices, value=p_default, label="回答模型", info=p_info)
+                embedding = gr.Dropdown(e_choices, value=e_default, label="檢索模型", info=e_info)
 
         gr.Markdown("### 📋 回答")
         answer_out = gr.HTML(value=EMPTY_HINT, elem_classes=["answer-card"], padding=True)
@@ -393,7 +482,11 @@ def build_app() -> gr.Blocks:
             retrieved_out = gr.HTML(padding=True)
             related_out = gr.HTML(padding=True)
 
-        gr.Examples(examples=build_examples(p_default), inputs=[question, provider, embedding])
+        with gr.Accordion("💡 範例問題", open=False):
+            gr.Examples(
+                examples=build_examples(p_default), inputs=[question, provider, embedding],
+                label=None,
+            )
 
         loading_io = dict(inputs=[question], outputs=[answer_out, retrieved_out, related_out])
         io = dict(
