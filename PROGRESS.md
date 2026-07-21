@@ -660,3 +660,41 @@
     17.2 秒冷啟動時間是 RTX 4090＋模型已快取的結果，**不能外推**到免費
     CPU Basic（無 GPU、模型可能需要現場下載）的真實表現，真實數字需部署
     後另外實測記錄
+
+- **2026-07-21（作者實際部署過程中的真實發現與修正）**：
+  - 完成內容：
+    - 作者本人操作建立 Space：帳號免費方案**新建 Gradio Space 只能選
+      ZeroGPU 硬體，CPU Basic 需訂閱 PRO 才能解鎖**（跟稽核當時查證的
+      「CPU Basic 對所有人免費」官方文件描述不一致，是這次實際操作才發現
+      的即時 UI 限制，已非本專案程式碼可控）。判斷本專案程式碼從未匯入
+      `spaces` 套件、未使用 `@spaces.GPU` decorator，選 ZeroGPU 對我們
+      而言等同純 CPU 執行、不佔用 GPU 配額，維持原設計不需改 app.py
+    - git push 第一次遇到 `RPC failed; curl 56 HTTP/2 stream 5 was reset`
+      （傳輸中途斷線），確認 Space Files 分頁沒收到檔案，判定真的失敗；
+      改 `git config http.version HTTP/1.1` 強制不走 HTTP/2 後重推成功
+      （`f58aaaf..7f68550 main -> main`），為已知的 HTTP/2 傳輸不穩定
+      workaround，非本專案特有問題
+    - 檔案推送成功後 Space 觸發建置，**實際 build 失敗**：`space/requirements.txt`
+      的 `networkx>=3.6.1` 在 Space 建置當下對接的 PyPI 上**不存在**（最高
+      只到 3.4.2，本機開發環境的版本領先真實 PyPI 現況）；且選 ZeroGPU
+      硬體後 HF 建置系統會**自動在安裝指令插入自己的 `torch<2.11.0` 限制**，
+      跟原本寫的 `torch>=2.11.0` 互相衝突（無法同時滿足）。修正：拿掉
+      `networkx`/`torch` 的版本下限，也拿掉 CPU-only torch 索引
+      （`--extra-index-url .../whl/cpu`，ZeroGPU 硬體需要平台自己搭配的
+      torch build，不該用我們指定的版本覆蓋過去）
+  - 驗證證據（實跑）：
+    - Space Files 分頁截圖確認：初次推送失敗時只有範本檔案（`.gitattributes`／
+      `README.md`，1 個 commit）；HTTP/1.1 重推後變成 `data/`／`src/`／
+      `README.md`／`app.py`／`requirements.txt`（2 個 commit，`deploy: init`
+      commit hash `7f68550`）
+    - Space Logs 分頁截圖確認 build error 的完整錯誤訊息與 pip 實際嘗試的
+      安裝指令（含 HF 自動注入的 `"torch<2.11.0"` 等參數），據此才能精確定位
+      根因而非猜測
+    - `uv run python scripts/check_public_text.py space/requirements.txt` → 通過
+  - 相關 commit：`0858873`
+  - 決策變更：`space/requirements.txt` 版本策略從「對照本機已驗證版本釘死」
+    改為「不釘版本，讓 Space 建置當下依真實 PyPI 解析」——僅此檔案例外，
+    main repo 的 `pyproject.toml`/`uv.lock` 仍維持鎖定，不受影響
+  - 實際成本：$0
+  - 待驗證：requirements.txt 修正後尚未重新推送/確認 build 是否成功，
+    下一步待作者重跑 `prepare_space_bundle.py` → robocopy → commit → push
