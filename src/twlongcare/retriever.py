@@ -133,9 +133,6 @@ class HybridRetriever:
                 self._settings.reranker_model,
                 max_length=1024,
                 device=self._device,
-                # 跟 embeddings.py 同理：eager 版本迴避 ZeroGPU 模擬層與 sdpa
-                # vmap 遮罩不相容的問題，見 PLAN D16
-                model_kwargs={"attn_implementation": "eager"},
             )
         logits = self._reranker.predict(
             [(query, c.text) for c in candidates], show_progress_bar=False
