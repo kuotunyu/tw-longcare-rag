@@ -95,9 +95,22 @@ def run_pipeline(
         if on_progress is not None:
             on_progress(msg)
 
-    # 彙總型問題（列出整部法）不走 RAG：top-k 檢索天生答不了「每一條」，
-    # 改由 laws.json 直接生成確定性目錄（structured.py，作者實測發現後新增）
-    from .structured import build_law_overview, detect_enumeration_query
+    # 彙總型問題（列出整部法）與 meta 問題（問系統本身）皆不走 RAG——
+    # 改寫模型對這兩類問題會失控（見 structured.py docstring 根因說明），
+    # 改由固定的確定性回答處理，零幻覺、零成本
+    from .structured import (
+        META_RESPONSE,
+        build_law_overview,
+        detect_enumeration_query,
+        detect_meta_query,
+    )
+
+    if detect_meta_query(question):
+        progress("[router] 偵測到系統範圍 meta 問題，改走固定回答（不經檢索）")
+        return PipelineResult(
+            question=question, rewritten_query=question,
+            overview=True, answer_text=META_RESPONSE,
+        )
 
     enum_pcode = detect_enumeration_query(question)
     if enum_pcode is not None:

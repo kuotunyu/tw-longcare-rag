@@ -16,9 +16,10 @@ import sys
 
 import gradio as gr
 
-from twlongcare.config import get_settings
+from twlongcare.config import LOGS_DIR, get_settings
 from twlongcare.generate import CITATION_RE, LawsLookup
 from twlongcare.graph_expand import GRAPH_PATH, load_graph
+from twlongcare.grounding import log_grounding
 from twlongcare.pipeline import run_pipeline
 from twlongcare.retriever import HybridRetriever
 
@@ -103,6 +104,10 @@ def handle_question(question: str, provider: str, embedding: str):
         )
     except Exception as e:  # noqa: BLE001 - 介面層需要把錯誤攤在畫面上，不能整頁崩潰
         return f'<p class="error">執行失敗：{html.escape(str(e))}</p>', "", ""
+
+    if result.grounding is not None:
+        log_grounding(LOGS_DIR / "grounding" / f"{provider}.jsonl",
+                      question, provider, result.grounding)
 
     answer_html = render_answer_html(result.answer_text)
     if result.refused or result.overview:

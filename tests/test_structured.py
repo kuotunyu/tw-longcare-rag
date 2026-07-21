@@ -3,7 +3,11 @@
 import json
 
 from twlongcare.config import DATA_DIR
-from twlongcare.structured import build_law_overview, detect_enumeration_query
+from twlongcare.structured import (
+    build_law_overview,
+    detect_enumeration_query,
+    detect_meta_query,
+)
 
 
 # ---------- 偵測：應觸發 ----------
@@ -54,6 +58,29 @@ def test_no_trigger_on_trap_questions():
     spec.loader.exec_module(er)
     for q in er.TRAP_QUESTIONS:
         assert detect_enumeration_query(q) is None, q
+
+
+# ---------- meta 問題偵測（作者實測 3 次重現後新增） ----------
+
+def test_detect_meta_query_variants():
+    assert detect_meta_query("可以問你哪些法規問題?")
+    assert detect_meta_query("請問我可以問你哪些法規問題?")
+    assert detect_meta_query("你是誰")
+    assert detect_meta_query("這個工具是做什麼的")
+    assert detect_meta_query("你的功能是什麼")
+
+
+def test_meta_query_no_trigger_on_real_questions():
+    # 含「可以」「什麼」但問的是實質法規問題，不可誤觸
+    assert not detect_meta_query("幾歲可以申請長照服務")
+    assert not detect_meta_query("我可以申請什麼補助")
+    assert not detect_meta_query("開一家日照中心要什麼許可")
+
+
+def test_meta_query_no_trigger_on_formal_testset():
+    data = json.loads((DATA_DIR / "testset.json").read_text(encoding="utf-8"))
+    for it in data["items"]:
+        assert not detect_meta_query(it["question"]), it["question"]
 
 
 # ---------- 目錄生成 ----------

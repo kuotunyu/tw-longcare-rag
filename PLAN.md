@@ -33,6 +33,7 @@
 | D10 | 2026-07-20 | Query 改寫 prompt 升級為 **few-shot 版**（3 個口語→法規語範例＋微型詞彙對照）；**不採用** dual-query（原問題＋改寫並行 RRF 融合）；`retrieve_multi()` 保留為基礎能力（P5 評估矩陣可用）但 CLI 預設維持單查詢；拒答門檻隨新 prompt 重校準 0.644 → **0.636** | 12 題 dev set（預期條文逐條對照 laws.json 原文查證）實測五種策略：V1 prompt 92%、few-shot 100%（修復 V1 把「服務種類」改偏成「給付標準」的語意漂移）；dual-query 無增益且在 V1 下反而有害（RRF 被口語查詢的雜訊排名稀釋，75〜92%）——假設被數據推翻，如實記錄。「完全不改寫」hit@5 亦 100% 但不可採：改寫的第二個作用是拉開正常/陷阱題的 rerank 分數分離度（不改寫時正常題最低 0.522、與陷阱題重疊，拒答門檻失效）。few-shot 版重校準後分離幅度反而擴大（0.718 vs 0.553）。全程地端評測成本 $0，數據見 `scripts/eval_rewrite.py` 與 PROGRESS |
 | D11 | 2026-07-20 | Phase 5 deepeval 版本更正為實際安裝的 **2.9.3**（`uv add deepeval` 當下 PyPI 最新版，非 2026-07 稽核當時記錄的 4.1.1——稽核資料已過時，以實裝為準）；judge model 改用自訂 `OpenAIJudge`（繼承 `DeepEvalBaseLLM`，內部走官方 `openai` SDK `.chat.completions.parse()`），**不**把 `OPENAI_MODEL` 字串直接傳給 `FaithfulnessMetric(model=...)` | deepeval 2.9.3 的 `GPTModel` 內建模型白名單硬編碼到 `gpt-4.5-preview`/`o4-mini`，不含 `gpt-5-mini`，直接傳字串會拋 `ValueError`；自訂 wrapper 繞過白名單同時保留「模型字串不寫死」鐵律。安裝 deepeval 連帶把 `google-genai` 降版 2.12.1→1.75.0（deepeval 相依限制），已實跑一次 `--provider gemini` CLI 驗證輸出正常、非僅憑 pytest 綠燈 |
 | D12 | 2026-07-20 | 管線最前端加**查詢路由（query router，`structured.py`）**：偵測「明確指名五法之一＋整部列舉意圖」（每一條/全部條文/共幾條/目錄…）的彙總型問題時，繞過 RAG 直接由 laws.json 生成確定性法規目錄（章節結構＋條數＋官方全文連結），不呼叫任何 LLM | 作者 Phase 6 驗收實測「請列出長期照顧服務法的每一條」：top-5 檢索天生答不了彙總題，生成端把零碎檢索結果湊成順序混亂、混入他法條文的清單（引用格式也錯）。結構化資料就在手上，這類問題走檢索是用錯工具。範圍刻意收窄（需同時命中法名與列舉意圖），對抗式驗證 30 題正式測試集＋13 題陷阱題全數不誤觸（`tests/test_structured.py`）；單一條文查詢與主題問題仍走 RAG |
+| D12-補 | 2026-07-20 | 同一路由機制擴充第二種偵測：**meta 問題**（問系統本身，如「可以問你哪些法規問題」）→ 固定誠實範圍說明，不經 RAG。同時補上 `app.py` 先前遺漏的 grounding 稽核 log 寫入（`log_grounding`，與 cli.py 對齊） | 作者連續 3 次重現「可以問你哪些法規問題」讓 query 改寫模型把「問系統範圍」誤判成需改寫成法規查詢，**憑空捏造**具體法律問題（如「1. 失能老人聘僱外籍看護的補助額度為何？」），檢索抓到不相關條文，生成端被帶偏退化成列一串假設性問題清單（且句子被 grounding 移除後編號出現斷層 1,2,4,5,6，看似 bug 實為防幻覺機制正常運作，只是呈現不佳，此呈現問題留待未來處理，不在本次修復範圍）。三次重現皆一致，確認是系統性失效模式。查此問題根因時發現 app.py 完全沒寫 grounding log（本次調查因此得繞去用 CLI 重現），一併補上避免以後 UI 端問題難以排查 |
 
 ## 模型分工總表（防「地端模式偷打雲端」）
 
@@ -172,6 +173,7 @@ tw-longcare-rag/
 | TAIDE 12B 需重建（換量化等級/模型更新） | 照 PROGRESS phase-0 日誌的已驗證流程；三個 Windows 陷阱：HF 下載用 `--local-dir`（非開發者模式 symlink 權限 WinError 1314）、llama.cpp checkout 與 venv 放短路徑如 `C:\llamacpp-build\`（MAX_PATH 260）且 checkout 用 sparse（`gguf-py requirements conversion`）、requirements 安裝加 `--index-strategy unsafe-best-match`；Modelfile 已入版控（models/Modelfile） |
 | num_ctx 4096 靜默截斷 → 引用規則無聲失效 | Modelfile num_ctx 8192 + ChatOllama 顯式傳參 + prompt 長度守門測試 |
 | 「。」分句與句尾 citation 打架 | splitter 規則明訂 + 獨立 pytest（P3） |
+| 生成端輸出編號列表（一、二、三…或 1. 2. 3.）時，若 grounding 移除其中一句，編號會出現斷層（如 1,2,4,5,6），看起來像 bug 其實是防幻覺機制正常運作 | 已知呈現限制，刻意不修（Phase 6 作者驗收時發現，見 D12-補）：`apply_grounding` 只管句子留/刪，不重新編號列表；真要修需偵測列表結構並重排編號，複雜度與此小瑕疵不成比例，暫緩 |
 | TAIDE gated / GGUF 再散布限制 | 先接受授權；GGUF 僅留本地（D5） |
 | 法規 API 失效 / 法規中途修正 | 三層 fallback；資料凍結規則（D6） |
 | ragas 相依衝突 | deepeval-first + timebox（D3） |
