@@ -11,6 +11,8 @@ import math
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import spaces
+
 from .config import DATA_DIR, get_settings
 from .embeddings import STEmbeddings
 
@@ -118,7 +120,12 @@ class HybridRetriever:
         self._reranker = None
         self._device = device
 
+    @spaces.GPU
     def _rerank(self, query: str, candidates: list[RetrievedChunk]) -> None:
+        """HF Space（ZeroGPU 硬體）要求 App 內至少要有一個 @spaces.GPU 函式才准
+        啟動；這裡是管線中最吃運算的一步（cross-encoder 對候選條文重排），
+        選它來滿足規則同時真的有加速效果。`@spaces.GPU` 在非 ZeroGPU 環境
+        （本機開發、CPU Basic 等）是無作用的 no-op，不影響本機行為。"""
         if self._reranker is None:
             from sentence_transformers import CrossEncoder
 
