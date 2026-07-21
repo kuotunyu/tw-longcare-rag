@@ -12,6 +12,13 @@ provider 只留雲端；embedding 只留 gtaide（bge-m3 對照基準留給本�
 建索引邏輯在 `retriever.py`／`index_build.py`），不讓第一位訪客等；另加
 每 session 題數上限與 queue 併發上限做基本濫用防護。
 
+Phase 7+（作者實測回饋）：生成期間切出去做別的事、回來常找不到答案在哪——
+`show_loading()` 在 `handle_question()` 之前先跑一步，立刻把答案區換成明顯的
+「生成中」提示（`.hint-loading` 有脈動動畫，尊重 prefers-reduced-motion）；
+答案區塊本身也加 `.answer-card` 邊框樣式，固定佔一個顯眼的視覺錨點。曾嘗試
+在 `.then()` 加 `js=` 做完成後自動捲動，但實測會讓整個事件鏈完全不觸發
+（`.click()` 支援 `js=` 不代表 `.then()` 也支援，兩者不能混為一談），已移除。
+
 用法：
     uv run python app.py
 """
@@ -57,6 +64,7 @@ EMPTY_HINT = (
     '<p class="hint">💬 在上方輸入問題，按「送出」後，答案裡的每一句引用'
     "（例如 <code>[長期照顧服務法 §8]</code>）都可以點開查看條文原文。</p>"
 )
+LOADING_HINT = '<p class="hint hint-loading">⏳ 正在查詢法規、生成回答中，請稍候幾秒…</p>'
 SOURCES_INTRO = (
     '<p class="hint">這裡會列出系統實際用來生成上面答案的法規條文'
     "（檢索到的條文），以及透過法規之間互相引用關係額外帶出的條文"
@@ -148,6 +156,16 @@ def _friendly_error_message(provider: str, error: Exception) -> str:
     if "api_key" in text or "api key" in text or "authentication" in text or "401" in text:
         return f"雲端服務（{provider}）的金鑰設定似乎有問題，請檢查 .env 是否已正確填入。"
     return "查詢時發生問題，請稍後再試一次；若持續發生，請查看終端機的錯誤訊息。"
+
+
+def show_loading(question: str):
+    """送出後立刻顯示（在真正跑管線之前）：作者實測回饋——生成期間如果切出去
+    做別的事，回來常常找不到答案在哪；先給明顯的「生成中」狀態，讓使用者
+    知道系統正在動作，也讓「答案卡片」隨時保持在同一個位置。空輸入不用
+    顯示這個（handle_question 自己會處理，這裡讓它保持原本的空狀態提示）。"""
+    if not (question or "").strip():
+        return EMPTY_HINT, "", ""
+    return LOADING_HINT, "", ""
 
 
 def handle_question(question: str, provider: str, embedding: str, session_count: int = 0):
@@ -245,6 +263,27 @@ CUSTOM_CSS = """
     line-height: 1.7;
     padding: 6px 2px;
 }
+/* 答案卡片：作者實測回饋「生成完切出去再切回來常常找不到答案在哪」——
+   給它一個固定位置、隨時看得見的邊框卡片，不管是空狀態、生成中、還是
+   已有答案，視覺份量都比周圍的提示文字重，作為畫面上的主要錨點。 */
+.answer-card {
+    border: 2px solid var(--border-color-primary);
+    background: var(--background-fill-primary);
+    border-radius: var(--radius-lg);
+    padding: 4px 18px;
+    margin-top: 2px;
+}
+.hint-loading {
+    font-weight: 600;
+    animation: hint-loading-pulse 1.6s ease-in-out infinite;
+}
+@keyframes hint-loading-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hint-loading { animation: none; }
+}
 .citation { display: inline; }
 .citation summary {
     display: inline;
@@ -337,7 +376,8 @@ def build_app() -> gr.Blocks:
             provider = gr.Dropdown(p_choices, value=p_default, label="回答模型", info=p_info)
             embedding = gr.Dropdown(e_choices, value=e_default, label="檢索模型", info=e_info)
 
-        answer_out = gr.HTML(value=EMPTY_HINT, label="回答", padding=True)
+        gr.Markdown("### 📋 回答")
+        answer_out = gr.HTML(value=EMPTY_HINT, elem_classes=["answer-card"], padding=True)
         with gr.Accordion("引用來源與相關條文", open=False):
             gr.HTML(SOURCES_INTRO)
             retrieved_out = gr.HTML(padding=True)
@@ -345,12 +385,13 @@ def build_app() -> gr.Blocks:
 
         gr.Examples(examples=build_examples(p_default), inputs=[question, provider, embedding])
 
+        loading_io = dict(inputs=[question], outputs=[answer_out, retrieved_out, related_out])
         io = dict(
             inputs=[question, provider, embedding, session_count],
             outputs=[answer_out, retrieved_out, related_out, session_count],
         )
-        submit.click(handle_question, **io)
-        question.submit(handle_question, **io)
+        submit.click(show_loading, **loading_io).then(handle_question, **io)
+        question.submit(show_loading, **loading_io).then(handle_question, **io)
 
         gr.HTML(f'<p class="notice-footer">{DISCLAIMER}</p>')
 

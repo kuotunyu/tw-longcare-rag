@@ -167,3 +167,33 @@ def test_sources_intro_explains_purpose_when_empty():
     加一段永遠顯示的說明，不再讓手風琴看起來像壞掉的空框。"""
     assert "檢索到的條文" in app.SOURCES_INTRO
     assert "關聯條文" in app.SOURCES_INTRO
+
+
+# ---------- UI/UX polish 第三輪：生成中找不到答案在哪 ----------
+
+def test_show_loading_shows_loading_hint_for_nonempty_question():
+    """作者反饋「送出後切出去做別的事，回來常找不到答案在哪」——
+    送出當下要立刻顯示明顯的生成中狀態，不用等真正的回答回來才有反應。"""
+    answer, retrieved, related = app.show_loading("幾歲可以申請長照服務")
+    assert answer == app.LOADING_HINT
+    assert retrieved == "" and related == ""
+
+
+def test_show_loading_keeps_empty_hint_for_empty_question():
+    """空輸入不該顯示「生成中」（反正 handle_question 也不會真的跑管線）。"""
+    answer, retrieved, related = app.show_loading("")
+    assert answer == app.EMPTY_HINT
+
+
+def test_answer_card_css_gives_answer_area_visual_weight():
+    """答案卡片要有清楚的邊框（作者反饋回答區塊不夠顯眼），且不能違反
+    side-stripe border 的絕對禁止規則（單邊裝飾性 border-left/right）。"""
+    assert ".answer-card" in app.CUSTOM_CSS
+    assert "border-left" not in app.CUSTOM_CSS
+    assert "border-right" not in app.CUSTOM_CSS
+
+
+def test_loading_pulse_respects_reduced_motion():
+    """生成中的脈動動畫要有 prefers-reduced-motion 的無障礙替代方案。"""
+    assert "prefers-reduced-motion" in app.CUSTOM_CSS
+    assert "hint-loading-pulse" in app.CUSTOM_CSS
