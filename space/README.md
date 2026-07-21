@@ -7,7 +7,7 @@ sdk: gradio
 sdk_version: 6.20.0
 app_file: app.py
 python_version: "3.11"
-short_description: 用口語中文問台灣長照法規，每句回答都附法條引用可查證
+short_description: 用白話中文問台灣長照法規，RAG 回答附法條引用可查證
 pinned: false
 ---
 

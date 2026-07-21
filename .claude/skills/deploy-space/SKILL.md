@@ -40,19 +40,30 @@ uv run python scripts/prepare_space_bundle.py    # 預設輸出 dist/space-bundl
 
 ## 推送
 
+Space 在網頁建立時會自動產生一個初始 commit（範本 README.md/app.py），跟
+`prepare_space_bundle.py` 產出的資料夾是**兩份不相干的 git 歷史**——直接
+`git init` 再推會因為歷史不相容被拒絕，硬要推需要 `--force`（洗掉遠端歷史，
+非必要不建議）。改用「先 clone 空 Space、再把檔案複製進去」，全程不必
+force push：
+
 首次：
 
 ```powershell
-cd dist/space-bundle
-git init
-git remote add space https://huggingface.co/spaces/<帳號>/<space名稱>
-git add . && git commit -m "deploy: 初次部署"
-git push space main
+git clone https://huggingface.co/spaces/<帳號>/<space名稱> dist/space-repo
+uv run python scripts/prepare_space_bundle.py
+# Windows robocopy：/E 含子目錄、/PURGE 移除 space-repo 裡舊檔（但保留 .git）
+robocopy dist/space-bundle dist/space-repo /E /XD .git /PURGE
+cd dist/space-repo
+git add -A
+git commit -m "deploy: 初次部署"
+git push
 ```
 
-之後更新：重跑 `prepare_space_bundle.py` 覆蓋 `dist/space-bundle/`，`cd` 進去、
-`git add -A && git commit ... && git push space main`（`dist/` 已在
-`.gitignore`，不會混進主 repo 的版控歷史）。
+之後更新：重跑 `prepare_space_bundle.py`，再重跑同一段 `robocopy` + commit + push
+（`dist/` 已在 `.gitignore`，這些暫存產物不會混進主 repo 的版控歷史）。
+
+`robocopy` 的結束碼 0～7 都代表成功（8 以上才是真的錯誤）；PowerShell 或 Git
+Bash 若把它當失敗攔下來，看結束碼再判斷即可，不必特別處理。
 
 ## 冷啟動與自動建索引（原理，出問題時看這裡）
 
