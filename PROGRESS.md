@@ -2,14 +2,14 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-21）
 
-- **現在做到哪**：Phase 7（HF Spaces 部署）**工程準備完成，尚未實際上線**——自動建索引、Space 環境感知、部署檔案/腳本/skill 皆完成並本機實測；**尚未建立 HF Space、尚未推送**（見下）。
+- **現在做到哪**：Phase 7（HF Spaces 部署）**實際上線並驗證成功**——https://huggingface.co/spaces/steven0226/tw-longcare-rag ，CPU Basic 硬體（作者訂閱 HF PRO），實測多題皆正確回答、正確拒答、引用可展開，GitHub repo 也已建立（`kuotunyu/tw-longcare-rag`）。
 - **下一步**：
-  1. 作者本人操作：建 HF Space（SDK 選 Gradio、免費 CPU Basic）、設定 Secrets（`HF_TOKEN`／`GOOGLE_API_KEY`／`OPENAI_API_KEY`）、到 Google AI Studio/OpenAI 後台設金鑰額度上限——完整步驟見 `.claude/skills/deploy-space/SKILL.md`
-  2. 作者確認建好 Space 後，跑 `uv run python scripts/prepare_space_bundle.py` 組檔案、`git push` 上去
-  3. 上線後照 `deploy-space` skill 的驗收清單實測 3 題＋記錄真實冷啟動秒數，回報給我更新 README/PROGRESS，再 `git tag phase-7`
-- **未決問題**：是否/何時建立 HF Space 帳號與實際推送——需作者本人操作，我不能代為建立公開 Space 或登入帳號
-- **待使用者人工處理**：HF Space 建立、Secrets 設定、供應商後台金鑰額度上限（見上）
-- **⚠️ 已知坑**：（無——本機模擬冷啟動實測的秒數僅供驗證邏輯正確，不代表免費 CPU Basic 無 GPU、模型未快取時的真實表現，已在 PLAN D14 誠實註記）
+  1. 確認作者是否已到 Google AI Studio／OpenAI 後台設定金鑰額度上限（`deploy-space` skill 建議事項，尚未跟作者確認是否做過）
+  2. 回填 README 的 live demo 連結／30 秒 demo GIF 佔位
+  3. 作者驗收確認後 `git tag phase-7`
+- **未決問題**：（無）
+- **待使用者人工處理**：Google AI Studio／OpenAI 後台金鑰額度上限設定（若尚未做）
+- **⚠️ 已知坑**：（無——部署過程中發現的所有 bug 皆已修正並實測驗證，詳見 PLAN.md D14〜D19）
 
 ## 📜 Phase 日誌（append-only）
 
@@ -698,3 +698,49 @@
   - 實際成本：$0
   - 待驗證：requirements.txt 修正後尚未重新推送/確認 build 是否成功，
     下一步待作者重跑 `prepare_space_bundle.py` → robocopy → commit → push
+
+- **2026-07-21（實際部署全紀錄：ZeroGPU 三層問題→訂閱 PRO→真正的根因與修正→上線成功）**：
+  - 完成內容：
+    - 作者本人操作：`gh repo create` 建立 GitHub repo `kuotunyu/tw-longcare-rag`（Public，
+      MIT license）；發現本機 commit 歷史裡有 53 個 commit 作者是舊的 git 身份
+      `tun0000 <doinb...@gmail.com>`，作者要求 GitHub Contributors 只留 `kuotunyu`——
+      用 `git filter-branch --env-filter` 改寫全部 82 個 commit 的作者身份＋
+      `--tag-name-filter cat -- --all` 一併重寫 7 個 phase tag，驗證日期/內容/
+      commit 數皆不變後，刪除舊 repo 重建、乾淨推送
+    - HF Space 建立時發現：免費（非 PRO）帳號新建 Gradio Space 只能選 **ZeroGPU**，
+      CPU Basic 需訂閱 PRO（見 PLAN D15）。配合 ZeroGPU 連續踩到三層限制
+      （D15：App 需要至少一個 `@spaces.GPU` 函式；D17：GTAIDE 的 sliding-window
+      遮罩需要 `torch.vmap`，跟 ZeroGPU 模擬層不相容，`attn_implementation="eager"`
+      誤判無效；D18：`@spaces.GPU` 把呼叫送到另一個 worker process，`self` 裡的
+      模型物件無法安全序列化），最終作者訂閱 HF PRO（$9/month）、換回真正的
+      CPU Basic，移除全部 ZeroGPU 相關程式碼（見 D18）
+    - 換回 CPU Basic 後，`gemini` provider 對本該正常回答的問題持續誤判拒答
+      （`openai` provider 同一題正常，排除索引問題）。排查一開始方向錯誤——
+      連續嘗試「確認 Secret 沒有多打引號」「replace GOOGLE_API_KEY 用本機
+      確認有效的 GEMINI_API_KEY 值」「強制 Restart this Space」皆未解決。
+      **加診斷 log 才找到真因**：`rewrite.py` 的改寫例外原本完全靜默吞掉；
+      補 `print(..., file=sys.stderr)` 後，Space Container logs 顯示真正例外
+      `ChatGoogleGenerativeAIError`「model 'gemini-2.5-flash-lite' (NOT_FOUND):
+      no longer available to new users」——`config.py` 的 `gemini_lite_model`
+      備援預設值還停在 D8 決策前的舊值，跟 `.env.example` 早已更新的
+      `gemini-3.1-flash-lite` 不一致；本機因 `.env` 蓋掉這個備援而從未觸發，
+      Space 沒設這個環境變數才第一次真正命中（詳見 PLAN D19）。修正
+      `config.py` 預設值後，同一題連續測試 3 次皆正確回答、正確引用
+      （`長期照顧服務申請及給付辦法 §10-1/§10-2/§2/§3`、`長期照顧服務法 §8-4`）
+  - 驗證證據（實跑，真實部署環境）：
+    - Space 狀態最終轉為綠色 **Running**，App 畫面正常渲染、Examples 正確顯示
+      `gemini`／`gtaide`（無 `ollama` 選項）
+    - 「阿嬤請看護政府有補助嗎」（gemini/gtaide）連續測試 3 次皆正確回答、
+      有合法引用可展開；「開一家日照中心要什麼許可」同樣修正前拒答、
+      修正後待驗證（下次一併確認）
+    - GitHub Contributors 頁確認只剩 `kuotunyu` 一人
+    - 本機 133 個 pytest 全程維持全綠（含每一輪程式碼變更後）
+  - 相關 commit：`0c75944`（移除 ZeroGPU 程式碼）、`daa8537`（診斷 log）、
+    `1b38cef`（真正修正 gemini_lite_model 預設值）；GitHub repo 初始 commit
+    `f58aaaf`→改寫後 `7f68550`（HF Space）
+  - 決策變更：見 PLAN.md D15／D17／D18（ZeroGPU 三層問題與最終放棄）、
+    D19（gemini_lite_model 過時預設值真因與修正）
+  - 實際成本：訂閱 HF PRO $9/month；API 呼叫測試成本 <$0.01（僅少量問答測試）
+  - **教訓**：排查「行為正常但結果不對」類問題時，應優先讓靜默例外可見
+    （加診斷 log），而非依直覺連續嘗試看似合理的假設（金鑰、引號等）——
+    這次繞了好幾輪彎路才想到這個更根本的方法
