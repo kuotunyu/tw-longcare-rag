@@ -43,4 +43,4 @@ uv run python -m twlongcare.cli "問題" --provider ollama         # CLI 問答�
 - `rebuild-index`：重建 chroma/bm25s 索引（含 contextual 成本 gate 與多索引建置）
 - `ask-cli`：CLI 問答展示/除錯程序（三 provider、驗收題組、拒答陷阱題）
 - `run-eval`：Phase 5 評估三支腳本（retrieval 矩陣、盲測、faithfulness）執行程序，含成本估算與快取重跑規則
-- （隨 Phase 陸續加入：deploy-space）
+- `deploy-space`：Phase 7 部署到 HF Spaces 的標準程序（組檔案、Secrets、冷啟動原理、驗收 DoD）

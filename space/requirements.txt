@@ -1,0 +1,19 @@
+# HF Space（gradio SDK）執行期依賴。與 pyproject.toml 對照，差異：
+# - gradio 不列在這裡：Spaces 依 README frontmatter 的 sdk_version 自動安裝
+# - torch 走 CPU-only 索引（免費 CPU Basic 沒有 GPU；PyPI 預設 wheel 含 CUDA、體積大很多）
+# - deepeval / pyvis / langchain-ollama 不列：分別只用於評估腳本、圖譜視覺化腳本、
+#   本機 Ollama provider，Space 執行期用不到（ollama import 已在程式內 try/except 保護）
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.11.0
+
+bm25s>=0.3.9
+chromadb>=1.5.9
+huggingface-hub>=1.24.0
+jieba>=0.42.1
+langchain>=1.3.14
+langchain-google-genai>=4.2.7
+langchain-openai>=1.3.5
+networkx>=3.6.1
+python-dotenv>=1.2.2
+sentence-transformers>=5.6.0
+transformers>=5.14.1
