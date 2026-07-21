@@ -61,10 +61,16 @@ def render_answer_html(answer_text: str) -> str:
     def _sub(m: re.Match) -> str:
         return render_citation(m.group(1).strip(), m.group(2))
 
+    url_re = re.compile(r"https://law\.moj\.gov\.tw/[\w./?=&-]+")
+
     parts = []
     for para in paragraphs:
         escaped = html.escape(para)
         rendered = CITATION_RE.sub(_sub, escaped)
+        # 官方法規網址轉成可點擊連結（僅白名單 law.moj.gov.tw，不 linkify 任意網址）
+        rendered = url_re.sub(
+            lambda m: f'<a href="{m.group(0)}" target="_blank">{m.group(0)}</a>', rendered
+        )
         parts.append(f"<p>{rendered}</p>")
     return "\n".join(parts)
 
@@ -99,7 +105,7 @@ def handle_question(question: str, provider: str, embedding: str):
         return f'<p class="error">執行失敗：{html.escape(str(e))}</p>', "", ""
 
     answer_html = render_answer_html(result.answer_text)
-    if result.refused:
+    if result.refused or result.overview:
         return answer_html, "", ""
 
     retrieved_html = render_article_list(

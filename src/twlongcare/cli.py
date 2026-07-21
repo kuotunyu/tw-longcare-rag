@@ -96,7 +96,7 @@ def main(argv: list[str] | None = None) -> None:
     print("\n" + "=" * 60)
     print(result.answer_text)
     print("=" * 60)
-    if not result.refused:
+    if not result.refused and not result.overview:
         print("\n引用條文出處：")
         seen = set()
         for c in result.retrieved:

@@ -34,6 +34,7 @@ class PipelineResult:
     retrieved: list[RetrievedChunk] = field(default_factory=list)
     related: list[RelatedArticle] = field(default_factory=list)
     refused: bool = False
+    overview: bool = False  # 彙總型問題走結構化路由（不經 RAG，無引用可列）
     answer_text: str = ""
     grounding: GroundingResult | None = None  # 未跑 grounding 或拒答時為 None
     grounding_error: str | None = None
@@ -93,6 +94,18 @@ def run_pipeline(
     def progress(msg: str) -> None:
         if on_progress is not None:
             on_progress(msg)
+
+    # 彙總型問題（列出整部法）不走 RAG：top-k 檢索天生答不了「每一條」，
+    # 改由 laws.json 直接生成確定性目錄（structured.py，作者實測發現後新增）
+    from .structured import build_law_overview, detect_enumeration_query
+
+    enum_pcode = detect_enumeration_query(question)
+    if enum_pcode is not None:
+        progress("[router] 偵測到整部法規彙總問題，改走結構化目錄（不經檢索）")
+        return PipelineResult(
+            question=question, rewritten_query=question,
+            overview=True, answer_text=build_law_overview(enum_pcode),
+        )
 
     settings = get_settings()
     progress("[1/5] Query 改寫…")

@@ -32,14 +32,16 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    Q[口語問題] --> RW[Query 改寫<br/>口語→法規用語<br/>解決用詞對不上]
+    Q[口語問題] --> ROUTER{彙總型問題?<br/>指名整部法+列舉意圖}
+    ROUTER -->|是，不經檢索| TOC[法規目錄直出<br/>laws.json 章節+官方連結<br/>零幻覺零成本]
+    ROUTER -->|否| RW[Query 改寫<br/>口語→法規用語<br/>解決用詞對不上]
     RW --> BM25[BM25 檢索 top-20<br/>解決精確字詞/條號]
     RW --> VEC[向量檢索 top-20<br/>解決語意/換句話說]
     BM25 --> RRF[RRF 融合<br/>公平合併兩套排名]
     VEC --> RRF
     RRF --> RR[bge-reranker-v2-m3<br/>重排取 top-5<br/>更精準的第二輪篩選]
     RR --> GE[引用圖譜一階擴展<br/>關聯條文，上限+5]
-    RR --> GATE1{top-1 分數<br/>< 門檻 0.644?}
+    RR --> GATE1{top-1 分數<br/>< 門檻 0.636?}
     GATE1 -->|是，跳過生成| A2[查無明確法源<br/>+ 1966 專線]
     GATE1 -->|否| GEN[LLM 生成<br/>每句附法條引用]
     GE --> GEN

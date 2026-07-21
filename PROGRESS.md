@@ -391,6 +391,33 @@
       law.moj.gov.tw URL（格式與 pcode/flno 皆核對正確）
   - 相關 commit：`2ccb9b9` pipeline.py抽取+cli.py重構、`8ac5ae9` app.py+測試
   - 決策變更：無新 D 決策（照 PLAN Phase 6 執行）
+
+- **2026-07-20（作者驗收過程發現＋修正：彙總型問題查詢路由，D12）**：
+  - 完成內容：
+    - 作者自行測試「請列出 長期照顧服務法 的每一條」發現回答品質差：
+      top-5 檢索天生答不了彙總題，生成端把零碎檢索結果湊成順序混亂、
+      混入他法條文的清單，引用格式也錯（`[長期照顧服務法第 3]` 無 §，
+      點不開）——**這類問題走檢索是用錯工具**
+    - 新增 `src/twlongcare/structured.py` 查詢路由：偵測「明確指名五法
+      之一（含常見簡稱 alias 表，最長匹配防字首誤配）＋整部列舉意圖
+      （每一條/全部條文/共幾條/目錄…）」→ 繞過 RAG，由 laws.json 直接
+      生成確定性法規目錄（章節結構＋各章條號範圍＋最近修正日期＋官方
+      全文連結），不呼叫任何 LLM，零幻覺零成本、三 provider 行為一致
+    - 接進 `pipeline.run_pipeline()` 最前端（`PipelineResult.overview`
+      旗標）；cli.py/app.py 對 overview 結果隱藏引用區塊；app.py 另補
+      law.moj.gov.tw 網址白名單 linkify（僅官方網域，不 linkify 任意網址）
+    - `tests/test_structured.py` 8 個測試，含**對抗式不誤觸驗證**：
+      30 題正式測試集＋13 題拒答陷阱題全部不觸發路由（誤觸=正常問題
+      被目錄搶答）；「長照法第10條是什麼」（單條查詢）也不觸發
+  - 驗證證據（實跑）：
+    - `uv run pytest -q` → `106 passed`（含新增 8 個）
+    - CLI 實跑作者原句「請列出 長期照顧服務法 的每一條」→ 即時回應
+      正確目錄（72 條、7 章、章名與條號範圍與 laws.json 一致、官方連結）
+    - 迴歸：正常問題「幾歲可以申請長照服務」仍走完整 RAG 管線（[1/5]〜
+      [5/5] 全部照常），回答正確
+  - 相關 commit：本條目（見 git log）
+  - 決策變更：**D12**（彙總型問題查詢路由，記入 PLAN Decision Log）
+  - 實際成本：$0
   - **已知限制**：README 的 30 秒 demo GIF 未產出——本機截圖/錄影工具
     （`mcp__Claude_Browser__computer` screenshot action）對 Gradio 頁面
     連續逾時，與 Phase 4 的 pyvis 截圖限制是同一工具問題的第二次出現；
