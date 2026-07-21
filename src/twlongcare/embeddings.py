@@ -31,6 +31,10 @@ class STEmbeddings(Embeddings):
             device=device,
             truncate_dim=truncate_dim,
             token=hf_token or None,
+            # HF Space（ZeroGPU）在裝飾函式外的「CUDA 模擬模式」對 sdpa 的
+            # vmap 遮罩實作不相容（實測 RuntimeError，見 PLAN D16）；eager
+            # 版本在任何環境都能跑，序列短（法規條文片段）效能差異可忽略
+            model_kwargs={"attn_implementation": "eager"},
         )
 
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
