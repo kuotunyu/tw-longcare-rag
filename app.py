@@ -235,11 +235,14 @@ CUSTOM_CSS = """
 .gradio-container table {
     font-size: var(--text-md) !important;
 }
+/* 作者反饋「整個版面太多框框」——第二輪只用邊框卡片凸顯答案，結果跟
+   本來就有的提示框疊在一起變成滿版是框。改用「次要區塊拿掉邊框、只留
+   淺底色」＋「答案不用邊框、改用底色塊+放大字級」，框線只留給真正
+   重要的東西，其餘用背景色與留白做層次（不是不管重要性一律套用卡片）。 */
 .notice {
-    padding: 12px 16px;
-    border: 1px solid var(--border-color-accent);
-    background: var(--color-accent-soft);
-    border-radius: var(--radius-lg);
+    padding: 10px 4px;
+    border: none;
+    background: none;
     color: var(--body-text-color);
     font-size: var(--text-md);
     line-height: 1.6;
@@ -253,9 +256,8 @@ CUSTOM_CSS = """
     opacity: 0.75;
 }
 .notice-error {
-    border-color: var(--error-border-color);
-    background: var(--error-background-fill);
     color: var(--error-text-color);
+    font-weight: 600;
 }
 .hint {
     color: var(--body-text-color);
@@ -263,15 +265,23 @@ CUSTOM_CSS = """
     line-height: 1.7;
     padding: 6px 2px;
 }
-/* 答案卡片：作者實測回饋「生成完切出去再切回來常常找不到答案在哪」——
-   給它一個固定位置、隨時看得見的邊框卡片，不管是空狀態、生成中、還是
-   已有答案，視覺份量都比周圍的提示文字重，作為畫面上的主要錨點。 */
+/* 答案卡片：作者實測回饋「生成完切出去再切回來常找不到答案在哪」，
+   接著又反饋「邊框太多」——改成無邊框，用「陰影浮起＋放大字級」取代
+   線條邊框凸顯（量測發現 --color-accent-soft 本身色差太細微，淺色模式
+   下卡片背景跟頁面背景只有 1.06:1，肉眼幾乎分不出來，需要陰影輔助）。
+   陰影模糊半徑壓在 8px 內、且完全不搭配 border，避免變成「ghost card」
+   （1px border + 大範圍陰影疊加）這個常見的裝飾性反樣式。
+   `!important` 是必要的：Gradio 自己的 `.block` 包裝層有更高特異性
+   （兩個 class）的預設邊框樣式，量測後發現一般選擇器蓋不掉。 */
 .answer-card {
-    border: 2px solid var(--border-color-primary);
-    background: var(--background-fill-primary);
+    border: none !important;
+    background: var(--color-accent-soft) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     border-radius: var(--radius-lg);
-    padding: 4px 18px;
-    margin-top: 2px;
+    padding: 16px 20px;
+    margin: 6px 0 2px;
+    font-size: var(--text-lg);
+    line-height: 1.75;
 }
 .hint-loading {
     font-weight: 600;
