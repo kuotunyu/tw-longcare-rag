@@ -184,6 +184,7 @@ tw-longcare-rag/
 | taide-12b（12B 地端）引用格式遵循能力有限，grounding judge 準確度亦有限 | Phase 2 驗收實測：句尾 citation 覆蓋率約 50%（漏標非捏造內容）；prompt 層加強規則反而讓覆蓋率降至 0（規則超出小模型負荷），已回退最小修正版。Phase 3 grounding 查核本身也實測到地端 judge 假陰性（誤判條文中確實存在的內容為不支持、且引用不存在的條號當理由），雲端 judge 交叉驗證同案例皆正確。**不再嘗試靠 prompt 根治這類地端模型能力限制**，Phase 5 blind test 正式量化地端 vs 雲端差距，README 誠實揭露此已知限制 |
 | 拒答門檻（D10 後 0.636）與 Query 改寫 few-shot prompt 皆只用小樣本（5+5 題、12 題）人工標註校準，樣本量不足以外推 | **已於 Phase 5 完成重新驗證**（31 正常 + 13 對抗式查證過的陷阱題，`scripts/eval_refusal.py`）：門檻 0.636 維持不動（誤拒 2/31、漏放 2/13，備選門檻總錯誤數相同且更過擬合）；改寫效果由 30 題矩陣隱含驗證（baseline hit@5 93%）。**殘留結構性限制**：rerank 分數量主題相似度而非可回答性，「五法沾邊但答不了」的問題（如外籍看護聘僱資格）會落在正常分數區且生成端可能答非所問（實測有一例誤導性回答，逐句查核擋不住——它驗句子有無條文支持，不驗有無答對問題）；正確解法為未來加 CRAG 式 retrieval evaluator（LLM 判定檢索結果能否回答問題），非調門檻可解，詳見 docs/eval.md |
 | pyvis 互動圖譜（`docs/assets/law_graph.html`）渲染正常，但本專案用的自動化瀏覽器截圖工具對其連續逾時卡住 | 依 Phase 4 風險備援不深究 pyvis 本身；README 改用手繪 mermaid 聚合圖佐證統計數字，互動 HTML 仍保留供使用者自行本機開啟查看，僅截圖流程受限 |
+| 同一套自動化瀏覽器截圖工具對 Phase 6 的 Gradio app（`localhost:7860`）也連續逾時（`computer` screenshot action），非本次新問題、是同一工具限制的第二次出現 | `read_page`／`get_page_text`／`form_input`／點擊互動皆正常運作，改用這些方法完成 4 個案例的真實端對端驗證（含引用展開點擊確認）；README 的 30 秒 demo GIF 待作者另尋管道錄製（例如自己用 Windows 內建錄影工具），不列入 Phase 6 DoD 阻塞項 |
 
 ## 進度管理與專案級 skills
 

@@ -12,8 +12,9 @@
 
 ## 系統架構
 
-> Phase 0〜5 已實作（索引建置、hybrid 檢索、生成、逐句查核、
-> 法條引用圖譜一階擴展、對照實驗與盲測評估）；介面（Phase 6〜7）尚待實作。
+> Phase 0〜6 已實作（索引建置、hybrid 檢索、生成、逐句查核、
+> 法條引用圖譜一階擴展、對照實驗與盲測評估、Gradio 網頁介面）；
+> 雲端部署（Phase 7）尚待實作。
 
 **索引建置**（離線，`scripts/build_index.py`）：
 
@@ -72,6 +73,19 @@ uv run python -m twlongcare.cli "阿嬤請看護政府有補助嗎" --provider o
 
 `--provider` 可切換 `ollama`（地端 TAIDE 12B，預設）/ `gemini` / `openai`。
 開發者：clone 後執行一次 `git config core.hooksPath .githooks` 啟用公開文案守門 hooks。
+
+**網頁介面**（Gradio 6.x，Phase 6）：
+
+```powershell
+uv run python app.py
+```
+
+開啟 http://localhost:7860——輸入問題、選擇生成模型與 embedding，回答每句的
+`[法規名 §條號]` 引用可點擊展開看條文原文，並顯示檢索到的條文與圖譜擴展的
+關聯條文。（尚無 demo GIF：本機截圖/錄影工具在此環境對 Gradio 頁面的擷取
+持續逾時，同一限制之前在 pyvis 互動圖譜也遇過，依 PLAN 風險備援不深究，
+已用文字＋本機實測記錄替代——功能本身已用真實瀏覽器互動驗證過 4 個案例，
+見 PROGRESS.md Phase 6 日誌。）
 
 ### 範例輸出（`--provider gemini`）
 
@@ -222,7 +236,7 @@ citation 覆蓋率落差一致，這次用第三方評審量化出實際勝率�
 | langchain-openai | 1.3.5 | jieba | 0.42.1 |
 | langchain-ollama | 1.1.0 | networkx | 3.6.1 |
 | torch | 2.11.0+cu128 | pyvis | 0.3.2 |
-| deepeval | 2.9.3 | gradio（Phase 6） | 6.x |
+| deepeval | 2.9.3 | gradio | 6.20.0 |
 
 註：向量庫直接呼叫 `chromadb`（不經 `langchain-chroma` 包裝），因 hybrid 檢索需要對候選集做精細控制；LLM 呼叫仍全數走 LangChain（見 PLAN.md D9）。
 

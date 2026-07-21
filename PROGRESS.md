@@ -2,12 +2,14 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：Phase 5（評估）**作者驗收通過，已打 tag `phase-5`**。測試集、retrieval 矩陣（7 config）、生成端盲測、faithfulness/answer relevancy、拒答門檻大樣本重新驗證、docs/eval.md 正本、README 同步、run-eval skill 全部完成。
+- **現在做到哪**：Phase 6（Gradio 介面）**實作與本機真實瀏覽器驗證完成，待作者驗收**——app.py（問答+每句引用可展開原文+provider/embedding下拉+檢索/圖譜顯示）、共用 pipeline.py 重構、4 個案例端對端測試（3 正常題+1 拒答，涵蓋三個 provider 與兩種 embedding）皆通過。
 - **下一步**：
-  1. 詢問作者是否要開始 Phase 6（Gradio 介面）
+  1. 作者驗收 Phase 6 → `git tag phase-6`
+  2. 之後開 Phase 7（HF Spaces 部署）
 - **未決問題**：（無）
 - **待使用者人工處理**：（無）
-- **⚠️ 已知坑**：（無——拒答門檻已補做大樣本重新驗證，殘留的「主題相似度≠可回答性」結構性限制已轉入 PLAN 風險表與 docs/eval.md，含未來工作方向）
+- **⚠️ 已知坑**：
+  - README「30 秒 demo GIF」尚未產出——本機截圖/錄影工具對 Gradio 頁面持續逾時（與 Phase 4 的 pyvis 截圖限制同一工具問題），已用 `read_page`/`get_page_text`/點擊互動完成真實驗證取代螢幕錄影佐證；若要 GIF 需作者自行用其他工具錄製，非阻塞項
 
 ## 📜 Phase 日誌（append-only）
 
@@ -330,6 +332,68 @@
       `docs/eval/refusal_results.json`）
     - 現行門檻：誤拒 2/31、漏放 2/13
     - 兩題漏放的 CLI 完整輸出已人工檢視（誤導性/無害各一）
-  - 相關 commit：本條目（見 git log）
+  - 相關 commit：`14ce2d4` 拒答門檻重新驗證+deepeval依賴補commit
   - 決策變更：無新 D 決策（門檻維持現值；結構性限制記入風險表）
   - 實際成本：$0（查證與評測全程地端/本機）
+
+### Phase 6 — Gradio 介面（實作完成 2026-07-20，待驗收）
+
+- **2026-07-20**：
+  - 完成內容：
+    - `src/twlongcare/pipeline.py`（新檔）：把 `cli.py` main() 的核心邏輯
+      （改寫→hybrid檢索→拒答門檻→圖譜擴展→生成→逐句查核）抽成
+      `run_pipeline()`，`retriever` 由呼叫端建構後傳入（介面端要重複使用
+      已載入的 embedding/reranker，不能每次問答重建）；`on_progress` 回呼
+      讓 CLI 保留原本逐步 stderr 輸出，Gradio 端可選擇不接
+    - `cli.py` 改為薄封裝：只剩參數解析、進度印出、結果格式化，呼叫
+      `pipeline.run_pipeline()`；**重構中修正一個潛在邏輯誤區**：原始
+      cli.py 在「拒答」分支會把 `retrieved` 清空以隱藏引用出處列表，但
+      步驟 [2/5] 的檢索分數 debug 輸出是在清空之前印的——若天真地把
+      「retrieved 清空」邏輯搬進 pipeline.py 共用函式，會連 debug 輸出都
+      跟著消失（cli.py 的除錯資訊會少於重構前）。改用獨立的 `result.refused`
+      布林值控制「是否顯示引用出處」，`result.retrieved` 恆保留實際檢索
+      結果，兩個關注點分開
+    - `app.py`（新檔，repo 根目錄，比照 HF Spaces 慣例路徑）：Gradio 6.x
+      Blocks 介面——問題輸入、provider（ollama/gemini/openai）與 embedding
+      （gtaide/bge-m3）下拉、回答區用 `gr.HTML` 渲染，句尾 `[法規名 §條號]`
+      引用轉成 `<details>` 可展開原文（html.escape 先跳脫全文防注入，
+      escape 不影響方括號比對）、Accordion 顯示檢索到的條文與圖譜擴展
+      關聯條文、頁尾非官方聲明
+    - retriever 依 embedding 選項延遲建構＋快取（`_retriever_cache` dict），
+      避免每次問答重載模型
+    - 開工前依 CLAUDE.md 鐵律查證 Gradio 6 現行 API（Context7 本 session
+      未連接，改 WebFetch 官方 migration guide）：**Gradio 6 把 theme/css
+      從 `gr.Blocks()` 搬到 `launch()`**（4.x/5.x 教學會寫在 Blocks 建構子，
+      是本次特別提防的坑）；`show_api` 改 `footer_links`；`gr.HTML` padding
+      預設 True→False（本專案顯式傳 `padding=True`）
+    - `tests/test_app.py` 6 個測試：已知條文可展開、未知條文標記缺漏、
+      HTML 特殊字元跳脫（防 XSS）、多段落渲染、空內容備援
+  - 驗證證據（實跑，**真實瀏覽器互動**，非僅憑程式碼檢查）：
+    - `uv run pytest -q` → `98 passed`（含新增 6 個）
+    - cli.py 重構後端對端比對：同一問題「沒有申請許可就開長照機構會怎樣」
+      重跑，檢索分數與圖譜擴展結果與重構前一致；grounding 稽核 log
+      （`logs/grounding/ollama.jsonl`）逐句 verdict 筆數正確（5 筆），
+      證實重構沒有讓稽核記錄退化成空殼
+    - 拒答分支重跑「機車紅燈右轉會被罰多少錢」：debug 仍正確印出檢索分數
+      （0.50〜0.52，低於門檻），且最終「引用條文出處」區塊正確隱藏——
+      證實 `result.refused` 與 `result.retrieved` 分離設計正確
+    - `uv run python app.py` 啟動後用瀏覽器工具實測 4 案例：
+      (1) 「阿嬤請看護政府有補助嗎」ollama/gtaide——taide-12b 這次未加
+      句尾方括號引用（已知地端模型限制，非本次 bug）
+      (2) 「幾歲可以申請長照服務」gemini/gtaide——句尾正確標註
+      `[長期照顧服務申請及給付辦法 §2]`，**親自點擊展開**確認彈出的條文
+      全文與 laws.json 原文逐字一致
+      (3) 「開一家日照中心要什麼許可」openai/bge-m3——驗證第三個 provider
+      與第二個 embedding 選項都能正常運作
+      (4) 「機車紅燈右轉會被罰多少錢」ollama——拒答分支正確顯示「查無
+      明確法源」，且檢索/圖譜擴展細節區塊正確清空
+    - 檢索到的條文、圖譜擴展關聯條文皆以可點擊連結呈現，連結指向真實
+      law.moj.gov.tw URL（格式與 pcode/flno 皆核對正確）
+  - 相關 commit：`2ccb9b9` pipeline.py抽取+cli.py重構、`8ac5ae9` app.py+測試
+  - 決策變更：無新 D 決策（照 PLAN Phase 6 執行）
+  - **已知限制**：README 的 30 秒 demo GIF 未產出——本機截圖/錄影工具
+    （`mcp__Claude_Browser__computer` screenshot action）對 Gradio 頁面
+    連續逾時，與 Phase 4 的 pyvis 截圖限制是同一工具問題的第二次出現；
+    改用 `read_page`/`get_page_text`/表單填寫/點擊互動完成上述 4 案例的
+    真實驗證，功能正確性不受影響，只是無法產出視覺化錄影佐證
+  - 實際成本：$0（本機模型+已有雲端額度測試呼叫，量級可忽略）
