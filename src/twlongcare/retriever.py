@@ -94,13 +94,27 @@ class HybridRetriever:
         ctx = "ctx" if contextual else "noctx"
         collection_name = f"{embedding_key}_{probe_dim}_{ctx}"
         client = chromadb.PersistentClient(path=str(DATA_DIR / "chroma"))
-        self._collection = client.get_collection(collection_name)
-
         bm25_dir = DATA_DIR / "bm25s" / ctx
-        self._bm25 = bm25s.BM25.load(str(bm25_dir))
-        self._bm25_ids: list[str] = json.loads(
-            (bm25_dir / "chunk_ids.json").read_text(encoding="utf-8")
-        )
+
+        def _load():
+            collection = client.get_collection(collection_name)
+            bm25 = bm25s.BM25.load(str(bm25_dir))
+            bm25_ids = json.loads((bm25_dir / "chunk_ids.json").read_text(encoding="utf-8"))
+            return collection, bm25, bm25_ids
+
+        try:
+            self._collection, self._bm25, self._bm25_ids = _load()
+        except Exception:
+            # 索引不存在（如 HF Space 每次冷啟動的非持久磁碟）：用已載入的
+            # embedder 自動建一次，避免重複下載/載入模型；contextual 快取
+            # 若不齊全會明確拋錯而非靜默呼叫付費 API（見 index_build.py）
+            from .index_build import build_index
+
+            build_index(
+                embedding_key=embedding_key, dim=dim, contextual=contextual,
+                confirm_cost=False, embedder=self._embedder,
+            )
+            self._collection, self._bm25, self._bm25_ids = _load()
         self._reranker = None
         self._device = device
 
