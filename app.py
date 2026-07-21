@@ -23,6 +23,13 @@ import os
 import re
 import sys
 import time
+from pathlib import Path
+
+# HF Space 只跑 `pip install -r requirements.txt`，不會把本專案自己的
+# src/twlongcare 套件裝進去（本機能 import 是因為 uv sync 做了 editable
+# install）；顯式把 src/ 加進 sys.path，兩邊都能正確 import（本機這行是
+# 多餘但無害，因為套件本來就已經裝好，路徑重複加入不影響解析結果）。
+sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
 import gradio as gr
 
