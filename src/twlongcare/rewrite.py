@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import sys
+
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from .llm_text import extract_text
@@ -42,5 +44,6 @@ def rewrite_query(question: str, model, system: str = REWRITE_SYSTEM) -> str:
         text = extract_text(reply.content)
         rewritten = text.strip().splitlines()[0].strip() if text.strip() else ""
         return rewritten or question
-    except Exception:  # noqa: BLE001 - 改寫非關鍵路徑
+    except Exception as e:  # noqa: BLE001 - 改寫非關鍵路徑，仍印出真實原因供除錯
+        print(f"[rewrite] 改寫失敗，退回原始問題：{e!r}", file=sys.stderr)
         return question
