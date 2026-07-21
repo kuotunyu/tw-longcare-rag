@@ -1,19 +1,18 @@
-# HF Space（gradio SDK，ZeroGPU 硬體）執行期依賴。
+# HF Space（gradio SDK，CPU Basic 硬體）執行期依賴。
 #
 # 版本刻意不釘死（跟 pyproject.toml/uv.lock 不同）：實際部署時發現本機開發
 # 環境裝到的版本（如 networkx 3.6.1）在 Space 建置當下對接的 PyPI 上還不存在，
-# 硬性下限反而讓 build 失敗；且選了 ZeroGPU 硬體後，HF 會自動在安裝指令插入
-# 它自己的 torch 版本限制（實測 torch<2.11.0），跟我們自訂下限衝突。因此也不
-# 指定 CPU-only torch 索引，讓 Space 自己依硬體選相容的 torch build。
+# 硬性下限反而讓 build 失敗，故改為不釘版本讓 Space 依當下真實 PyPI 解析。
 #
+# torch 走 CPU-only 索引：CPU Basic 沒有 GPU，PyPI 預設 wheel 含 CUDA、體積
+# 大很多，用官方 CPU 索引可以省下載時間。
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+
 # 與 pyproject.toml 對照，差異：
 # - gradio 不列在這裡：Space 依 README frontmatter 的 sdk_version 自動安裝
-# - spaces 也不列：選 ZeroGPU 硬體後 HF 建置會自動注入固定版本（實測 0.51.0），
-#   自己列版本可能跟它衝突（同一類坑，見上面 torch 那段）；本機開發用
-#   `uv add spaces` 另外裝，不透過這份檔案
 # - deepeval / pyvis / langchain-ollama 不列：分別只用於評估腳本、圖譜視覺化腳本、
 #   本機 Ollama provider，Space 執行期用不到（ollama import 已在程式內 try/except 保護）
-torch
 bm25s
 chromadb
 huggingface-hub

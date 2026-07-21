@@ -4268,23 +4268,6 @@ wheels = [
 ]
 
 [[package]]
-name = "spaces"
-version = "0.51.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "gradio" },
-    { name = "httpx" },
-    { name = "packaging" },
-    { name = "pydantic" },
-    { name = "requests" },
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/d0/93/6066dcd0ee4eee2a6242de917b461e6779282cbe78fbf1d278b8042e7232/spaces-0.51.0.tar.gz", hash = "sha256:ff7700969ed3e3500eccae46b9f5f6daf00de182ee2f3ad51156f3ade471fd37", size = 88598, upload-time = "2026-07-10T16:08:46.921Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a1/ae/77e14929554053c2f5465a555fd0de0b2f26441442b555d677424d4ad0f0/spaces-0.51.0-py3-none-any.whl", hash = "sha256:a6783be3561d2a49a55c23cdbf2f88a1a8d922cf6884ca11a4d70a5ed501d0f6", size = 111642, upload-time = "2026-07-10T16:08:48.011Z" },
-]
-
-[[package]]
 name = "stack-data"
 version = "0.6.3"
 source = { registry = "https://pypi.org/simple" }
@@ -4560,7 +4543,6 @@ dependencies = [
     { name = "python-dotenv" },
     { name = "pyvis" },
     { name = "sentence-transformers" },
-    { name = "spaces" },
     { name = "torch" },
 ]
 
@@ -4585,7 +4567,6 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.2.2" },
     { name = "pyvis", specifier = ">=0.3.2" },
     { name = "sentence-transformers", specifier = ">=5.6.0" },
-    { name = "spaces", specifier = ">=0.51.0" },
     { name = "torch", specifier = ">=2.11.0", index = "https://download.pytorch.org/whl/cu128" },
 ]
 
