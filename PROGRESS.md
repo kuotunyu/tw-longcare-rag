@@ -1,15 +1,15 @@
 # PROGRESS — 進度日誌
 
-## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-21）
+## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-22）
 
-- **現在做到哪**：Phase 7（HF Spaces 部署）**實際上線並驗證成功**——https://huggingface.co/spaces/steven0226/tw-longcare-rag ，CPU Basic 硬體（作者訂閱 HF PRO），實測多題皆正確回答、正確拒答、引用可展開，GitHub repo 也已建立（`kuotunyu/tw-longcare-rag`）。
+- **現在做到哪**：Phase 7（HF Spaces 部署）**實際上線並持續打磨 UI**——https://huggingface.co/spaces/steven0226/tw-longcare-rag ，CPU Basic 硬體（作者訂閱 HF PRO）。上線後又經多輪作者實測回饋（字級、換行、留白、進階設定框線）修正，每輪皆直接連線上 Space 驗證（不只憑本機測試），詳見下方 Phase 7 log。README 已補上 demo 連結。
 - **下一步**：
-  1. 確認作者是否已到 Google AI Studio／OpenAI 後台設定金鑰額度上限（`deploy-space` skill 建議事項，尚未跟作者確認是否做過）
-  2. 回填 README 的 live demo 連結／30 秒 demo GIF 佔位
-  3. 作者驗收確認後 `git tag phase-7`
+  1. **主 repo 尚未 commit 今天這輪改動**（`app.py`／`tests/test_app.py`／`README.md`，`git status` 目前是 working tree 有未加入版控的修改）——這些改動只推上了 HF Space 自己的 git（`dist/space-repo`），沒進主 repo 歷史，GitHub 上看到的 `app.py` 是舊版本。跟作者確認後執行 `git add app.py tests/test_app.py README.md && git commit -m "..." && git push`
+  2. 確認作者是否已到 Google AI Studio／OpenAI 後台設定金鑰額度上限（`deploy-space` skill 建議事項，尚未跟作者確認是否做過）
+  3. 作者驗收確認今天這輪修正後 `git tag phase-7`
 - **未決問題**：（無）
 - **待使用者人工處理**：Google AI Studio／OpenAI 後台金鑰額度上限設定（若尚未做）
-- **⚠️ 已知坑**：（無——部署過程中發現的所有 bug 皆已修正並實測驗證，詳見 PLAN.md D14〜D19）
+- **⚠️ 已知坑**：主 repo 與實際部署的 Space 程式碼不同步（見上「下一步」第 1 項）——收工前務必 commit，否則之後容易搞混哪個版本才是真的在跑
 
 ## 📜 Phase 日誌（append-only）
 
@@ -744,3 +744,73 @@
   - **教訓**：排查「行為正常但結果不對」類問題時，應優先讓靜默例外可見
     （加診斷 log），而非依直覺連續嘗試看似合理的假設（金鑰、引號等）——
     這次繞了好幾輪彎路才想到這個更根本的方法
+
+- **2026-07-22（上線後 UI/UX 打磨：字級、換行、留白、進階設定，共 5 輪作者實測回饋）**：
+  - 完成內容：
+    - **字級再放大**（作者反饋「字全部都太小了」）：`--text-sm/--text-md/--text-lg`
+      從 14/16/18px 調到 16/20/24px；量測後發現送出按鈕與 Accordion 收合標題
+      各自走獨立的 Gradio 字級 token、不受這組變數影響，額外補上
+      `button.primary`/`.label-wrap span` 選擇器
+    - **Examples 收合**（作者反饋「Examples 那塊太顯眼」）：包進新的
+      「💡 範例問題」Accordion、預設收合；`gr.Examples(..., label=None)` 避免
+      收合標題裡再疊一層原生「Examples」字樣
+    - **合併無意義換行 + 修正一個潛藏已久的深層 bug**（作者反饋「太多無效
+      空白/換行」）：
+      1. `render_answer_html` 改用內容判斷合併行——某一行拿掉引用括號/標點後
+         若完全沒有實質文字（LLM 常把引用括號或句尾標點自己斷成一行），
+         視為附屬於前一行接上去，不再逐行都變獨立段落
+      2. **真正的主因**：瀏覽器 HTML 解析規則把 `<details>`（citation 展開用
+         的元素）當成強制關閉 `<p>` 的訊號之一——只要 citation 不是段落最後
+         一個元素，後面的文字就會被解析器擠出 `<p>` 外變成裸露節點，殘留的
+         `</p>` 還會讓瀏覽器補插入一個帶預設 margin 的空 `<p>`。這個 bug
+         從 Phase 6 citation 功能一加上就存在，這次才用 DOM 樹狀 dump 抓到。
+         改用 `<div class="answer-para">` 包段落，`<div>` 沒有這個限制
+    - **提示區塊間距**（作者反饋「圈起來的空白很浪費空間」，共三輪才收斂）：
+      1. 量測發現 gr.HTML 外層疊了兩層 Gradio 自己的 padding（`.block` 本身
+         + 內層 `.html-container`），跟 `.notice` 自己的 padding 疊加成雙重
+         留白；`.block` 用 `:has()` 蓋掉，`.html-container` 改用負 margin
+         在 `.notice` 自己身上抵銷
+      2. **本機測有效、上線後完全沒改善**：追查發現正式部署環境的 Gradio
+         樣式多了 `.prose > :first-child { margin-top: 0 }` 和
+         `.prose :last-child { margin-bottom: 0 !important }`（本機開發伺服器
+         的樣式包沒有這兩條規則）——`.notice` 是它那層 `.prose` 唯一的子
+         元素、同時是 first 也是 last child，特異度都比單純 `.notice { margin }`
+         高，直接蓋掉負 margin。改成 `.html-container .prose .notice` 疊多層
+         class 撐高特異度＋`!important` 解決
+      3. 作者換瀏覽器再測仍反饋「還是浪費很多空間」——直接在**線上 Space**
+         實測多組負 margin 數值（-14px→12px/8px、-16px→10px/4px、
+         -18px→8px/0px 兩則提示會貼在一起太過頭），選定 -15px（11px/6px，
+         比全頁基準 16px 明顯更緊，兩則提示間仍留可辨識分隔）
+    - **進階設定手風琴**（作者反饋「字太小、框太多、沒善用空間」）：
+      1. 下拉選單的 combobox input 沒有 `type="text"` 屬性，原本鎖定
+         `input[type="text"]` 的選擇器吃不到，字級卡在 14px；info 提示文字
+         固定走 `.info-text` class，只有 12px。兩個都補上規則
+      2. 展開後疊了三層邊框（Accordion 本身、外層 `.form` 分組框、每個下拉
+         自己的輸入框）；`.form` 這個 class 同時也用在「你的問題」輸入框
+         （不能動），限定在 `.gr-accordion` 範圍內才拿掉 `.form` 邊框
+      3. 「回答模型」「檢索模型」兩個下拉改用 `gr.Row()` 並排，不再直向堆疊
+    - `tests/test_app.py` 新增約 20 個測試，涵蓋以上每一項修正（含刻意驗證
+      「合併規則不能把兩個真的不同重點擠成一段」的反向案例）
+  - 驗證證據（實跑，每輪皆連線**實際部署的 HF Space** 用瀏覽器工具測量，
+    非僅本機）：
+    - `uv run pytest -q` → `146 passed`
+    - 每輪修正皆用 JS 量測 computed style（`getComputedStyle`、
+      `getBoundingClientRect`）而非目測：字級變化前後對照表、`.answer-para`
+      DOM 樹正確嵌套（citation 後的文字不再裸露）、notice 間距從 26px/36px
+      降到 16px 再降到 11px/6px、進階設定下拉並排座標（同 `top`、不同 `x`）
+    - **兩次假性回歸的真實診斷過程**（皆用 HF Space API
+      `https://huggingface.co/api/spaces/...`／線上 CSS 規則直接量測排除，
+      非猜測）：
+      1. 「圈起來的空白完全沒改善」——線上量測發現 CSS 規則其實已生效
+         （gap 26px/36px→16px），根因是作者當下截圖時 Space 狀態其實還在
+         **Restarting**，重建還沒跑完；等 Running 後重新確認正常
+      2. 「進階設定字級/框線完全沒生效」——線上量測發現連 cache-busting
+         query string 都測不到新規則，查 HF Space 頁面狀態確認同樣是
+         **Restarting** 未完成；用 `until curl .../api/spaces/... | grep
+         RUNNING; do sleep 5; done` 輪詢等到真正 Running 後重測，四項全部
+         確認生效
+  - 相關 commit：本輪改動已推上 HF Space 自己的 git（`dist/space-repo`，
+    commit `1caa01c`/`22683e9`/`e3f3cea`/`c06f1eb`/`7143455`），**尚未
+    commit 進主 repo**（見上方快速回憶區「下一步」第 1 項）
+  - 決策變更：無新 D 決策（UI 呈現層調整，不影響管線邏輯）
+  - 實際成本：$0（僅本機/線上 UI 測試，無額外 API 呼叫）

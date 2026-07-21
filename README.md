@@ -2,7 +2,10 @@
 
 > 每句回答都附法條引用；查不到明確法源，就誠實說「查無明確法源」並建議撥打 1966 長照專線。
 
-**TL;DR (English).** A Traditional-Chinese RAG system for Taiwan's long-term care regulations, built end-to-end on Taiwan's open-source model stack (TAIDE embedding + TAIDE LLM via Ollama), with hybrid retrieval (BM25 + dense + rerank), contextual retrieval, a citation graph for cross-article expansion, and sentence-level groundedness checking — every sentence in an answer carries a legal citation, and the system honestly refuses when no legal basis is found. Benchmarked against international baselines (bge-m3, gemma-3-12b-it). Live demo: (Phase 7 補上)
+🌐 **線上 Demo**：<https://huggingface.co/spaces/steven0226/tw-longcare-rag>
+（免費 Space 硬體，回答固定使用雲端模型；本機執行可用完整功能，含地端 TAIDE 12B 生成，見下方「快速開始」。）
+
+**TL;DR (English).** A Traditional-Chinese RAG system for Taiwan's long-term care regulations, built end-to-end on Taiwan's open-source model stack (TAIDE embedding + TAIDE LLM via Ollama), with hybrid retrieval (BM25 + dense + rerank), contextual retrieval, a citation graph for cross-article expansion, and sentence-level groundedness checking — every sentence in an answer carries a legal citation, and the system honestly refuses when no legal basis is found. Benchmarked against international baselines (bge-m3, gemma-3-12b-it). **Live demo:** <https://huggingface.co/spaces/steven0226/tw-longcare-rag>
 
 ## 為什麼做這個專案
 
@@ -12,11 +15,12 @@
 
 ## 系統架構
 
-> Phase 0〜6 已實作（索引建置、hybrid 檢索、生成、逐句查核、
-> 法條引用圖譜一階擴展、對照實驗與盲測評估、Gradio 網頁介面）；
-> 雲端部署（Phase 7）**工程準備已完成、尚未實際上線**——自動建索引、
-> Space 環境限制（僅雲端 provider、僅 gtaide）、部署腳本與 skill 皆已
-> 就緒並本機實測，正式上線待作者本人建立 HF Space 帳號資源後補上連結。
+> Phase 0〜7 已實作並上線（索引建置、hybrid 檢索、生成、逐句查核、
+> 法條引用圖譜一階擴展、對照實驗與盲測評估、Gradio 網頁介面、HF Spaces
+> 雲端部署）——公開 Demo：<https://huggingface.co/spaces/steven0226/tw-longcare-rag>
+> （免費 CPU Basic 硬體，僅提供雲端生成模型；自動建索引、Space 環境限制
+> 〔僅雲端 provider、僅 gtaide〕、每 session 題數上限等濫用防護皆已上線
+> 實測；本機執行仍可用完整功能，含地端 TAIDE 12B 生成）。
 
 **索引建置**（離線，`scripts/build_index.py`）：
 
