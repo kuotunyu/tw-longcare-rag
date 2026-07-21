@@ -32,6 +32,12 @@ EMPTY_HINT = (
     '<p class="hint">💬 在上方輸入問題，按「送出」後，答案裡的每一句引用'
     "（例如 <code>[長期照顧服務法 §8]</code>）都可以點開查看條文原文。</p>"
 )
+SOURCES_INTRO = (
+    '<p class="hint">這裡會列出系統實際用來生成上面答案的法規條文'
+    "（檢索到的條文），以及透過法規之間互相引用關係額外帶出的條文"
+    "（關聯條文）。每一條都可以點連結到全國法規資料庫核對官方原文，"
+    "送出問題前這裡不會有內容。</p>"
+)
 
 _settings = get_settings()
 _lookup = LawsLookup()
@@ -147,14 +153,35 @@ def handle_question(question: str, provider: str, embedding: str):
 # --body-text-color-subdued 在淺色模式對白底對比僅約 1.9:1，遠低於
 # WCAG AA 的 4.5:1，故所有需要閱讀的文字一律用 --body-text-color 本體，
 # 用字級大小做層次而非用顏色犧牲對比（PRODUCT.md 易用性要求）。
+#
+# 字級：Gradio 預設 --text-md 只有 14px，一般網頁 body 文字建議至少 16px
+# （尤其考慮到使用者可能含年長者），這裡整體上調一階，所有用到這組變數
+# 的原生 Gradio 元件（label、輸入框、按鈕、下拉選單…）都會跟著變大，
+# 不必逐一手改每個元件。
 CUSTOM_CSS = """
+.gradio-container {
+    --text-sm: 0.875rem !important;
+    --text-md: 1rem !important;
+    --text-lg: 1.125rem !important;
+}
+/* Textbox/Dropdown 的實際輸入框字級不是直接綁 --text-md（量測後發現的落差，
+   單改變數不夠），直接補上避免看起來字太小。 */
+.gradio-container textarea,
+.gradio-container input[type="text"],
+.gradio-container input[type="number"],
+.gradio-container .wrap-inner,
+.gradio-container ul.options li,
+.gradio-container label span,
+.gradio-container table {
+    font-size: var(--text-md) !important;
+}
 .notice {
-    padding: 10px 14px;
+    padding: 12px 16px;
     border: 1px solid var(--border-color-accent);
     background: var(--color-accent-soft);
     border-radius: var(--radius-lg);
     color: var(--body-text-color);
-    font-size: 14px;
+    font-size: var(--text-md);
     line-height: 1.6;
 }
 .notice-footer {
@@ -162,7 +189,7 @@ CUSTOM_CSS = """
     background: none;
     padding: 2px 0 0 0;
     color: var(--body-text-color);
-    font-size: 13px;
+    font-size: var(--text-sm);
     opacity: 0.75;
 }
 .notice-error {
@@ -172,21 +199,9 @@ CUSTOM_CSS = """
 }
 .hint {
     color: var(--body-text-color);
-    font-size: 14px;
+    font-size: var(--text-md);
     line-height: 1.7;
     padding: 6px 2px;
-}
-.wait-hint {
-    color: var(--body-text-color);
-    font-size: 13px;
-    opacity: 0.75;
-    margin-top: -4px;
-}
-.setting-note {
-    color: var(--body-text-color);
-    font-size: 13px;
-    opacity: 0.8;
-    margin: -6px 0 8px 2px;
 }
 .citation { display: inline; }
 .citation summary {
@@ -205,10 +220,11 @@ CUSTOM_CSS = """
     background: var(--background-fill-secondary);
     border-radius: var(--radius-md);
     line-height: 1.65;
+    font-size: var(--text-md);
 }
 .citation-missing { color: var(--error-text-color); }
 .article-list { margin-top: 0.3em; }
-.article-list li { margin: 0.25em 0; line-height: 1.6; }
+.article-list li { margin: 0.25em 0; line-height: 1.6; font-size: var(--text-md); }
 .error { color: var(--error-text-color); }
 """
 
@@ -228,32 +244,26 @@ def build_app() -> gr.Blocks:
         gr.HTML(f'<div class="notice">{DISCLAIMER}</div>')
 
         with gr.Row():
-            question = gr.Textbox(label="你的問題", placeholder="例如：阿嬤請看護政府有補助嗎",
-                                   scale=4)
+            question = gr.Textbox(
+                label="你的問題", placeholder="例如：阿嬤請看護政府有補助嗎",
+                info="地端模型首次查詢需要載入索引，可能需要 10〜30 秒，請耐心等候。",
+                scale=4,
+            )
             submit = gr.Button("送出", variant="primary", scale=1)
-        gr.Markdown(
-            "地端模型首次查詢需要載入索引，可能需要 10〜30 秒，請耐心等候。",
-            elem_classes=["wait-hint"],
-        )
 
         with gr.Accordion("進階設定（一般不需要更改）", open=False):
             provider = gr.Dropdown(
                 ["ollama", "gemini", "openai"], value="ollama", label="回答模型",
-            )
-            gr.Markdown(
-                "預設用本機模型（免費、可離線）；也可以切換成雲端模型比較回答品質。",
-                elem_classes=["setting-note"],
+                info="預設用本機模型（免費、可離線）；也可以切換成雲端模型比較回答品質。",
             )
             embedding = gr.Dropdown(
                 ["gtaide", "bge-m3"], value="gtaide", label="檢索模型",
-            )
-            gr.Markdown(
-                "決定用哪個模型理解你的問題和條文，一般不需要更改。",
-                elem_classes=["setting-note"],
+                info="決定用哪個模型理解你的問題和條文，一般不需要更改。",
             )
 
         answer_out = gr.HTML(value=EMPTY_HINT, label="回答", padding=True)
         with gr.Accordion("引用來源與相關條文", open=False):
+            gr.HTML(SOURCES_INTRO)
             retrieved_out = gr.HTML(padding=True)
             related_out = gr.HTML(padding=True)
 

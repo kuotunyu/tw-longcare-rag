@@ -86,3 +86,21 @@ def test_custom_css_uses_theme_tokens_not_hardcoded_hex():
 
     hex_colors = re.findall(r"#[0-9a-fA-F]{3,6}\b", app.CUSTOM_CSS)
     assert hex_colors == []
+
+
+# ---------- UI/UX polish 第二輪：字級太小、引用來源手風琴空白的回饋 ----------
+
+def test_custom_css_bumps_base_text_size():
+    """作者反饋「字有點太小」——body 文字建議至少 16px，Gradio 預設 text-md 只有
+    14px；量測後發現只改 CSS 變數不夠（textarea 字級沒直接綁這個變數），
+    需要對輸入框/下拉/表格等實際元素也直接補上。"""
+    assert "--text-md: 1rem" in app.CUSTOM_CSS
+    assert "textarea" in app.CUSTOM_CSS
+    assert "table" in app.CUSTOM_CSS
+
+
+def test_sources_intro_explains_purpose_when_empty():
+    """作者反饋「引用來源與相關條文」展開後全部空白、不懂功能意義——
+    加一段永遠顯示的說明，不再讓手風琴看起來像壞掉的空框。"""
+    assert "檢索到的條文" in app.SOURCES_INTRO
+    assert "關聯條文" in app.SOURCES_INTRO
