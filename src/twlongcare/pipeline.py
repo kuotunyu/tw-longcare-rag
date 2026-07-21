@@ -95,13 +95,15 @@ def run_pipeline(
         if on_progress is not None:
             on_progress(msg)
 
-    # 彙總型問題（列出整部法）與 meta 問題（問系統本身）皆不走 RAG——
-    # 改寫模型對這兩類問題會失控（見 structured.py docstring 根因說明），
-    # 改由固定的確定性回答處理，零幻覺、零成本
+    # 彙總型問題（列出整部法）、meta 問題（問系統本身）、全局/跨章節問題
+    # 皆不走一般 RAG——改寫模型/生成端對這三類問題都會失控（見
+    # structured.py docstring 根因說明），改由路由分開處理
     from .structured import (
         META_RESPONSE,
+        answer_global_question,
         build_law_overview,
         detect_enumeration_query,
+        detect_global_question,
         detect_meta_query,
     )
 
@@ -118,6 +120,19 @@ def run_pipeline(
         return PipelineResult(
             question=question, rewritten_query=question,
             overview=True, answer_text=build_law_overview(enum_pcode),
+        )
+
+    global_pcodes = detect_global_question(question)
+    if global_pcodes is not None:
+        progress("[router] 偵測到全局/跨章節問題，改走章節摘要（RAPTOR-lite，不經檢索）")
+        settings = get_settings()
+        global_model = make_chat_model(provider, settings, ollama_model)
+        text, removed = answer_global_question(question, global_pcodes, global_model)
+        if removed:
+            progress(f"[router] 章節引用驗證移除 {removed} 段（引用了未提供的章節）")
+        return PipelineResult(
+            question=question, rewritten_query=question,
+            overview=True, answer_text=text,
         )
 
     settings = get_settings()
