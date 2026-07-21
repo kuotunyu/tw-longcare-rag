@@ -46,3 +46,43 @@ def test_render_answer_html_multiple_paragraphs():
 
 def test_render_answer_html_empty_falls_back():
     assert "無回答內容" in app.render_answer_html("")
+
+
+# ---------- UI/UX polish：友善錯誤訊息、空狀態提示 ----------
+
+def test_handle_question_empty_input_shows_hint_not_error():
+    answer, retrieved, related = app.handle_question("", "ollama", "gtaide")
+    assert answer == app.EMPTY_HINT
+    assert retrieved == "" and related == ""
+
+
+def test_friendly_error_ollama_connection_issue():
+    msg = app._friendly_error_message("ollama", ConnectionError("Connection refused"))
+    assert "Ollama" in msg
+    assert "Connection refused" not in msg  # 不直接把原始錯誤丟給使用者
+
+
+def test_friendly_error_api_key_issue():
+    msg = app._friendly_error_message("gemini", ValueError("Invalid API key: 401"))
+    assert "金鑰" in msg
+    assert ".env" in msg
+
+
+def test_friendly_error_generic_fallback():
+    msg = app._friendly_error_message("openai", RuntimeError("something obscure"))
+    assert "終端機" in msg
+    assert "obscure" not in msg  # 一般情況也不外露原始錯誤細節
+
+
+def test_citation_body_has_no_side_stripe_border():
+    """Absolute ban：border-left 單獨當裝飾用的側邊條紋。CSS 應該是完整 border。"""
+    assert "border-left: 3px" not in app.CUSTOM_CSS
+    assert "border: 1px solid var(--border-color-primary)" in app.CUSTOM_CSS
+
+
+def test_custom_css_uses_theme_tokens_not_hardcoded_hex():
+    """易用性要求對比要夠——不應該寫死色碼，一律用 Gradio 主題變數以便深/淺色皆過關。"""
+    import re
+
+    hex_colors = re.findall(r"#[0-9a-fA-F]{3,6}\b", app.CUSTOM_CSS)
+    assert hex_colors == []

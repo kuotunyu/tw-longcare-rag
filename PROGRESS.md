@@ -2,7 +2,7 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-20）
 
-- **現在做到哪**：Phase 6（Gradio 介面）**實作完成，待作者驗收**——app.py、共用 pipeline.py、三層查詢路由（彙總列舉/meta問題/全局跨章節，D12+D13）皆完成並實測。
+- **現在做到哪**：Phase 6（Gradio 介面）**實作完成，待作者驗收**——app.py、共用 pipeline.py、三層查詢路由（彙總列舉/meta問題/全局跨章節，D12+D13）、UI/UX polish 皆完成並實測。
 - **下一步**：
   1. 作者驗收 Phase 6 → `git tag phase-6`
   2. 之後開 Phase 7（HF Spaces 部署）
@@ -502,3 +502,43 @@
   - 相關 commit：`17bcb3d` 全局問題路由實作
   - 決策變更：**D13**（全局/跨章節問題路由，RAPTOR-lite 章節摘要）
   - 實際成本：$0.019（GEMINI_LITE 生成 21 段章節摘要，一次性）
+
+- **2026-07-20（UI/UX polish，作者要求「更好但不要花俏」）**：
+  - 完成內容：
+    - 依 `/impeccable` 流程建立 `PRODUCT.md`（register=product；使用者=台灣家庭
+      照顧者，可能含年長者；品牌調性=誠實/克制/清楚，像社福諮詢櫃檯；反參考=
+      不花俏、不像官方政府網站、不像 SaaS 行銷頁；易用性=字體對比要足夠大）
+    - 拒答/免責聲明從頁尾單獨一行文字，改成頁首＋頁尾都有的明顯提示框
+      （對得起「非官方僅供參考」這句話，不能被畫面好看犧牲掉）
+    - `provider`/`embedding` 技術性下拉選單移進「進階設定（一般不需要更改）」
+      收合區塊，改名「回答模型」「檢索模型」並各加一行白話說明——非技術使用者
+      不需要理解 provider/embedding 是什麼也能用
+    - 回答區加友善空狀態提示（不再是空白區塊）；送出按鈕旁加等候時間說明
+      （地端模型較慢，讓使用者安心等待，不誤以為當機）
+    - 例外處理改成白話錯誤訊息（區分 Ollama 連線問題／API 金鑰問題／其他），
+      不再把原始 Python 例外字串直接丟給使用者；完整錯誤仍印到終端機供除錯
+    - **修掉一個違反 impeccable 設計鐵律的樣式**：`.citation-body` 原本用
+      `border-left: 3px solid` 當裝飾（side-stripe border，明確禁止的樣式），
+      改成完整 1px border + 背景色塊 + 6px 圓角
+    - 全部顏色改用 Gradio 主題 CSS 變數（`--body-text-color`、
+      `--color-accent-soft`、`--border-color-primary` 等），不寫死色碼——
+      深色/淺色模式自動適配，且對齊「Gradio 本身就是既有設計系統」的原則
+    - `tests/test_app.py` 新增 6 個測試：空輸入提示、三種友善錯誤訊息、
+      CSS 無 side-stripe border、CSS 無寫死色碼
+  - 驗證證據（實跑，含實際對比度計算，非目測）：
+    - `uv run pytest -q` → `122 passed`（含新增 6 個）
+    - 啟動 `app.py` 用瀏覽器工具實測：確認 Gradio 主題 CSS 變數的實際數值
+      （淺色 `--body-text-color-subdued` 對白底對比僅約 1.9:1，遠低於 WCAG AA
+      4.5:1——**因此刻意不用這個 token 呈現任何要閱讀的文字**，全部改用
+      `--body-text-color` 本體 + 字級差異做層次，這是查證後才發現、原本
+      直覺會踩到的坑）
+    - 用 JS 實際計算對比度（非估計）：`.notice` 提示框 9.50:1、`.hint` 空狀態
+      17.42:1、`.setting-note` 進階設定說明 13.55:1、citation 展開內文 16.12:1、
+      citation 摘要連結對頁面背景 5.21:1——全部通過 WCAG AA（部分達 AAA）
+    - 端對端測試：「幾歲可以申請長照服務」（ollama）、「開一家日照中心要
+      什麼許可」（gemini）皆正常運作；進階設定收合/展開、引用來源收合/展開
+      皆正確；citation-body 樣式改用 JS 注入測試元素直接驗證渲染結果（無
+      side-stripe、完整 border、正確配色）
+  - 相關 commit：本條目（見 git log）
+  - 決策變更：無新 D 決策（UI 呈現層調整，不影響管線邏輯）
+  - 實際成本：$0（本機模型測試呼叫）

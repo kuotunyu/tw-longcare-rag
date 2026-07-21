@@ -1,8 +1,9 @@
 """Phase 6：Gradio 6.x 介面。口語問題 → 回答（每句引用可展開原文）→
-provider/embedding 下拉 → 顯示檢索條文與圖譜擴展節點。
+進階設定（provider/embedding）→ 顯示檢索條文與圖譜擴展節點。
 
 核心管線邏輯在 `src/twlongcare/pipeline.py`（與 CLI 共用，行為一致）；
-本檔只負責 UI 佈局與 HTML 渲染。
+本檔只負責 UI 佈局與 HTML 渲染。介面設計原則見 PRODUCT.md（誠實優先於
+美觀、對非技術使用者友善、克制勝過花俏）。
 
 用法：
     uv run python app.py
@@ -23,7 +24,14 @@ from twlongcare.grounding import log_grounding
 from twlongcare.pipeline import run_pipeline
 from twlongcare.retriever import HybridRetriever
 
-DISCLAIMER = "⚠️ 本工具為非官方個人專案，僅供參考；正式資訊以衛生福利部公告與 1966 長照服務專線為準。"
+DISCLAIMER = (
+    "⚠️ 本工具為非官方個人專案，僅供參考。正式資訊請以衛生福利部公告與 "
+    "<strong>1966 長照服務專線</strong>為準。"
+)
+EMPTY_HINT = (
+    '<p class="hint">💬 在上方輸入問題，按「送出」後，答案裡的每一句引用'
+    "（例如 <code>[長期照顧服務法 §8]</code>）都可以點開查看條文原文。</p>"
+)
 
 _settings = get_settings()
 _lookup = LawsLookup()
@@ -90,20 +98,33 @@ def render_article_list(items, url_of, label: str) -> str:
             f'<li><a href="{html.escape(url_of(it))}" target="_blank">'
             f'《{html.escape(it.law_name)}》第 {html.escape(it.article_no)} 條</a></li>'
         )
-    return f"<p><b>{label}</b></p><ul>{''.join(rows)}</ul>"
+    return f'<p><b>{label}</b></p><ul class="article-list">{"".join(rows)}</ul>'
+
+
+def _friendly_error_message(provider: str, error: Exception) -> str:
+    """把原始錯誤換成非技術使用者看得懂的話；完整錯誤仍印到終端機供除錯。"""
+    text = str(error).lower()
+    kind = type(error).__name__
+    if provider == "ollama" and ("connect" in kind.lower() or "connect" in text):
+        return "本地模型服務目前無法連線，請確認 Ollama 是否已啟動，再試一次。"
+    if "api_key" in text or "api key" in text or "authentication" in text or "401" in text:
+        return f"雲端服務（{provider}）的金鑰設定似乎有問題，請檢查 .env 是否已正確填入。"
+    return "查詢時發生問題，請稍後再試一次；若持續發生，請查看終端機的錯誤訊息。"
 
 
 def handle_question(question: str, provider: str, embedding: str):
     question = (question or "").strip()
     if not question:
-        return "<p>請輸入問題</p>", "", ""
+        return EMPTY_HINT, "", ""
     try:
         retriever = get_retriever(embedding)
         result = run_pipeline(
             question, retriever, _lookup, provider=provider, graph=_graph,
         )
-    except Exception as e:  # noqa: BLE001 - 介面層需要把錯誤攤在畫面上，不能整頁崩潰
-        return f'<p class="error">執行失敗：{html.escape(str(e))}</p>', "", ""
+    except Exception as e:  # noqa: BLE001 - 介面層攤出友善訊息，完整錯誤留給終端機
+        print(f"[app] 查詢失敗（provider={provider}）：{e!r}", file=sys.stderr)
+        message = html.escape(_friendly_error_message(provider, e))
+        return f'<p class="notice notice-error">⚠️ {message}</p>', "", ""
 
     if result.grounding is not None:
         log_grounding(LOGS_DIR / "grounding" / f"{provider}.jsonl",
@@ -122,12 +143,73 @@ def handle_question(question: str, provider: str, embedding: str):
     return answer_html, retrieved_html, related_html
 
 
+# 全部顏色走 Gradio 主題變數（非寫死色碼），淺色/深色模式自動適配；
+# --body-text-color-subdued 在淺色模式對白底對比僅約 1.9:1，遠低於
+# WCAG AA 的 4.5:1，故所有需要閱讀的文字一律用 --body-text-color 本體，
+# 用字級大小做層次而非用顏色犧牲對比（PRODUCT.md 易用性要求）。
 CUSTOM_CSS = """
+.notice {
+    padding: 10px 14px;
+    border: 1px solid var(--border-color-accent);
+    background: var(--color-accent-soft);
+    border-radius: var(--radius-lg);
+    color: var(--body-text-color);
+    font-size: 14px;
+    line-height: 1.6;
+}
+.notice-footer {
+    border: none;
+    background: none;
+    padding: 2px 0 0 0;
+    color: var(--body-text-color);
+    font-size: 13px;
+    opacity: 0.75;
+}
+.notice-error {
+    border-color: var(--error-border-color);
+    background: var(--error-background-fill);
+    color: var(--error-text-color);
+}
+.hint {
+    color: var(--body-text-color);
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 6px 2px;
+}
+.wait-hint {
+    color: var(--body-text-color);
+    font-size: 13px;
+    opacity: 0.75;
+    margin-top: -4px;
+}
+.setting-note {
+    color: var(--body-text-color);
+    font-size: 13px;
+    opacity: 0.8;
+    margin: -6px 0 8px 2px;
+}
 .citation { display: inline; }
-.citation summary { display: inline; cursor: pointer; color: var(--link-text-color, #2563eb); }
-.citation-body { margin: 0.5em 0 0.5em 1em; padding: 0.5em; border-left: 3px solid #94a3b8; }
-.citation-missing { color: #b91c1c; }
-.error { color: #b91c1c; }
+.citation summary {
+    display: inline;
+    cursor: pointer;
+    color: var(--link-text-color);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+.citation summary:hover,
+.citation summary:focus-visible { color: var(--link-text-color-hover); }
+.citation-body {
+    margin: 0.4em 0 0.6em 0;
+    padding: 0.6em 0.9em;
+    border: 1px solid var(--border-color-primary);
+    background: var(--background-fill-secondary);
+    border-radius: var(--radius-md);
+    line-height: 1.65;
+}
+.citation-missing { color: var(--error-text-color); }
+.article-list { margin-top: 0.3em; }
+.article-list li { margin: 0.25em 0; line-height: 1.6; }
+.error { color: var(--error-text-color); }
 """
 
 EXAMPLES = [
@@ -143,18 +225,35 @@ def build_app() -> gr.Blocks:
             "# 台灣長照法規 RAG 諮詢系統\n"
             "每句回答都附法條引用（點擊可展開條文原文）；查不到明確法源，就誠實說「查無明確法源」。"
         )
+        gr.HTML(f'<div class="notice">{DISCLAIMER}</div>')
+
         with gr.Row():
             question = gr.Textbox(label="你的問題", placeholder="例如：阿嬤請看護政府有補助嗎",
                                    scale=4)
             submit = gr.Button("送出", variant="primary", scale=1)
-        with gr.Row():
-            provider = gr.Dropdown(["ollama", "gemini", "openai"], value="ollama",
-                                    label="生成模型 provider")
-            embedding = gr.Dropdown(["gtaide", "bge-m3"], value="gtaide",
-                                     label="Embedding 模型")
+        gr.Markdown(
+            "地端模型首次查詢需要載入索引，可能需要 10〜30 秒，請耐心等候。",
+            elem_classes=["wait-hint"],
+        )
 
-        answer_out = gr.HTML(label="回答", padding=True)
-        with gr.Accordion("檢索與圖譜擴展細節", open=False):
+        with gr.Accordion("進階設定（一般不需要更改）", open=False):
+            provider = gr.Dropdown(
+                ["ollama", "gemini", "openai"], value="ollama", label="回答模型",
+            )
+            gr.Markdown(
+                "預設用本機模型（免費、可離線）；也可以切換成雲端模型比較回答品質。",
+                elem_classes=["setting-note"],
+            )
+            embedding = gr.Dropdown(
+                ["gtaide", "bge-m3"], value="gtaide", label="檢索模型",
+            )
+            gr.Markdown(
+                "決定用哪個模型理解你的問題和條文，一般不需要更改。",
+                elem_classes=["setting-note"],
+            )
+
+        answer_out = gr.HTML(value=EMPTY_HINT, label="回答", padding=True)
+        with gr.Accordion("引用來源與相關條文", open=False):
             retrieved_out = gr.HTML(padding=True)
             related_out = gr.HTML(padding=True)
 
@@ -165,7 +264,7 @@ def build_app() -> gr.Blocks:
         question.submit(handle_question, inputs=[question, provider, embedding],
                          outputs=[answer_out, retrieved_out, related_out])
 
-        gr.Markdown(DISCLAIMER)
+        gr.HTML(f'<p class="notice-footer">{DISCLAIMER}</p>')
     return demo
 
 
