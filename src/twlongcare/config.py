@@ -38,7 +38,7 @@ def get_settings() -> Settings:
         hf_token=os.getenv("HF_TOKEN", ""),
         discord_webhook_url=os.getenv("DISCORD_WEBHOOK_URL", ""),
         gemini_model=os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite"),
-        gemini_lite_model=os.getenv("GEMINI_LITE_MODEL", "gemini-2.5-flash-lite"),
+        gemini_lite_model=os.getenv("GEMINI_LITE_MODEL", "gemini-3.1-flash-lite"),
         openai_model=os.getenv("OPENAI_MODEL", "gpt-5-mini"),
         ollama_model=os.getenv("OLLAMA_MODEL", "taide-gemma3-12b"),
         embedding_model=os.getenv("EMBEDDING_MODEL", "taide/embeddinggemma-GTAIDE-300m-2605"),
