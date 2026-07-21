@@ -51,9 +51,10 @@ def test_render_answer_html_empty_falls_back():
 # ---------- UI/UX polish：友善錯誤訊息、空狀態提示 ----------
 
 def test_handle_question_empty_input_shows_hint_not_error():
-    answer, retrieved, related = app.handle_question("", "ollama", "gtaide")
+    answer, retrieved, related, count = app.handle_question("", "ollama", "gtaide")
     assert answer == app.EMPTY_HINT
     assert retrieved == "" and related == ""
+    assert count == 0  # 空輸入不消耗 session 題數額度
 
 
 def test_friendly_error_ollama_connection_issue():
@@ -97,6 +98,68 @@ def test_custom_css_bumps_base_text_size():
     assert "--text-md: 1rem" in app.CUSTOM_CSS
     assert "textarea" in app.CUSTOM_CSS
     assert "table" in app.CUSTOM_CSS
+
+
+# ---------- Phase 7：Space 環境感知（session 題數上限、provider/embedding 限制）----------
+
+def test_handle_question_blocks_after_session_limit_on_space(monkeypatch):
+    """Space 濫用防護：達每 session 題數上限後直接拒答，不再呼叫 pipeline。"""
+    monkeypatch.setattr(app, "IS_SPACE", True)
+    answer, retrieved, related, count = app.handle_question(
+        "幾歲可以申請長照服務", "gemini", "gtaide",
+        session_count=app.MAX_QUESTIONS_PER_SESSION,
+    )
+    assert "notice-error" in answer
+    assert f"{app.MAX_QUESTIONS_PER_SESSION}" in answer
+    assert retrieved == "" and related == ""
+    assert count == app.MAX_QUESTIONS_PER_SESSION  # 未消耗額度（本來就已達上限）
+
+
+def test_handle_question_session_limit_not_enforced_locally(monkeypatch):
+    """本機開發（非 Space）不受此上限影響——只驗證不會被 session 上限分支擋下
+    （走到實際 pipeline 呼叫，這裡沒有真的模型/索引可跑，預期落在例外分支，
+    而不是被誤判為超過上限）。"""
+    monkeypatch.setattr(app, "IS_SPACE", False)
+    answer, retrieved, related, count = app.handle_question(
+        "幾歲可以申請長照服務", "gemini", "gtaide",
+        session_count=app.MAX_QUESTIONS_PER_SESSION + 5,
+    )
+    assert f"已提問 {app.MAX_QUESTIONS_PER_SESSION}" not in answer
+
+
+def test_space_provider_choices_exclude_ollama(monkeypatch):
+    """Space 免費硬體無法跑本機 Ollama，介面上不該出現這個選項。"""
+    monkeypatch.setattr(app, "IS_SPACE", True)
+    choices, default, _info = app.provider_choices()
+    assert "ollama" not in choices
+    assert set(choices) == {"gemini", "openai"}
+    assert default == "gemini"
+
+
+def test_space_embedding_choices_gtaide_only(monkeypatch):
+    """Space 不預建 bge-m3（省一個約 2GB 模型的冷啟動下載/建索引時間）。"""
+    monkeypatch.setattr(app, "IS_SPACE", True)
+    choices, default, _info = app.embedding_choices()
+    assert choices == ["gtaide"]
+    assert default == "gtaide"
+
+
+def test_local_dev_keeps_ollama_and_bge_m3(monkeypatch):
+    """非 Space 環境（本機開發）不受限制，維持原本三個 provider／兩個 embedding。"""
+    monkeypatch.setattr(app, "IS_SPACE", False)
+    p_choices, p_default, _ = app.provider_choices()
+    e_choices, e_default, _ = app.embedding_choices()
+    assert set(p_choices) == {"ollama", "gemini", "openai"}
+    assert p_default == "ollama"
+    assert set(e_choices) == {"gtaide", "bge-m3"}
+    assert e_default == "gtaide"
+
+
+def test_build_app_smoke_under_space_env(monkeypatch):
+    """build_app() 在 Space 模式下也要能正常組出 Blocks（不因條件式分支而壞掉）。"""
+    monkeypatch.setattr(app, "IS_SPACE", True)
+    demo = app.build_app()
+    assert demo is not None
 
 
 def test_sources_intro_explains_purpose_when_empty():

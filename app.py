@@ -5,6 +5,13 @@
 本檔只負責 UI 佈局與 HTML 渲染。介面設計原則見 PRODUCT.md（誠實優先於
 美觀、對非技術使用者友善、克制勝過花俏）。
 
+Phase 7：加 HF Space 環境感知（`SPACE_ID` 環境變數由 Space 執行時自動設定，
+見官方文件 spaces-overview）——Space 免費 CPU Basic 無法跑本機 Ollama，
+provider 只留雲端；embedding 只留 gtaide（bge-m3 對照基準留給本機評估，
+避免 Space 冷啟動要多載一個約 2GB 的模型）；索引在啟動時預先建好（自動
+建索引邏輯在 `retriever.py`／`index_build.py`），不讓第一位訪客等；另加
+每 session 題數上限與 queue 併發上限做基本濫用防護。
+
 用法：
     uv run python app.py
 """
@@ -12,8 +19,10 @@
 from __future__ import annotations
 
 import html
+import os
 import re
 import sys
+import time
 
 import gradio as gr
 
@@ -24,9 +33,18 @@ from twlongcare.grounding import log_grounding
 from twlongcare.pipeline import run_pipeline
 from twlongcare.retriever import HybridRetriever
 
+IS_SPACE = bool(os.environ.get("SPACE_ID"))
+MAX_QUESTIONS_PER_SESSION = 20  # Space 濫用防護；本機開發不受限
+
 DISCLAIMER = (
     "⚠️ 本工具為非官方個人專案，僅供參考。正式資訊請以衛生福利部公告與 "
     "<strong>1966 長照服務專線</strong>為準。"
+)
+SPACE_NOTICE = (
+    "🌐 這是公開線上 Demo：檢索仍使用台灣 TAIDE 模型（embeddinggemma-GTAIDE），"
+    "但免費 Space 硬體無法執行本機 12B 生成模型，回答固定使用雲端模型。"
+    "若想實測本機 TAIDE 生成效果，請見 GitHub 專案說明自行執行。"
+    f"（本頁每個瀏覽器分頁最多可提問 {MAX_QUESTIONS_PER_SESSION} 次）"
 )
 EMPTY_HINT = (
     '<p class="hint">💬 在上方輸入問題，按「送出」後，答案裡的每一句引用'
@@ -50,6 +68,13 @@ def get_retriever(embedding: str) -> HybridRetriever:
     if embedding not in _retriever_cache:
         _retriever_cache[embedding] = HybridRetriever(embedding_key=embedding)
     return _retriever_cache[embedding]
+
+
+if IS_SPACE:
+    print("[app] Space 環境：啟動時預先建立 gtaide 索引與載入模型…", file=sys.stderr)
+    _t0 = time.time()
+    get_retriever("gtaide")
+    print(f"[app] 索引就緒，耗時 {time.time() - _t0:.1f} 秒", file=sys.stderr)
 
 
 def render_citation(law_name: str, article_no: str) -> str:
@@ -118,10 +143,20 @@ def _friendly_error_message(provider: str, error: Exception) -> str:
     return "查詢時發生問題，請稍後再試一次；若持續發生，請查看終端機的錯誤訊息。"
 
 
-def handle_question(question: str, provider: str, embedding: str):
+def handle_question(question: str, provider: str, embedding: str, session_count: int = 0):
     question = (question or "").strip()
     if not question:
-        return EMPTY_HINT, "", ""
+        return EMPTY_HINT, "", "", session_count
+
+    if IS_SPACE and session_count >= MAX_QUESTIONS_PER_SESSION:
+        message = (
+            f"這個瀏覽器分頁已提問 {MAX_QUESTIONS_PER_SESSION} 次，"
+            "這是公開 Demo 的免費資源保護措施；請重新整理頁面開新的一輪，"
+            "或參考 GitHub 說明在本機執行不受此限制。"
+        )
+        return f'<p class="notice notice-error">⚠️ {message}</p>', "", "", session_count
+
+    session_count += 1
     try:
         retriever = get_retriever(embedding)
         result = run_pipeline(
@@ -130,7 +165,7 @@ def handle_question(question: str, provider: str, embedding: str):
     except Exception as e:  # noqa: BLE001 - 介面層攤出友善訊息，完整錯誤留給終端機
         print(f"[app] 查詢失敗（provider={provider}）：{e!r}", file=sys.stderr)
         message = html.escape(_friendly_error_message(provider, e))
-        return f'<p class="notice notice-error">⚠️ {message}</p>', "", ""
+        return f'<p class="notice notice-error">⚠️ {message}</p>', "", "", session_count
 
     if result.grounding is not None:
         log_grounding(LOGS_DIR / "grounding" / f"{provider}.jsonl",
@@ -138,7 +173,7 @@ def handle_question(question: str, provider: str, embedding: str):
 
     answer_html = render_answer_html(result.answer_text)
     if result.refused or result.overview:
-        return answer_html, "", ""
+        return answer_html, "", "", session_count
 
     retrieved_html = render_article_list(
         result.retrieved, lambda c: c.url, "檢索到的條文",
@@ -146,7 +181,7 @@ def handle_question(question: str, provider: str, embedding: str):
     related_html = render_article_list(
         result.related, lambda r: r.url, "關聯條文（法條引用關係擴展）",
     )
-    return answer_html, retrieved_html, related_html
+    return answer_html, retrieved_html, related_html, session_count
 
 
 # 全部顏色走 Gradio 主題變數（非寫死色碼），淺色/深色模式自動適配；
@@ -228,11 +263,41 @@ CUSTOM_CSS = """
 .error { color: var(--error-text-color); }
 """
 
-EXAMPLES = [
-    ["阿嬤請看護政府有補助嗎", "ollama", "gtaide"],
-    ["幾歲可以申請長照服務", "ollama", "gtaide"],
-    ["開一家日照中心要什麼許可", "ollama", "gtaide"],
-]
+def build_examples(default_provider: str) -> list[list[str]]:
+    """example provider 必須跟 provider_choices() 的預設值同一個來源——
+    否則 Space 環境下 EXAMPLES 若寫死 ollama，會因為不在 Dropdown choices
+    裡而觸發 gradio 警告（曾在測試中意外重現，見 test_app.py）。"""
+    return [
+        ["阿嬤請看護政府有補助嗎", default_provider, "gtaide"],
+        ["幾歲可以申請長照服務", default_provider, "gtaide"],
+        ["開一家日照中心要什麼許可", default_provider, "gtaide"],
+    ]
+
+
+def provider_choices() -> tuple[list[str], str, str]:
+    """(choices, 預設值, info 文字)——Space 只留雲端 provider（免費硬體跑不動本機模型）。"""
+    if IS_SPACE:
+        return (
+            ["gemini", "openai"], "gemini",
+            "此 Demo 僅提供雲端模型（Space 免費硬體無法執行本機模型）。",
+        )
+    return (
+        ["ollama", "gemini", "openai"], "ollama",
+        "預設用本機模型（免費、可離線）；也可以切換成雲端模型比較回答品質。",
+    )
+
+
+def embedding_choices() -> tuple[list[str], str, str]:
+    """(choices, 預設值, info 文字)——Space 只留 gtaide（bge-m3 對照基準留給本機評估）。"""
+    if IS_SPACE:
+        return (
+            ["gtaide"], "gtaide",
+            "此 Demo 固定使用台灣 TAIDE 檢索模型；基準模型對照請見本機評估報告。",
+        )
+    return (
+        ["gtaide", "bge-m3"], "gtaide",
+        "決定用哪個模型理解你的問題和條文，一般不需要更改。",
+    )
 
 
 def build_app() -> gr.Blocks:
@@ -242,24 +307,28 @@ def build_app() -> gr.Blocks:
             "每句回答都附法條引用（點擊可展開條文原文）；查不到明確法源，就誠實說「查無明確法源」。"
         )
         gr.HTML(f'<div class="notice">{DISCLAIMER}</div>')
+        if IS_SPACE:
+            gr.HTML(f'<div class="notice">{SPACE_NOTICE}</div>')
+
+        session_count = gr.State(0)
 
         with gr.Row():
             question = gr.Textbox(
                 label="你的問題", placeholder="例如：阿嬤請看護政府有補助嗎",
-                info="地端模型首次查詢需要載入索引，可能需要 10〜30 秒，請耐心等候。",
+                info=(
+                    "雲端模型通常數秒內回覆。"
+                    if IS_SPACE else
+                    "地端模型首次查詢需要載入索引，可能需要 10〜30 秒，請耐心等候。"
+                ),
                 scale=4,
             )
             submit = gr.Button("送出", variant="primary", scale=1)
 
         with gr.Accordion("進階設定（一般不需要更改）", open=False):
-            provider = gr.Dropdown(
-                ["ollama", "gemini", "openai"], value="ollama", label="回答模型",
-                info="預設用本機模型（免費、可離線）；也可以切換成雲端模型比較回答品質。",
-            )
-            embedding = gr.Dropdown(
-                ["gtaide", "bge-m3"], value="gtaide", label="檢索模型",
-                info="決定用哪個模型理解你的問題和條文，一般不需要更改。",
-            )
+            p_choices, p_default, p_info = provider_choices()
+            e_choices, e_default, e_info = embedding_choices()
+            provider = gr.Dropdown(p_choices, value=p_default, label="回答模型", info=p_info)
+            embedding = gr.Dropdown(e_choices, value=e_default, label="檢索模型", info=e_info)
 
         answer_out = gr.HTML(value=EMPTY_HINT, label="回答", padding=True)
         with gr.Accordion("引用來源與相關條文", open=False):
@@ -267,14 +336,21 @@ def build_app() -> gr.Blocks:
             retrieved_out = gr.HTML(padding=True)
             related_out = gr.HTML(padding=True)
 
-        gr.Examples(examples=EXAMPLES, inputs=[question, provider, embedding])
+        gr.Examples(examples=build_examples(p_default), inputs=[question, provider, embedding])
 
-        submit.click(handle_question, inputs=[question, provider, embedding],
-                     outputs=[answer_out, retrieved_out, related_out])
-        question.submit(handle_question, inputs=[question, provider, embedding],
-                         outputs=[answer_out, retrieved_out, related_out])
+        io = dict(
+            inputs=[question, provider, embedding, session_count],
+            outputs=[answer_out, retrieved_out, related_out, session_count],
+        )
+        submit.click(handle_question, **io)
+        question.submit(handle_question, **io)
 
         gr.HTML(f'<p class="notice-footer">{DISCLAIMER}</p>')
+
+    if IS_SPACE:
+        # 免費 CPU Basic 僅 2 vCPU：併發設低一點避免 rerank/grounding 互相拖慢；
+        # max_size 讓排隊滿了之後新請求直接被拒（不是無限堆積等到逾時）
+        demo.queue(max_size=20, default_concurrency_limit=2)
     return demo
 
 
