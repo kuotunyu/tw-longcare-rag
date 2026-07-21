@@ -2,13 +2,14 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-21）
 
-- **現在做到哪**：Phase 6（Gradio 介面）**已完成，作者驗收通過**，`git tag phase-6` 已打。
+- **現在做到哪**：Phase 7（HF Spaces 部署）**工程準備完成，尚未實際上線**——自動建索引、Space 環境感知、部署檔案/腳本/skill 皆完成並本機實測；**尚未建立 HF Space、尚未推送**（見下）。
 - **下一步**：
-  1. 跟作者確認是否開始 Phase 7（HF Spaces 部署）——見 `PLAN.md` 139 行 Phase 7 段落
-  2. 若確認開始：先跑 `nvidia-smi`／檢查現有 laws.json+contextual_cache.json 齊全，規劃「Space 啟動時重建索引」主路徑，濫用防護四項（queue上限/session題數上限/grounding降級/金鑰額度上限）
-- **未決問題**：（無）
-- **待使用者人工處理**：（無）
-- **⚠️ 已知坑**：（無——GIF 待錄與跨法規比較限制皆已轉入 PLAN.md 風險表，非本專案程式碼缺陷）
+  1. 作者本人操作：建 HF Space（SDK 選 Gradio、免費 CPU Basic）、設定 Secrets（`HF_TOKEN`／`GOOGLE_API_KEY`／`OPENAI_API_KEY`）、到 Google AI Studio/OpenAI 後台設金鑰額度上限——完整步驟見 `.claude/skills/deploy-space/SKILL.md`
+  2. 作者確認建好 Space 後，跑 `uv run python scripts/prepare_space_bundle.py` 組檔案、`git push` 上去
+  3. 上線後照 `deploy-space` skill 的驗收清單實測 3 題＋記錄真實冷啟動秒數，回報給我更新 README/PROGRESS，再 `git tag phase-7`
+- **未決問題**：是否/何時建立 HF Space 帳號與實際推送——需作者本人操作，我不能代為建立公開 Space 或登入帳號
+- **待使用者人工處理**：HF Space 建立、Secrets 設定、供應商後台金鑰額度上限（見上）
+- **⚠️ 已知坑**：（無——本機模擬冷啟動實測的秒數僅供驗證邏輯正確，不代表免費 CPU Basic 無 GPU、模型未快取時的真實表現，已在 PLAN D14 誠實註記）
 
 ## 📜 Phase 日誌（append-only）
 
@@ -583,3 +584,79 @@
   - 相關 commit：`git tag phase-6`（見 tag 列表）
   - 決策變更：無
   - 實際成本：$0
+
+### Phase 7 — HF Spaces 部署（工程準備完成 2026-07-21，**尚未實際上線**）
+
+- **2026-07-21**：
+  - 完成內容：
+    - `src/twlongcare/index_build.py`（新檔）：把 `scripts/build_index.py` 的
+      `load_chunks`/`ensure_contextual`/`build_chroma`/`build_bm25` 抽成可重用
+      模組（比照 Phase 6 `pipeline.py` 先例），新增 `build_index()` 統一入口；
+      `ensure_contextual` 缺快取且未確認成本時改拋 `ContextualCostConfirmationRequired`
+      （原本是 `SystemExit(2)`，CLI 場景仍能中止，但供 `retriever.py` 當函式庫
+      呼叫時 `SystemExit` 會直接砍掉整個 Gradio 行程，不利除錯）；
+      `scripts/build_index.py` 改為薄封裝，CLI 行為（含 `--confirm-cost` 流程）不變
+    - `src/twlongcare/retriever.py`：`HybridRetriever.__init__` 加自動建索引——
+      載入既有 chroma collection／bm25s 索引失敗時，用**已經載入的 embedder**
+      （不重複下載/載入模型）呼叫 `index_build.build_index()` 重建一次再重載；
+      `confirm_cost` 固定傳 `False`，快取不齊全會直接拋錯而非靜默呼叫付費 API
+    - `app.py` 加 Space 環境感知（偵測 `SPACE_ID`，HF Spaces 執行時自動設定）：
+      `provider_choices()`/`embedding_choices()` 兩支函式依環境回傳不同
+      choices/預設值/info 文字——Space 只留雲端 provider（隱藏 ollama）、
+      embedding 只留 gtaide（不建 bge-m3）；`build_examples()` 改用同一個
+      預設 provider 來源，避免 Examples 寫死值跟 Dropdown choices 對不上
+      （測試中意外重現過一次，已修正）；`handle_question` 加 `session_count`
+      （`gr.State`）追蹤每瀏覽器分頁題數，Space 模式下達 `MAX_QUESTIONS_PER_SESSION`
+      （20）直接拒答；`IS_SPACE` 時 `demo.queue(max_size=20, default_concurrency_limit=2)`
+      限流；模組 import 時（Space 環境）預先呼叫一次 `get_retriever("gtaide")`
+      讓建索引發生在啟動階段，不讓第一位訪客等
+    - `space/README.md`（HF Space frontmatter：title/emoji/colorFrom/colorTo/
+      sdk: gradio/sdk_version: 6.20.0/app_file/python_version/short_description
+      + 簡短說明，第一人稱動機改寫自主 README、無公司名）、
+      `space/requirements.txt`（CPU-only torch 索引，不含 gradio/deepeval/pyvis/
+      langchain-ollama——理由見檔案內註解）
+    - `scripts/prepare_space_bundle.py`（新檔）：白名單複製部署檔案子集到
+      `dist/space-bundle/`（`app.py`／`src/twlongcare/`／四個小型資料檔／
+      `space/README.md`→`README.md`／`space/requirements.txt`→`requirements.txt`），
+      刻意不含 chroma/bm25s/raw/models/.env/logs/tests/docs
+    - `.claude/skills/deploy-space/SKILL.md`（新 skill）：完整部署程序（前置需求、
+      組檔案、推送、冷啟動原理、驗收 DoD）；`CLAUDE.md` skills 索引同步
+    - 測試：`tests/test_index_build.py`（新檔，3 個：成本確認守門 2 個＋
+      外部 embedder 建索引整合測試 1 個）、`tests/test_app.py` 新增 6 個
+      （session 上限攔截／本機不受限／Space provider 排除 ollama／Space
+      embedding 僅 gtaide／本機維持三 provider 兩 embedding／Space 模式
+      `build_app()` 煙霧測試）
+  - 驗證證據（實跑）：
+    - `uv run pytest -q` → `133 passed`
+    - **本機模擬冷啟動**（真實驗證，非猜測）：備份 `data/chroma`＋`data/bm25s`
+      （改名為 `.bak`）→ 設 `SPACE_ID=test/simulated-cold-start` 環境變數
+      →`import app` 觸發自動建索引：`chunks：208`→`contextual 快取齊全（208
+      chunks）`→ `chroma collection：gtaide_768_ctx（208 筆）`→`bm25s 索引：
+      data\bm25s\ctx`→`索引就緒，耗時 17.2 秒`（RTX 4090＋模型已快取，
+      整體 import+warmup 19.9 秒）；即時檢索「幾歲可以申請長照服務」命中
+      `長期照顧服務申請及給付辦法 §2`（rerank 0.728），與本機原索引結果一致；
+      重跑一次確認第二次會偵測「已存在」直接載入、不重複建置（無 build 相關
+      print 訊息，僅模型載入時間）→ 驗證完畢後刪除測試產生的索引、把
+      `.bak` 還原回 `data/chroma`／`data/bm25s`，確認本機原索引大小/內容
+      與還原前一致，且還原後正常查詢不觸發重建
+    - 過程中在 `index_build.py` 發現真實 bug：`build_index()` 印 bm25s 路徑
+      用 `bm25_dir.relative_to(DATA_DIR.parent)`，`BM25_DIR` 被覆寫到 repo 外
+      （測試用 tmp_path）時拋 `ValueError`；改用 try/except 容錯（保留正常
+      情況下的 repo 相對路徑輸出），對應 pytest
+      `test_build_index_with_external_embedder_produces_loadable_index`
+    - `uv run python scripts/prepare_space_bundle.py` 實跑：產出 23 個檔案、
+      共 382 KB；人工核對檔案清單（`find dist/space-bundle -type f`）確認
+      無 `__pycache__`、無 chroma/bm25s/raw/models/.env/logs
+    - `uv run python scripts/check_public_text.py space/README.md
+      space/requirements.txt .claude/skills/deploy-space/SKILL.md
+      scripts/prepare_space_bundle.py CLAUDE.md` → 全部通過
+  - 相關 commit：見 git log（本輪 Phase 7 工程準備）
+  - 決策變更：見 PLAN.md D14（索引重建路徑、index_build.py 抽取、Space
+    provider/embedding 限制、濫用防護四項）
+  - 實際成本：$0（僅重用既有 contextual 快取，未呼叫任何付費 API）
+  - **附註（重要）**：本次僅完成可部署的工程準備，**尚未實際建立 HF Space
+    或推送**——建立 Space、設定 Secrets（含金鑰）、正式上線是作者本人需要
+    操作的帳號層級動作，我不會代為建立公開資源或登入帳號。本機測得的
+    17.2 秒冷啟動時間是 RTX 4090＋模型已快取的結果，**不能外推**到免費
+    CPU Basic（無 GPU、模型可能需要現場下載）的真實表現，真實數字需部署
+    後另外實測記錄
