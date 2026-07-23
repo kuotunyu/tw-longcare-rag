@@ -14,6 +14,7 @@
 - 開工前查證外部套件現行 API：**優先用 Context7 MCP**；若當下 session 未連接 Context7（`ToolSearch` 查不到），改用 WebFetch 抓官方文件頁面替代，效果等同
 - 小功能隨做隨 commit（Conventional Commits）；權重與大型資料不進 git
 - **commit 訊息與一切公開文字不得含任何公司/產品名或外部署名尾行**（公開文案守則）；clone 後執行一次 `git config core.hooksPath .githooks` 啟用守門 hooks
+  - 此禁令針對「幫特定公司背書」的敘事語氣，**不含**模型選型對照表等技術事實引用（例如 `BAAI/bge-m3`、`google/gemma-3-12b-it`、Gemini／OpenAI provider 名稱）——這些是 README「模型選型」章節必要的基準模型/供應商名稱，`check_public_text.py` 的 redlist 也刻意不含這些字串，不算違規
 - 會花錢的批次 API 呼叫：先印成本估算、作者確認後執行；結果一律快取（contextual_cache.json 等）
 - 載入地端模型前先 `nvidia-smi` 檢查 VRAM
 

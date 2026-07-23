@@ -1,15 +1,12 @@
 # PROGRESS — 進度日誌
 
-## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-22）
+## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-23）
 
-- **現在做到哪**：Phase 7（HF Spaces 部署）**實際上線並持續打磨 UI**——https://huggingface.co/spaces/steven0226/tw-longcare-rag ，CPU Basic 硬體（作者訂閱 HF PRO）。上線後又經多輪作者實測回饋（字級、換行、留白、進階設定框線）修正，每輪皆直接連線上 Space 驗證（不只憑本機測試），詳見下方 Phase 7 log。README 已補上 demo 連結。
-- **下一步**：
-  1. **主 repo 尚未 commit 今天這輪改動**（`app.py`／`tests/test_app.py`／`README.md`，`git status` 目前是 working tree 有未加入版控的修改）——這些改動只推上了 HF Space 自己的 git（`dist/space-repo`），沒進主 repo 歷史，GitHub 上看到的 `app.py` 是舊版本。跟作者確認後執行 `git add app.py tests/test_app.py README.md && git commit -m "..." && git push`
-  2. 確認作者是否已到 Google AI Studio／OpenAI 後台設定金鑰額度上限（`deploy-space` skill 建議事項，尚未跟作者確認是否做過）
-  3. 作者驗收確認今天這輪修正後 `git tag phase-7`
+- **現在做到哪**：**Phase 7 完整收尾，`project-wrapup-audit` workflow 稽核出的所有缺口皆已處理完畢**——https://huggingface.co/spaces/steven0226/tw-longcare-rag ，CPU Basic 硬體（作者訂閱 HF PRO），`git tag phase-7` 已打在 HEAD。金鑰額度上限（Google NT$600/月、OpenAI $60/月）已設定；「開一家日照中心要什麼許可」修正後已在線上重新驗證正確；grounding 降級決定不做（PLAN.md D20，濫用防護收斂為三項）；真實冷啟動時間已實測記錄（115.4 秒，見下方 Phase 7 log）。
+- **下一步**：（無——目前沒有已知待辦，若要繼續可考慮：README 補 30 秒 demo GIF、README「成本透明」標題與 TL;DR 英文段落的用詞是否要微調，皆屬錦上添花，非缺口）
 - **未決問題**：（無）
-- **待使用者人工處理**：Google AI Studio／OpenAI 後台金鑰額度上限設定（若尚未做）
-- **⚠️ 已知坑**：主 repo 與實際部署的 Space 程式碼不同步（見上「下一步」第 1 項）——收工前務必 commit，否則之後容易搞混哪個版本才是真的在跑
+- **待使用者人工處理**：（無）
+- **⚠️ 已知坑**：（無）
 
 ## 📜 Phase 日誌（append-only）
 
@@ -100,7 +97,7 @@
       - `--provider openai` 1 題：多句多引用皆正確標註 `[老人福利法 §47][§48][§49]` 等
   - 相關 commit：`3165637` 依賴、`f024bc6` chunking+embedding、`adb3125` 檢索+生成+CLI、`4ddb21c` skills、`23f71f0` contextual 穩健性修正、`3ed5d2c` D8 模型統一、`675a4ce` extract_text 共用修正+prompt 收緊、`3c6b883` README、`06649ef`/`da8c6b8`/本條目 PROGRESS 與 prompt 迭代
   - 決策變更：**D8**（Gemini 模型統一）、**D9**（向量庫不經 langchain-chroma，直接走 chromadb；見 PLAN.md Decision Log）
-  - 實際成本：Contextual 摘要 208 筆，事前估算上限 $0.414／樂觀（隱式快取命中）$0.132（gemini-3.1-flash-lite）；未取得逐次呼叫實際 token 用量，以此估算區間入帳，Phase 5 起補齊實際用量記錄機制
+  - 實際成本：Contextual 摘要 208 筆，事前估算上限 $0.414／樂觀（隱式快取命中）$0.132（gemini-3.1-flash-lite）；未取得逐次呼叫實際 token 用量，以此估算區間入帳。**當時承諾「Phase 5 起補齊實際用量記錄機制」，2026-07-22 收尾複查時確認從未兌現**——回頭看全程實際成本量級始終 <$0.2（見 Phase 5 條目），逐次 token 記錄機制的開發成本不成比例，正式放棄此項，改以事前估算區間 + 批次後人工核對總金額（信用卡/帳單）作為足夠的成本控管手段
   - **作者驗收過程**（2026-07-20，含多輪真實 CLI 測試，非我方單方面宣稱）：
     - 作者親自用 CLI 測試同一題「阿嬤請看護政府有補助嗎」across 三個 provider，逐句對照 laws.json 原文查證：
       - ollama（taide-12b）：2 句話，1 句有引用且準確、1 句內容準確但漏標引用——**引用覆蓋率約 50%，內容未發現瞎掰**
@@ -123,6 +120,7 @@
     - V1 唯一漏失案例：「長照服務有哪些種類」被 V1 改寫成「長照給付標準」語意漂移致 L0070040-9 掉出 top-5；few-shot 版修復
     - 「不改寫」hit@5 雖同為 100% 但正常題 rerank 分數會與陷阱題重疊（校準第一次失敗已證實），拒答門檻會失效，故不可採
     - `uv run pytest -q` → `61 passed`；`scripts/calibrate_grounding.py` 重跑輸出見 PLAN D10
+    - 附註（2026-07-22 收尾複查時確認）：這個條目雖然文字排在下方「Phase 3 — 防幻覺」小節之前，但實際 commit 時間在 Phase 3 的 grounding 測試（`tests/test_grounding.py`）已完成之後（同一天，相隔約 2 小時）；D10 這次改動沒有新增任何測試檔案，所以兩處都寫「61 passed」並非複製貼上沒改到，是兩個時間點各自量測都正確——純粹是本檔案為了主題分組把 D10 排在 Phase 3 之前，跟真實時間順序不同，容易誤讀成數字兜不起來
   - 相關 commit：見本條目 commit
   - 決策變更：**D10**（見 PLAN.md Decision Log；含 dual-query 假設被數據推翻的如實記錄）
   - 實際成本：$0（全地端）
@@ -810,7 +808,81 @@
          RUNNING; do sleep 5; done` 輪詢等到真正 Running 後重測，四項全部
          確認生效
   - 相關 commit：本輪改動已推上 HF Space 自己的 git（`dist/space-repo`，
-    commit `1caa01c`/`22683e9`/`e3f3cea`/`c06f1eb`/`7143455`），**尚未
-    commit 進主 repo**（見上方快速回憶區「下一步」第 1 項）
+    commit `1caa01c`/`22683e9`/`e3f3cea`/`c06f1eb`/`7143455`），**之後已
+    補 commit 進主 repo**（`336f4d2`/`5eadf58`/`0cee99b`，見下一條目）
   - 決策變更：無新 D 決策（UI 呈現層調整，不影響管線邏輯）
   - 實際成本：$0（僅本機/線上 UI 測試，無額外 API 呼叫）
+
+- **2026-07-23（Phase 7 收尾複查：`project-wrapup-audit` workflow 稽核 + 逐項處理）**：
+  - 完成內容：
+    - 主 repo 補 commit 今天累積的 UI 修正（`336f4d2` fix(ui) + `5eadf58` docs
+      + `0cee99b` chore），推送 GitHub；`git tag phase-7` 打在 HEAD（`0cee99b`）
+    - 作者在 Google AI Studio（`GDG-20260110` 專案，NT$600/月 monthly spend
+      cap）與 OpenAI（organization spend limit $60/月＋75%/100% email 預警，
+      查證後發現這個其實**早就設定好了**，只是 UI 用詞跟預期的「Usage
+      limits」不同）都確認完成金鑰花費上限，濫用防護的最後一項落地
+    - 跑 `project-wrapup-audit` workflow（五個面向平行稽核：PLAN/PROGRESS
+      交叉比對、README 完整性、程式碼測試健康度、git 狀態、風險表盤點），
+      逐項驗證後處理：
+      1. 「開一家日照中心要什麼許可」——查 `pipeline.py` 的
+         `make_rewrite_model()` 才發現 D19 那個 bug（`gemini_lite_model`
+         過時預設值）**只影響 gemini provider 的查詢改寫**，openai
+         provider 的改寫走自己的模型、從未受影響；在線上 Space 對 gemini
+         重新測這題，拿到完整正確答案（4 個引用，《長期照顧服務機構設立
+         許可及管理辦法》§6/§35/§13），關掉這個從 D19 修正後就沒回頭驗證
+         過的缺口
+      2. **grounding 降級決定不做**（PLAN.md D20，supersedes 原「四項濫用
+         防護」規劃）：現有 queue 併發上限（2）已經連帶壓住 grounding 這類
+         額外 LLM 呼叫，加上金鑰額度上限是絕對硬底線，動態降級機制的架構
+         複雜度不成比例。PLAN.md 149/150/193 行措辭同步改為「三項」
+      3. PLAN.md 拒答門檻/CRAG retrieval evaluator 那行風險表補一句明確
+         收尾（暫不投入開發，個人專案規模影響有限）
+      4. Phase 2 承諾的「Phase 5 起補齊逐次 token 用量記錄機制」確認從未
+         兌現，誠實記錄放棄（全程實際成本量級 <$0.2，不成比例）
+      5. 查證「Phase 3 pytest 數字兜不起來」的疑慮：用 `git log -p` 考古
+         `tests/test_grounding.py` 的建立時間，確認**不是真的 bug**——兩處
+         「61 passed」各自量測時間點都正確，只是 D10 那段文字排版排在
+         Phase 3 之前、但實際 commit 時間在 Phase 3 grounding 測試完成
+         之後，純粹是文件分組順序造成的誤讀，已加註解澄清（見上方 125 行
+         附近）
+      6. README 補 Phase 8 離線部署架構文字說明（app+向量庫本機、Ollama
+         host 服務連線）
+      7. CLAUDE.md 補一句：公開文案守則的「禁公司名」不含模型選型對照表的
+         技術性引用（`BAAI/bge-m3`、`google/gemma-3-12b-it`、Gemini/OpenAI
+         provider 名稱），`check_public_text.py` 的 redlist 本來就沒把這些
+         字串當違規
+      8. jieba 0.42.1（上游多年未更新）在 `setuptools>=81` 下觸發
+         `pkg_resources` 棄用警告（pytest 唯一的 1 個 warning）；評估後
+         決定不釘 setuptools 版本（代價過大），記錄為觀察中的低優先風險
+    - **真實冷啟動時間實測**：作者在 HF Space 網頁點擊「Restart this
+      Space」，親自到 Container Logs 找到 `[app] 索引就緒，耗時 115.4 秒`
+      這行（2026-07-23 18:22:55 開始的那次重啟，含重新下載 embedding
+      模型 `model.safetensors` 1.21GB），寫進 `space/README.md`——這是
+      免費 CPU Basic 硬體上首次真正的冷啟動實測數字，遠慢於本機 RTX 4090
+      模擬的 17.2 秒（符合預期：無 GPU、模型未快取需現場下載），此前
+      README 一直誠實標註「不可外推」，現在有真數字可以取代這句警語
+    - **一次工具限制的釐清**：嘗試自己在瀏覽器裡切換 Space 的「回答模型」
+      下拉選單改測 openai provider，發現 Gradio 這顆 Dropdown 元件是完全
+      「受控」的 Svelte 元件，純 JS 模擬事件（`dispatchEvent`）會被下一輪
+      渲染打回原值，連 `computer` 工具的真實鍵盤事件（focus+Enter 開啟
+      清單、輸入文字篩選）都只能打開清單、選不到選項；改用查程式碼
+      （見上第 1 項）證明這把測試其實非必要，而不是硬幹到底
+    - **嘗試自動量測冷啟動時間但失敗，改用更簡單的辦法**：一開始想靠外部
+      輪詢 HF Space 公開狀態 API（`/api/spaces/.../` 的 `runtime.stage`
+      欄位）量測「Restarting → Running」的實際秒數，但兩次都因為時序
+      沒抓準（開始輪詢時對方已經重啟完、或 10 分鐘內沒等到重啟開始）而
+      失敗；後來想到 `app.py` 本身就有內建計時器印出的 log 行，直接請
+      作者本人到 Container Logs 找那一行文字，比外部猜時間精準又省事
+  - 驗證證據（實跑）：
+    - `uv run pytest -q` → `146 passed`（同前，本輪未改動程式邏輯，只改
+      文件）
+    - `uv run python scripts/check_public_text.py README.md PLAN.md
+      PROGRESS.md CLAUDE.md space/README.md` → 全部通過
+    - `git status` 確認 commit 前後主 repo 與 GitHub 遠端同步、`git tag`
+      確認 `phase-7` 存在且指向正確的 commit
+    - 線上 Space 對「開一家日照中心要什麼許可」（gemini/gtaide）的完整
+      作答與 4 個 citation 展開內容已用瀏覽器 JS 直接讀取確認
+  - 相關 commit：待本輪文件改動 commit（`README.md`／`PLAN.md`／
+    `PROGRESS.md`／`CLAUDE.md`／`space/README.md`）
+  - 決策變更：**D20**（grounding 降級決定不做，見 PLAN.md Decision Log）
+  - 實際成本：$0（僅文件修正、線上驗證與既有 API 呼叫測試，量級可忽略）

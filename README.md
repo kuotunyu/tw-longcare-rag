@@ -110,6 +110,11 @@ uv run python app.py
 已用文字＋本機實測記錄替代——功能本身已用真實瀏覽器互動驗證過 4 個案例，
 見 PROGRESS.md Phase 6 日誌。）
 
+**離線部署**：本機執行不需要容器化——`app.py`＋chromadb／bm25s 向量庫都在
+本機直接跑，唯一的外部依賴是 Ollama（地端 TAIDE 12B 生成），以 host 服務
+方式連線（`ChatOllama` 打本機 `localhost:11434`）。整套架構可以完全離線運作
+（雲端 provider 除外），不依賴任何常駐容器。
+
 ### 範例輸出（`--provider gemini`）
 
 ```
