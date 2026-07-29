@@ -11,8 +11,7 @@
 
 [線上 Demo](https://huggingface.co/spaces/steven0226/tw-longcare-rag) ·
 [Production RAG 設計](docs/production-rag.md) ·
-[完整評估](docs/eval.md) ·
-[開發決策](PLAN.md)
+[完整評估](docs/eval.md)
 
 </div>
 
@@ -21,7 +20,8 @@
 bounded corrective retrieval、逐句 grounding、完整 trace 與版本化 Living
 Knowledge Base，沒有為了框架展示而重寫成 LlamaIndex。
 
-> [!IMPORTANT]
+> **使用範圍**
+>
 > 本工具是非官方個人專案，不構成法律或長照申請建議。正式資訊請以
 > 衛生福利部公告、全國法規資料庫與 1966 長照服務專線為準。
 
@@ -183,8 +183,6 @@ locked test 結果回頭調 threshold；要調整 gate 時只使用 calibration 
 
 - [Production RAG 架構、trace、budget 與 Living KB](docs/production-rag.md)
 - [完整 retrieval / generation / refusal 評估](docs/eval.md)
-- [設計決策與階段規劃](PLAN.md)
-- [實作與實驗日誌](PROGRESS.md)
 - [法條引用圖譜（互動版）](docs/assets/law_graph.html)
 
 ---
