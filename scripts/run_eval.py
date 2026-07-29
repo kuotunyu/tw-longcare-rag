@@ -147,6 +147,9 @@ def print_table(results: list[dict]) -> None:
 
 
 def main() -> None:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--config", choices=list(CONFIGS), help="只跑單一 config")
     parser.add_argument("--all", action="store_true", help="跑全部 config 並輸出對照表+JSON")

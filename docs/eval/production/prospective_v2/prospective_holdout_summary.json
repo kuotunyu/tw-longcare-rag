@@ -1,0 +1,63 @@
+{
+ "schema_version": "prospective-gate-holdout-result-v1",
+ "cycle_id": "prospective-v2-unseen-sources",
+ "dataset_sha256": "af86020e224d4aa04edd48240043b8423001c30a723797cc2b74aede3bf4196c",
+ "calibration_dataset_sha256": "c5dfaacc8a9daecb6c45c89bdec0fd750ec9005733c7ee95b3ded9d03542caa6",
+ "synthetic_proxy": true,
+ "represents_production_distribution": false,
+ "item_count": 100,
+ "strata": {
+  "ambiguous": 10,
+  "long_tail_typo": 15,
+  "multi_hop": 10,
+  "single_hop": 55,
+  "unanswerable": 10
+ },
+ "needs_correction_count": 23,
+ "route_accuracy": 0.84,
+ "latency_ms": {
+  "p50": 224.90800000000002,
+  "p95": 256.314
+ },
+ "rule_gate": {
+  "count": 100,
+  "accuracy": 0.53,
+  "precision": 0.3235294117647059,
+  "recall": 0.9565217391304348,
+  "specificity": 0.4025974025974026,
+  "activation_rate": 0.68,
+  "false_activation_rate": 0.5974025974025974,
+  "missed_correction_rate": 0.043478260869565216,
+  "confusion": {
+   "tp": 22,
+   "fp": 46,
+   "fn": 1,
+   "tn": 31
+  }
+ },
+ "candidate_gate": {
+  "count": 100,
+  "accuracy": 0.94,
+  "precision": 0.8695652173913043,
+  "recall": 0.8695652173913043,
+  "specificity": 0.961038961038961,
+  "activation_rate": 0.23,
+  "false_activation_rate": 0.03896103896103896,
+  "missed_correction_rate": 0.13043478260869565,
+  "confusion": {
+   "tp": 20,
+   "fp": 3,
+   "fn": 3,
+   "tn": 74
+  }
+ },
+ "decision_threshold": 0.21,
+ "adoption_criteria_passed": false,
+ "decision": "keep_rule_gate_and_do_not_adopt_candidate",
+ "limitations": [
+  "synthetic proxy does not represent production distribution",
+  "labels measure evidence completeness, not answer correctness",
+  "questions are retrieved directly without LLM query rewrite"
+ ],
+ "holdout_read_count_for_this_candidate": 1
+}

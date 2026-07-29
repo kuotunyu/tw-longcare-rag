@@ -1,0 +1,64 @@
+{
+ "schema_version": "production-readiness-v1",
+ "local_readiness_passed": true,
+ "checks": {
+  "cycle2_validation_passed": true,
+  "cycle2_is_not_production_claim": true,
+  "cycle2_holdout_read_exactly_once": true,
+  "candidate_not_silently_adopted": true,
+  "end_to_end_locked_count_complete": true,
+  "end_to_end_tokens_measured": true,
+  "law_snapshot_is_immutable": true,
+  "active_index_matches_law_snapshot": true,
+  "post_refresh_retrieval_regression_passed": true
+ },
+ "artifacts": {
+  "locked_baseline": "docs/eval/production/baseline_frozen.json",
+  "adaptive": "docs/eval/production/adaptive_summary.json",
+  "cycle2_validation": "data/eval/prospective_v2_holdout_validation.json",
+  "cycle2_candidate": "docs/eval/production/prospective_v2/prospective_gate_candidate.json",
+  "cycle2_holdout": "docs/eval/production/prospective_v2/prospective_holdout_summary.json",
+  "end_to_end": "docs/eval/production/end_to_end/summary.json",
+  "end_to_end_traces": "docs/eval/production/end_to_end/traces.jsonl",
+  "law_manifest": "data/law_version_manifest.json",
+  "index_manifest": "data/index_manifest.json"
+ },
+ "evaluation_decision": "keep_rule_gate_and_do_not_adopt_candidate",
+ "candidate_adoption_state": "offline_candidate_rejected",
+ "end_to_end": {
+  "latency_ms": {
+   "p50": 8560.687,
+   "p95": 20155.948
+  },
+  "tokens": {
+   "main_total": 224549,
+   "shadow_total": 32760,
+   "combined_total": 257309,
+   "mean_combined_per_query": 5847.931818181818,
+   "by_stage": {
+    "answer_generation": 45760,
+    "query_rewrite": 9952,
+    "sentence_grounding": 168837,
+    "shadow.query_refinement": 32760
+   }
+  },
+  "estimated_cost_usd": 0.0
+ },
+ "living_kb": {
+  "source_update_date": "2026-07-17",
+  "law_version": "2026-07-17-e941dcc3e345",
+  "content_changed": false,
+  "metadata_only_refresh": true,
+  "active_index": "hybrid-index-v1-e941dcc3e345-gtaide-native-ctx",
+  "recall_at_20": 1.0,
+  "last_regression_verified_at": "2026-07-29T17:07:47+00:00",
+  "serving_snapshot": "data/versions/laws/2026-07-17-e941dcc3e345/laws.json"
+ },
+ "deployment": {
+  "space_detected": false,
+  "external_volume_paths_configured": false,
+  "data_dir": "data",
+  "logs_dir": "logs",
+  "note": "Attach a Hugging Face Storage Bucket volume and set RAG_DATA_DIR/RAG_LOGS_DIR before deployment if persistence is required."
+ }
+}

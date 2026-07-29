@@ -1,0 +1,212 @@
+{
+ "長照法第 27 條是否禁止非長照機構使用長照機構名稱？": {
+  "query": "長期照顧服務法 長照機構 名稱 使用規範 第27條",
+  "usage": {
+   "input_tokens": 531,
+   "output_tokens": 34,
+   "total_tokens": 565,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 531,
+     "output_tokens": 34,
+     "total_tokens": 565
+    }
+   }
+  }
+ },
+ "長照服務申請後由哪個單位進行評估？": {
+  "query": "由哪些單位負責評估長照服務申請者的長照需求等級？",
+  "usage": {
+   "input_tokens": 664,
+   "output_tokens": 43,
+   "total_tokens": 707,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 664,
+     "output_tokens": 43,
+     "total_tokens": 707
+    }
+   }
+  }
+ },
+ "家庭照顧者支持服務包含哪些類型？": {
+  "query": "家庭照顧者支持服務包含哪些類型？ 家庭照顧者支持服務包括下列三種類型：",
+  "usage": {
+   "input_tokens": 708,
+   "output_tokens": 62,
+   "total_tokens": 770,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 708,
+     "output_tokens": 62,
+     "total_tokens": 770
+    }
+   }
+  }
+ },
+ "長照機構停業最長可以多久？": {
+  "query": "住宿式長照機構 停業 最長期限",
+  "usage": {
+   "input_tokens": 666,
+   "output_tokens": 31,
+   "total_tokens": 697,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 666,
+     "output_tokens": 31,
+     "total_tokens": 697
+    }
+   }
+  }
+ },
+ "老人財產信託是哪一條規定？": {
+  "query": "老人福利法 財產信託 條款",
+  "usage": {
+   "input_tokens": 614,
+   "output_tokens": 46,
+   "total_tokens": 660,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 614,
+     "output_tokens": 46,
+     "total_tokens": 660
+    }
+   }
+  }
+ },
+ "長照給付超過核定額度後由誰負擔？": {
+  "query": "前二項津貼請領資格、條件、程序、金額及其他相關事項之辦法，由中央主管",
+  "usage": {
+   "input_tokens": 675,
+   "output_tokens": 596,
+   "total_tokens": 1271,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 675,
+     "output_tokens": 596,
+     "total_tokens": 1271
+    }
+   }
+  }
+ },
+ "勞退新制雇主要提撥百分之多少？": {
+  "query": "根據《勞工退休金條例》，雇主必須為勞工提撥多少比例的退休金？",
+  "usage": {
+   "input_tokens": 502,
+   "output_tokens": 16,
+   "total_tokens": 518,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 502,
+     "output_tokens": 16,
+     "total_tokens": 518
+    }
+   }
+  }
+ },
+ "汽車酒駕的刑事責任是什麼？": {
+  "query": "酒後駕車 刑法 公共危險罪 刑罰",
+  "usage": {
+   "input_tokens": 591,
+   "output_tokens": 28,
+   "total_tokens": 619,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 591,
+     "output_tokens": 28,
+     "total_tokens": 619
+    }
+   }
+  }
+ },
+ "綜合所得稅的標準扣除額是多少？": {
+  "query": "綜合所得稅標準扣除額 免稅額 法規",
+  "usage": {
+   "input_tokens": 672,
+   "output_tokens": 8,
+   "total_tokens": 680,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 672,
+     "output_tokens": 8,
+     "total_tokens": 680
+    }
+   }
+  }
+ },
+ "健保牙齒矯正有沒有給付？": {
+  "query": "全民健康保險 牙齒矯正 給付範圍",
+  "usage": {
+   "input_tokens": 662,
+   "output_tokens": 8,
+   "total_tokens": 670,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 662,
+     "output_tokens": 8,
+     "total_tokens": 670
+    }
+   }
+  }
+ },
+ "房屋租賃契約提前解約要賠多少？": {
+  "query": "房屋租賃契約提前解約要賠多少？ 房屋租賃 契約終止 違約金 賠償標準",
+  "usage": {
+   "input_tokens": 635,
+   "output_tokens": 78,
+   "total_tokens": 713,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 635,
+     "output_tokens": 78,
+     "total_tokens": 713
+    }
+   }
+  }
+ },
+ "遺產稅免稅額目前是多少？": {
+  "query": "遺產稅免稅額度 繼承稅 扣除額度 長照特種基金 財源項目 財政收支劃分原則",
+  "usage": {
+   "input_tokens": 632,
+   "output_tokens": 22,
+   "total_tokens": 654,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 632,
+     "output_tokens": 22,
+     "total_tokens": 654
+    }
+   }
+  }
+ },
+ "這個規定到底可不可以？": {
+  "query": "這個規定到底可不可以？ 法規條文效力",
+  "usage": {
+   "input_tokens": 633,
+   "output_tokens": 41,
+   "total_tokens": 674,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 633,
+     "output_tokens": 41,
+     "total_tokens": 674
+    }
+   }
+  }
+ },
+ "公司解僱員工要提前幾天通知？": {
+  "query": "公司解僱員工要提前幾天通知？ 資遣預告期間",
+  "usage": {
+   "input_tokens": 577,
+   "output_tokens": 133,
+   "total_tokens": 710,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 577,
+     "output_tokens": 133,
+     "total_tokens": 710
+    }
+   }
+  }
+ }
+}

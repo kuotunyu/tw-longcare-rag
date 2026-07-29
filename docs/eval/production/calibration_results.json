@@ -1,0 +1,1353 @@
+{
+ "dataset": "data/eval/gate_calibration.json",
+ "policy": {
+  "version": "gate-calibration-v1",
+  "min_top1": 0.6,
+  "strong_top1": 0.69,
+  "min_margin": 0.015,
+  "min_overlap_count": 1,
+  "min_overlap_jaccard": 0.03,
+  "max_refinements": 1
+ },
+ "n": 16,
+ "end_to_end_gate_accuracy": 0.9375,
+ "rewrite_tokens": 0,
+ "rows": [
+  {
+   "id": "a-01",
+   "question": "長照法第 27 條是否禁止非長照機構使用長照機構名稱？",
+   "answerable": true,
+   "expected_parent_ids": [
+    "L0070040-27"
+   ],
+   "rewritten": "長期照顧服務法 長照機構 名稱 使用規範",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.7309709936465442,
+     "top1_top2_margin": 5.6172637191265196e-05,
+     "bm25_dense_overlap_count": 11,
+     "bm25_dense_overlap_jaccard": 0.3793103448275862,
+     "required_articles": [
+      "L0070040-27"
+     ],
+     "retrieved_articles": [
+      "L0070040-28",
+      "L0070040-27",
+      "L0070040-26",
+      "L0070044-13",
+      "L0070043-6"
+     ],
+     "graph_articles": [
+      "L0070040-10",
+      "L0070040-11",
+      "L0070040-12",
+      "L0070040-21"
+     ],
+     "required_article_coverage": 1.0,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "answer",
+    "reason": "multiple retrieval signals support generation",
+    "confidence": 0.86,
+    "signals": {
+     "top1_rerank": 0.73102420546027,
+     "top1_top2_margin": 0.000530821497819578,
+     "bm25_dense_overlap_count": 14,
+     "bm25_dense_overlap_jaccard": 0.2692307692307692,
+     "required_articles": [
+      "L0070040-27"
+     ],
+     "retrieved_articles": [
+      "L0070040-27",
+      "L0070040-50",
+      "L0070040-29",
+      "L0070040-28",
+      "L0070043-6"
+     ],
+     "graph_articles": [
+      "L0070040-18",
+      "L0070040-19",
+      "L0070040-26",
+      "L0070040-10",
+      "L0070040-11"
+     ],
+     "required_article_coverage": 1.0,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "長期照顧服務法 長照機構 名稱 使用規範 第27條",
+   "retrieved_parent_ids": [
+    "L0070040-27",
+    "L0070040-50",
+    "L0070040-29",
+    "L0070040-28",
+    "L0070043-6"
+   ],
+   "hit_rank": 1,
+   "refinement_tokens": 565,
+   "predicted_answerable_without_refinement": true,
+   "correct": true
+  },
+  {
+   "id": "a-02",
+   "question": "老人福利法第 2 條如何定義老人？",
+   "answerable": true,
+   "expected_parent_ids": [
+    "D0050037-2"
+   ],
+   "rewritten": "老人福利法 定義老人",
+   "initial_gate": {
+    "decision": "answer",
+    "reason": "multiple retrieval signals support generation",
+    "confidence": 0.86,
+    "signals": {
+     "top1_rerank": 0.7298001917300241,
+     "top1_top2_margin": 0.04894312713196536,
+     "bm25_dense_overlap_count": 14,
+     "bm25_dense_overlap_jaccard": 0.5384615384615384,
+     "required_articles": [
+      "D0050037-2"
+     ],
+     "retrieved_articles": [
+      "D0050037-2",
+      "D0050037-1",
+      "D0050037-26",
+      "D0050037-11",
+      "D0050037-24"
+     ],
+     "graph_articles": [],
+     "required_article_coverage": 1.0,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "answer",
+    "reason": "multiple retrieval signals support generation",
+    "confidence": 0.86,
+    "signals": {
+     "top1_rerank": 0.7298001917300241,
+     "top1_top2_margin": 0.04894312713196536,
+     "bm25_dense_overlap_count": 14,
+     "bm25_dense_overlap_jaccard": 0.5384615384615384,
+     "required_articles": [
+      "D0050037-2"
+     ],
+     "retrieved_articles": [
+      "D0050037-2",
+      "D0050037-1",
+      "D0050037-26",
+      "D0050037-11",
+      "D0050037-24"
+     ],
+     "graph_articles": [],
+     "required_article_coverage": 1.0,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": false,
+   "final_query": "老人福利法 定義老人",
+   "retrieved_parent_ids": [
+    "D0050037-2",
+    "D0050037-1",
+    "D0050037-26",
+    "D0050037-11",
+    "D0050037-24"
+   ],
+   "hit_rank": 1,
+   "refinement_tokens": 0,
+   "predicted_answerable_without_refinement": true,
+   "correct": true
+  },
+  {
+   "id": "a-03",
+   "question": "長照服務申請後由哪個單位進行評估？",
+   "answerable": true,
+   "expected_parent_ids": [
+    "L0070059-3"
+   ],
+   "rewritten": "長照需要等級評估",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.7302025971928747,
+     "top1_top2_margin": 0.003326718425228914,
+     "bm25_dense_overlap_count": 10,
+     "bm25_dense_overlap_jaccard": 0.3333333333333333,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070059-7",
+      "L0070059-3",
+      "L0070040-8-1",
+      "L0070059-13",
+      "L0070059-6"
+     ],
+     "graph_articles": [
+      "L0070040-8",
+      "L0070059-2"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "answer",
+    "reason": "multiple retrieval signals support generation",
+    "confidence": 0.86,
+    "signals": {
+     "top1_rerank": 0.7288171772460093,
+     "top1_top2_margin": 0.00029857190814397416,
+     "bm25_dense_overlap_count": 16,
+     "bm25_dense_overlap_jaccard": 0.2962962962962963,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-8",
+      "L0070059-3",
+      "L0070059-6",
+      "L0070040-39",
+      "L0070040-8-1"
+     ],
+     "graph_articles": [
+      "L0070059-2"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "由哪些單位負責評估長照服務申請者的長照需求等級？",
+   "retrieved_parent_ids": [
+    "L0070040-8",
+    "L0070059-3",
+    "L0070059-6",
+    "L0070040-39",
+    "L0070040-8-1"
+   ],
+   "hit_rank": 2,
+   "refinement_tokens": 707,
+   "predicted_answerable_without_refinement": true,
+   "correct": true
+  },
+  {
+   "id": "a-04",
+   "question": "機構設立許可證書遺失後幾日內要申請補發？",
+   "answerable": true,
+   "expected_parent_ids": [
+    "L0070044-15"
+   ],
+   "rewritten": "機構設立許可證書遺失後幾日內要申請補發？",
+   "initial_gate": {
+    "decision": "answer",
+    "reason": "multiple retrieval signals support generation",
+    "confidence": 0.86,
+    "signals": {
+     "top1_rerank": 0.7308159968606818,
+     "top1_top2_margin": 0.04999964032036419,
+     "bm25_dense_overlap_count": 14,
+     "bm25_dense_overlap_jaccard": 0.5384615384615384,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070044-15",
+      "L0070044-26",
+      "L0070044-25",
+      "L0070044-22",
+      "D0050037-50"
+     ],
+     "graph_articles": [
+      "L0070040-22",
+      "L0070044-23"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "answer",
+    "reason": "multiple retrieval signals support generation",
+    "confidence": 0.86,
+    "signals": {
+     "top1_rerank": 0.7308159968606818,
+     "top1_top2_margin": 0.04999964032036419,
+     "bm25_dense_overlap_count": 14,
+     "bm25_dense_overlap_jaccard": 0.5384615384615384,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070044-15",
+      "L0070044-26",
+      "L0070044-25",
+      "L0070044-22",
+      "D0050037-50"
+     ],
+     "graph_articles": [
+      "L0070040-22",
+      "L0070044-23"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": false,
+   "final_query": "機構設立許可證書遺失後幾日內要申請補發？",
+   "retrieved_parent_ids": [
+    "L0070044-15",
+    "L0070044-26",
+    "L0070044-25",
+    "L0070044-22",
+    "D0050037-50"
+   ],
+   "hit_rank": 1,
+   "refinement_tokens": 0,
+   "predicted_answerable_without_refinement": true,
+   "correct": true
+  },
+  {
+   "id": "a-05",
+   "question": "家庭照顧者支持服務包含哪些類型？",
+   "answerable": true,
+   "expected_parent_ids": [
+    "L0070040-13"
+   ],
+   "rewritten": "家庭照顧者支持服務包括下列三種類型：",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.726496248759826,
+     "top1_top2_margin": 0.01208207980232412,
+     "bm25_dense_overlap_count": 8,
+     "bm25_dense_overlap_jaccard": 0.25,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-13",
+      "D0050037-31",
+      "L0070040-9",
+      "D0050037-18",
+      "L0070040-10"
+     ],
+     "graph_articles": [
+      "L0070040-7"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "answer",
+    "reason": "multiple retrieval signals support generation",
+    "confidence": 0.86,
+    "signals": {
+     "top1_rerank": 0.7289469426622817,
+     "top1_top2_margin": 0.01554805104400614,
+     "bm25_dense_overlap_count": 9,
+     "bm25_dense_overlap_jaccard": 0.2647058823529412,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-13",
+      "D0050037-31",
+      "L0070040-9",
+      "D0050037-18",
+      "L0070040-10"
+     ],
+     "graph_articles": [
+      "L0070040-7"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "家庭照顧者支持服務包含哪些類型？ 家庭照顧者支持服務包括下列三種類型：",
+   "retrieved_parent_ids": [
+    "L0070040-13",
+    "D0050037-31",
+    "L0070040-9",
+    "D0050037-18",
+    "L0070040-10"
+   ],
+   "hit_rank": 1,
+   "refinement_tokens": 770,
+   "predicted_answerable_without_refinement": true,
+   "correct": true
+  },
+  {
+   "id": "a-06",
+   "question": "長照機構停業最長可以多久？",
+   "answerable": true,
+   "expected_parent_ids": [
+    "L0070040-34"
+   ],
+   "rewritten": "住宿式長照機構停業期限",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.7287409040545418,
+     "top1_top2_margin": 0.005377865820344829,
+     "bm25_dense_overlap_count": 9,
+     "bm25_dense_overlap_jaccard": 0.2903225806451613,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070044-6",
+      "L0070040-53",
+      "L0070040-25",
+      "L0070044-24",
+      "L0070044-12"
+     ],
+     "graph_articles": [
+      "L0070044-10",
+      "L0070044-8",
+      "L0070044-5",
+      "L0070040-19",
+      "L0070040-31"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "answer",
+    "reason": "multiple retrieval signals support generation",
+    "confidence": 0.86,
+    "signals": {
+     "top1_rerank": 0.7302534510168683,
+     "top1_top2_margin": 0.0031768925540561765,
+     "bm25_dense_overlap_count": 18,
+     "bm25_dense_overlap_jaccard": 0.4090909090909091,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-25",
+      "L0070044-24",
+      "L0070040-53",
+      "L0070044-6",
+      "L0070044-33"
+     ],
+     "graph_articles": [
+      "L0070040-19",
+      "L0070040-31",
+      "L0070040-33",
+      "L0070040-38",
+      "L0070040-39"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "住宿式長照機構 停業 最長期限",
+   "retrieved_parent_ids": [
+    "L0070040-25",
+    "L0070044-24",
+    "L0070040-53",
+    "L0070044-6",
+    "L0070044-33"
+   ],
+   "hit_rank": null,
+   "refinement_tokens": 697,
+   "predicted_answerable_without_refinement": true,
+   "correct": false
+  },
+  {
+   "id": "a-07",
+   "question": "老人財產信託是哪一條規定？",
+   "answerable": true,
+   "expected_parent_ids": [
+    "D0050037-14"
+   ],
+   "rewritten": "老人福利法",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.7297079046748526,
+     "top1_top2_margin": 0.00013425189386828684,
+     "bm25_dense_overlap_count": 15,
+     "bm25_dense_overlap_jaccard": 0.6,
+     "required_articles": [],
+     "retrieved_articles": [
+      "D0050037-48",
+      "D0050037-5",
+      "D0050037-4",
+      "D0050037-3",
+      "D0050037-6"
+     ],
+     "graph_articles": [
+      "D0050037-37",
+      "D0050037-36"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "answer",
+    "reason": "multiple retrieval signals support generation",
+    "confidence": 0.86,
+    "signals": {
+     "top1_rerank": 0.7207151743441876,
+     "top1_top2_margin": 0.13130490274218287,
+     "bm25_dense_overlap_count": 18,
+     "bm25_dense_overlap_jaccard": 0.391304347826087,
+     "required_articles": [],
+     "retrieved_articles": [
+      "D0050037-14",
+      "D0050037-3",
+      "D0050037-11",
+      "D0050037-24",
+      "D0050037-1"
+     ],
+     "graph_articles": [],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "老人福利法 財產信託 條款",
+   "retrieved_parent_ids": [
+    "D0050037-14",
+    "D0050037-3",
+    "D0050037-11",
+    "D0050037-24",
+    "D0050037-1"
+   ],
+   "hit_rank": 1,
+   "refinement_tokens": 660,
+   "predicted_answerable_without_refinement": true,
+   "correct": true
+  },
+  {
+   "id": "a-08",
+   "question": "長照給付超過核定額度後由誰負擔？",
+   "answerable": true,
+   "expected_parent_ids": [
+    "L0070059-15"
+   ],
+   "rewritten": "失能者補助額度 超過部分 自負額",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.5202339686556616,
+     "top1_top2_margin": 0.01572622782692179,
+     "bm25_dense_overlap_count": 11,
+     "bm25_dense_overlap_jaccard": 0.3793103448275862,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070059-15",
+      "L0070040-8-1",
+      "D0050037-22",
+      "L0070059-7",
+      "D0050037-12"
+     ],
+     "graph_articles": [
+      "L0070040-35",
+      "L0070040-8"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "answer",
+    "reason": "multiple retrieval signals support generation",
+    "confidence": 0.86,
+    "signals": {
+     "top1_rerank": 0.7294511104340377,
+     "top1_top2_margin": 0.009782452307080747,
+     "bm25_dense_overlap_count": 23,
+     "bm25_dense_overlap_jaccard": 0.38333333333333336,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070059-15",
+      "L0070040-8-1",
+      "L0070059-14",
+      "L0070059-21",
+      "L0070059-6"
+     ],
+     "graph_articles": [
+      "L0070040-35",
+      "L0070040-8",
+      "L0070059-5"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "strong_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "前二項津貼請領資格、條件、程序、金額及其他相關事項之辦法，由中央主管",
+   "retrieved_parent_ids": [
+    "L0070059-15",
+    "L0070040-8-1",
+    "L0070059-14",
+    "L0070059-21",
+    "L0070059-6"
+   ],
+   "hit_rank": 1,
+   "refinement_tokens": 1271,
+   "predicted_answerable_without_refinement": true,
+   "correct": true
+  },
+  {
+   "id": "u-01",
+   "question": "勞退新制雇主要提撥百分之多少？",
+   "answerable": false,
+   "expected_parent_ids": [],
+   "rewritten": "勞工退休金 提繳比例 法規條文",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.5769645580633187,
+     "top1_top2_margin": 0.07400803077737972,
+     "bm25_dense_overlap_count": 5,
+     "bm25_dense_overlap_jaccard": 0.14285714285714285,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-32-2",
+      "D0050037-29",
+      "L0070043-15",
+      "L0070059-22",
+      "L0070040-66"
+     ],
+     "graph_articles": [
+      "L0070059-2",
+      "L0070059-10"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "refuse",
+    "reason": "retrieval remained insufficient after the allowed refinement",
+    "confidence": 0.92,
+    "signals": {
+     "top1_rerank": 0.5001016927548865,
+     "top1_top2_margin": 6.741458357029106e-05,
+     "bm25_dense_overlap_count": 11,
+     "bm25_dense_overlap_jaccard": 0.15714285714285714,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-15",
+      "L0070043-15",
+      "L0070040-32-2",
+      "L0070059-22",
+      "L0070059-14"
+     ],
+     "graph_articles": [
+      "L0070059-2",
+      "L0070059-10",
+      "L0070059-5"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "根據《勞工退休金條例》，雇主必須為勞工提撥多少比例的退休金？",
+   "retrieved_parent_ids": [
+    "L0070040-15",
+    "L0070043-15",
+    "L0070040-32-2",
+    "L0070059-22",
+    "L0070059-14"
+   ],
+   "hit_rank": null,
+   "refinement_tokens": 518,
+   "predicted_answerable_without_refinement": false,
+   "correct": true
+  },
+  {
+   "id": "u-02",
+   "question": "汽車酒駕的刑事責任是什麼？",
+   "answerable": false,
+   "expected_parent_ids": [],
+   "rewritten": "酒後駕車 刑法 公共危險罪 刑罰",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.5025903043498028,
+     "top1_top2_margin": 0.0011906476392086196,
+     "bm25_dense_overlap_count": 5,
+     "bm25_dense_overlap_jaccard": 0.14285714285714285,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-56",
+      "L0070040-47",
+      "L0070040-57",
+      "D0050037-51",
+      "D0050037-52"
+     ],
+     "graph_articles": [
+      "L0070040-44",
+      "L0070040-23",
+      "L0070040-34",
+      "L0070040-41",
+      "L0070040-64"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "refuse",
+    "reason": "retrieval remained insufficient after the allowed refinement",
+    "confidence": 0.92,
+    "signals": {
+     "top1_rerank": 0.5001231885955889,
+     "top1_top2_margin": 6.2426112018565405e-06,
+     "bm25_dense_overlap_count": 10,
+     "bm25_dense_overlap_jaccard": 0.20833333333333334,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-48",
+      "L0070044-36",
+      "L0070044-35",
+      "L0070044-12",
+      "L0070040-56"
+     ],
+     "graph_articles": [
+      "L0070040-6",
+      "L0070044-5",
+      "L0070040-9",
+      "L0070044-10",
+      "L0070044-9"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "酒後駕車 刑法 公共危險罪 刑罰",
+   "retrieved_parent_ids": [
+    "L0070040-48",
+    "L0070044-36",
+    "L0070044-35",
+    "L0070044-12",
+    "L0070040-56"
+   ],
+   "hit_rank": null,
+   "refinement_tokens": 619,
+   "predicted_answerable_without_refinement": false,
+   "correct": true
+  },
+  {
+   "id": "u-03",
+   "question": "綜合所得稅的標準扣除額是多少？",
+   "answerable": false,
+   "expected_parent_ids": [],
+   "rewritten": "綜合所得稅 標準扣除額 免稅額",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.5008035480344621,
+     "top1_top2_margin": 0.0004782140548272862,
+     "bm25_dense_overlap_count": 5,
+     "bm25_dense_overlap_jaccard": 0.14285714285714285,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070059-14",
+      "L0070059-12",
+      "D0050037-34",
+      "L0070059-7",
+      "D0050037-12"
+     ],
+     "graph_articles": [
+      "L0070059-5",
+      "L0070040-8"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "refuse",
+    "reason": "retrieval remained insufficient after the allowed refinement",
+    "confidence": 0.92,
+    "signals": {
+     "top1_rerank": 0.5000876331241793,
+     "top1_top2_margin": 3.294240644158286e-06,
+     "bm25_dense_overlap_count": 10,
+     "bm25_dense_overlap_jaccard": 0.2,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-15",
+      "L0070059-14",
+      "L0070059-12",
+      "L0070059-7",
+      "D0050037-34"
+     ],
+     "graph_articles": [
+      "L0070059-5",
+      "L0070040-8"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "綜合所得稅標準扣除額 免稅額 法規",
+   "retrieved_parent_ids": [
+    "L0070040-15",
+    "L0070059-14",
+    "L0070059-12",
+    "L0070059-7",
+    "D0050037-34"
+   ],
+   "hit_rank": null,
+   "refinement_tokens": 680,
+   "predicted_answerable_without_refinement": false,
+   "correct": true
+  },
+  {
+   "id": "u-04",
+   "question": "健保牙齒矯正有沒有給付？",
+   "answerable": false,
+   "expected_parent_ids": [],
+   "rewritten": "全民健康保險 牙齒矯正 給付範圍",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.5018193852182856,
+     "top1_top2_margin": 0.0009779505019500423,
+     "bm25_dense_overlap_count": 11,
+     "bm25_dense_overlap_jaccard": 0.3793103448275862,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070059-8",
+      "L0070059-7",
+      "D0050037-22",
+      "L0070059-10",
+      "L0070059-12"
+     ],
+     "graph_articles": [
+      "L0070040-8"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "refuse",
+    "reason": "retrieval remained insufficient after the allowed refinement",
+    "confidence": 0.92,
+    "signals": {
+     "top1_rerank": 0.5007638011472854,
+     "top1_top2_margin": 0.0004449931750536429,
+     "bm25_dense_overlap_count": 13,
+     "bm25_dense_overlap_jaccard": 0.2826086956521739,
+     "required_articles": [],
+     "retrieved_articles": [
+      "D0050037-22",
+      "L0070059-12",
+      "L0070059-10",
+      "L0070059-8",
+      "L0070059-9"
+     ],
+     "graph_articles": [
+      "L0070059-7"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "全民健康保險 牙齒矯正 給付範圍",
+   "retrieved_parent_ids": [
+    "D0050037-22",
+    "L0070059-12",
+    "L0070059-10",
+    "L0070059-8",
+    "L0070059-9"
+   ],
+   "hit_rank": null,
+   "refinement_tokens": 670,
+   "predicted_answerable_without_refinement": false,
+   "correct": true
+  },
+  {
+   "id": "u-05",
+   "question": "房屋租賃契約提前解約要賠多少？",
+   "answerable": false,
+   "expected_parent_ids": [],
+   "rewritten": "房屋租賃 契約終止 違約金 賠償標準",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.504697342966954,
+     "top1_top2_margin": 0.0012165037791076472,
+     "bm25_dense_overlap_count": 10,
+     "bm25_dense_overlap_jaccard": 0.3333333333333333,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070044-6",
+      "L0070044-12",
+      "L0070040-52",
+      "D0050037-46",
+      "L0070040-56"
+     ],
+     "graph_articles": [
+      "L0070044-10",
+      "L0070044-8",
+      "L0070044-5",
+      "L0070044-9",
+      "L0070040-42"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "refuse",
+    "reason": "retrieval remained insufficient after the allowed refinement",
+    "confidence": 0.92,
+    "signals": {
+     "top1_rerank": 0.500123419127016,
+     "top1_top2_margin": 2.7462031120473185e-05,
+     "bm25_dense_overlap_count": 14,
+     "bm25_dense_overlap_jaccard": 0.3684210526315789,
+     "required_articles": [],
+     "retrieved_articles": [
+      "D0050037-46",
+      "L0070044-12",
+      "L0070040-52",
+      "L0070044-6",
+      "L0070040-56"
+     ],
+     "graph_articles": [
+      "D0050037-34",
+      "D0050037-36",
+      "D0050037-38",
+      "D0050037-39",
+      "D0050037-40"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "房屋租賃契約提前解約要賠多少？ 房屋租賃 契約終止 違約金 賠償標準",
+   "retrieved_parent_ids": [
+    "D0050037-46",
+    "L0070044-12",
+    "L0070040-52",
+    "L0070044-6",
+    "L0070040-56"
+   ],
+   "hit_rank": null,
+   "refinement_tokens": 713,
+   "predicted_answerable_without_refinement": false,
+   "correct": true
+  },
+  {
+   "id": "u-06",
+   "question": "遺產稅免稅額目前是多少？",
+   "answerable": false,
+   "expected_parent_ids": [],
+   "rewritten": "遺產稅 免稅額度 繼承稅 扣除額度",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.5027325526239588,
+     "top1_top2_margin": 0.0021611337370641692,
+     "bm25_dense_overlap_count": 9,
+     "bm25_dense_overlap_jaccard": 0.2903225806451613,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-15",
+      "L0070059-22",
+      "L0070059-12",
+      "L0070059-10",
+      "D0050037-24"
+     ],
+     "graph_articles": [
+      "L0070059-2"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "refuse",
+    "reason": "retrieval remained insufficient after the allowed refinement",
+    "confidence": 0.92,
+    "signals": {
+     "top1_rerank": 0.501238952881908,
+     "top1_top2_margin": 0.001210687445525327,
+     "bm25_dense_overlap_count": 13,
+     "bm25_dense_overlap_jaccard": 0.25,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-15",
+      "L0070059-22",
+      "D0050037-41",
+      "D0050037-12",
+      "L0070059-14"
+     ],
+     "graph_articles": [
+      "L0070059-2",
+      "L0070059-10",
+      "L0070059-5"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "遺產稅免稅額度 繼承稅 扣除額度 長照特種基金 財源項目 財政收支劃分原則",
+   "retrieved_parent_ids": [
+    "L0070040-15",
+    "L0070059-22",
+    "D0050037-41",
+    "D0050037-12",
+    "L0070059-14"
+   ],
+   "hit_rank": null,
+   "refinement_tokens": 654,
+   "predicted_answerable_without_refinement": false,
+   "correct": true
+  },
+  {
+   "id": "u-07",
+   "question": "這個規定到底可不可以？",
+   "answerable": false,
+   "expected_parent_ids": [],
+   "rewritten": "法規條文效力",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.5198154062561062,
+     "top1_top2_margin": 0.00028004836454564863,
+     "bm25_dense_overlap_count": 7,
+     "bm25_dense_overlap_jaccard": 0.21212121212121213,
+     "required_articles": [],
+     "retrieved_articles": [
+      "D0050037-4",
+      "D0050037-36",
+      "L0070044-9",
+      "L0070044-14",
+      "L0070059-22"
+     ],
+     "graph_articles": [
+      "L0070040-22",
+      "L0070059-2",
+      "L0070059-10"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "refuse",
+    "reason": "retrieval remained insufficient after the allowed refinement",
+    "confidence": 0.92,
+    "signals": {
+     "top1_rerank": 0.5038078238286131,
+     "top1_top2_margin": 0.0011644157561458979,
+     "bm25_dense_overlap_count": 13,
+     "bm25_dense_overlap_jaccard": 0.23636363636363636,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-62",
+      "D0050037-54",
+      "L0070044-18",
+      "L0070040-65",
+      "L0070040-32-1"
+     ],
+     "graph_articles": [
+      "L0070040-10",
+      "L0070040-11",
+      "L0070040-12",
+      "L0070040-13"
+     ],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "這個規定到底可不可以？ 法規條文效力",
+   "retrieved_parent_ids": [
+    "L0070040-62",
+    "D0050037-54",
+    "L0070044-18",
+    "L0070040-65",
+    "L0070040-32-1"
+   ],
+   "hit_rank": null,
+   "refinement_tokens": 674,
+   "predicted_answerable_without_refinement": false,
+   "correct": true
+  },
+  {
+   "id": "u-08",
+   "question": "公司解僱員工要提前幾天通知？",
+   "answerable": false,
+   "expected_parent_ids": [],
+   "rewritten": "資遣預告期間",
+   "initial_gate": {
+    "decision": "refine_once",
+    "reason": "retrieval evidence is incomplete or conflicting; one bounded refinement is allowed",
+    "confidence": 0.78,
+    "signals": {
+     "top1_rerank": 0.5020725799295221,
+     "top1_top2_margin": 0.0014821669771903911,
+     "bm25_dense_overlap_count": 5,
+     "bm25_dense_overlap_jaccard": 0.14285714285714285,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-31",
+      "L0070059-10",
+      "L0070044-24",
+      "L0070040-66",
+      "L0070040-25"
+     ],
+     "graph_articles": [],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "final_gate": {
+    "decision": "refuse",
+    "reason": "retrieval remained insufficient after the allowed refinement",
+    "confidence": 0.92,
+    "signals": {
+     "top1_rerank": 0.5005100216926682,
+     "top1_top2_margin": 7.236759884199362e-05,
+     "bm25_dense_overlap_count": 7,
+     "bm25_dense_overlap_jaccard": 0.11666666666666667,
+     "required_articles": [],
+     "retrieved_articles": [
+      "L0070040-25",
+      "L0070044-24",
+      "L0070040-66",
+      "L0070044-25",
+      "L0070044-31"
+     ],
+     "graph_articles": [],
+     "required_article_coverage": null,
+     "graph_added_required_article": false,
+     "ambiguous_or_multi_hop": false
+    },
+    "rules_triggered": [
+     "low_top1",
+     "small_top1_top2_margin"
+    ],
+    "policy_version": "gate-calibration-v1"
+   },
+   "refinement_executed": true,
+   "final_query": "公司解僱員工要提前幾天通知？ 資遣預告期間",
+   "retrieved_parent_ids": [
+    "L0070040-25",
+    "L0070044-24",
+    "L0070040-66",
+    "L0070044-25",
+    "L0070044-31"
+   ],
+   "hit_rank": null,
+   "refinement_tokens": 710,
+   "predicted_answerable_without_refinement": false,
+   "correct": true
+  }
+ ]
+}

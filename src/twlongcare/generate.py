@@ -8,10 +8,11 @@ from __future__ import annotations
 
 import json
 import re
+from pathlib import Path
 
 from langchain_core.messages import HumanMessage, SystemMessage
 
-from .config import DATA_DIR
+from .knowledge_base import active_laws_path
 from .llm_text import extract_text
 from .retriever import RetrievedChunk
 
@@ -40,8 +41,9 @@ def extract_citations(text: str) -> list[tuple[str, str]]:
 class LawsLookup:
     """laws.json 條文索引：parent-document 還原與引用驗證用。"""
 
-    def __init__(self) -> None:
-        data = json.loads((DATA_DIR / "laws.json").read_text(encoding="utf-8"))
+    def __init__(self, path: Path | None = None) -> None:
+        self.path = path or active_laws_path()
+        data = json.loads(self.path.read_text(encoding="utf-8"))
         self.by_key: dict[tuple[str, str], dict] = {
             (r["pcode"], r["article_no"]): r for r in data["articles"]
         }
@@ -107,8 +109,11 @@ def build_messages(
 def answer(
     question: str, retrieved: list[RetrievedChunk], lookup: LawsLookup, model,
     related: list | None = None,
+    on_response=None,
 ) -> str:
     if not retrieved:
         return f"{REFUSAL_TEXT}。建議撥打 1966 長照服務專線洽詢。"
     reply = model.invoke(build_messages(question, retrieved, lookup, related))
+    if on_response is not None:
+        on_response("answer_generation", reply)
     return extract_text(reply.content).strip()

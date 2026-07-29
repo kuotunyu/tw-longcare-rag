@@ -1,0 +1,50 @@
+{
+ "schema_version": "prospective-gate-calibration-result-v1",
+ "cycle_id": "prospective-v2-unseen-sources",
+ "dataset_sha256": "c5dfaacc8a9daecb6c45c89bdec0fd750ec9005733c7ee95b3ded9d03542caa6",
+ "strata": {
+  "ambiguous": 5,
+  "single_hop": 40,
+  "unanswerable": 5
+ },
+ "needs_correction_count": 10,
+ "route_accuracy": 0.92,
+ "latency_ms": {
+  "p50": 222.69299999999998,
+  "p95": 291.145
+ },
+ "rule_gate": {
+  "count": 50,
+  "accuracy": 0.64,
+  "precision": 0.35714285714285715,
+  "recall": 1.0,
+  "specificity": 0.55,
+  "activation_rate": 0.56,
+  "false_activation_rate": 0.45,
+  "missed_correction_rate": 0.0,
+  "confusion": {
+   "tp": 10,
+   "fp": 18,
+   "fn": 0,
+   "tn": 22
+  }
+ },
+ "candidate_oof": {
+  "count": 50,
+  "accuracy": 0.98,
+  "precision": 0.9090909090909091,
+  "recall": 1.0,
+  "specificity": 0.975,
+  "activation_rate": 0.22,
+  "false_activation_rate": 0.025,
+  "missed_correction_rate": 0.0,
+  "confusion": {
+   "tp": 10,
+   "fp": 1,
+   "fn": 0,
+   "tn": 39
+  }
+ },
+ "selected_threshold": 0.21,
+ "holdout_read": false
+}

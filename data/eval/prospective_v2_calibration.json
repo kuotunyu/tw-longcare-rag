@@ -1,0 +1,669 @@
+{
+ "schema_version": "prospective-gate-proxy-v1",
+ "cycle_id": "prospective-v2-unseen-sources",
+ "synthetic_proxy": true,
+ "represents_production_distribution": false,
+ "seed": 20260731,
+ "created_at": "2026-07-29T16:50:48+00:00",
+ "selection_policy": "article sources unseen by locked eval and invalid cycle 1; calibration/holdout source pools fixed and disjoint before question generation; the sole unseen citation edge is holdout-only",
+ "prior_invalid_dataset_sha256": {
+  "calibration": "16a297ef23f30ad69a48ee1ac40319e5c1eabe1fa4deaa49b05c8f66c36cfbde",
+  "holdout": "f99ec0bdb80bca80399e17420c62b296a4564424319494ece46332f63b9bf47e"
+ },
+ "split": "calibration",
+ "locked": true,
+ "item_count": 50,
+ "items": [
+  {
+   "id": "v2-cal-single-015",
+   "question": "直轄市、縣（市）主管機關應定期舉辦哪些服務，以確保老人能得到適當的健康管理與追蹤照護？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-21"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-037",
+   "question": "直轄市、縣（市）政府可以如何結合民間資源來提供社區式服務給老年人？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-18"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-038",
+   "question": "在實施前，從事相關服務的人員，於新法實施後兩年內，是否可以繼續提供服務而不受某些限制？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-61"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "calibration-unanswerable-001",
+   "question": "護照到期換發需要準備哪些文件？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "v2-cal-single-023",
+   "question": "為了發揮老人保護功能，直轄市和縣市的單位應該如何建立老人保護體系呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-44"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-025",
+   "question": "雇主在聘用高齡者時，有哪些義務需要遵守？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-29"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-016",
+   "question": "勞工主管機關應如何促進高齡者就業，並防止他們在職場上受到歧視？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-29"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "calibration-unanswerable-004",
+   "question": "申請建築執照通常需要哪些圖說？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "v2-cal-single-014",
+   "question": "如何建立老人保護體系，以發揮老人的保護功能？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-44"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-040",
+   "question": "直轄市、縣（市）政府可以如何結合民間資源來提供居家式服務給失能的老人？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-17"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-007",
+   "question": "勞工主管機關在促進高齡者就業方面，會採取哪些政策或措施來避免就業歧視？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-29"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-006",
+   "question": "地方政府定期舉辦老人體檢和健康檢查時，健康檢查的項目和方式是由誰來規定的呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-21"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-027",
+   "question": "長照服務如何整合醫療與社會福利資源？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-32"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-028",
+   "question": "針對需要協助的老年人，政府可以提供哪些類型的社區服務項目來提升他們的生活品質？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-18"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "calibration-ambiguous-003",
+   "question": "這樣的身分到底有沒有申請資格？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "v2-cal-single-034",
+   "question": "勞工主管機關有哪些責任來促進高齡者的就業，並確保他們不會被歧視？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-29"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-022",
+   "question": "直轄市、縣市主管機關應該提供哪些居家式服務來協助失能的老年人獲得連續性的照顧？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-17"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-033",
+   "question": "地方政府應該如何定期安排老年人的健康檢查和保健服務？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-21"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-001",
+   "question": "針對需要社區照顧的長者，地方政府可以提供哪些類型的服務？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-18"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-005",
+   "question": "為了更好地保護長者，直轄市、縣（市）政府需要如何建立老人保護體系？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-44"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-013",
+   "question": "居家式服務有哪些類型，可以協助失能的居家老人獲得連續性的照顧？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-17"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-009",
+   "question": "長照服務體系如何連結醫療體系與社會福利服務，以提供更有效的轉介與整合服務？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-32"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-011",
+   "question": "在施行前，已經有哪些從事長照服務的人員，可以繼續提供服務到什麼時候？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-61"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-012",
+   "question": "長照機構提供長照服務時，需要與誰簽訂書面契約，以保障雙方的權益？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-42"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-003",
+   "question": "長照機構和長者、家屬或支付費用者簽訂合約時，中央主管機關會規定哪些格式和內容？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-42"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-021",
+   "question": "長照機構在與使用者簽訂書面契約時，需要注意哪些格式和內容規範？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-42"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-039",
+   "question": "長照機構在提供長照服務時，必須與誰簽訂書面契約？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-42"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-035",
+   "question": "政府可以如何鼓勵老年人參與社區的志願服務活動？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-28"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-026",
+   "question": "政府如何協助老年人參與志工服務？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-28"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-004",
+   "question": "失能居家老人需要連續性的照顧服務，地方政府可以結合哪些資源來提供這些服務呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-17"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-010",
+   "question": "社區式服務有哪些類型，可以協助老人在家中生活更自主？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-18"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-019",
+   "question": "為了讓長者能在社區自主生活，直轄市和縣市的主管機關應該提供哪些社區式服務？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-18"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-018",
+   "question": "長照體系、醫療體系和社會福利服務體系之間如何建立連結機制，以提供更整合的服務給使用者呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-32"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "calibration-unanswerable-002",
+   "question": "機車定期檢驗逾期會罰多少錢？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "v2-cal-single-020",
+   "question": "在實施前，已經有些人從事長照服務，他們還能繼續提供服務多久呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-61"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "calibration-ambiguous-005",
+   "question": "家人遇到同樣情況也能照這個方式辦嗎？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "v2-cal-single-029",
+   "question": "這些人在長照法實施前已經從事相關長照服務，那他們之後還能繼續做多久？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-61"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-017",
+   "question": "主管機關在推動老人志願服務時，需要協調哪些單位來共同參與？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-28"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-024",
+   "question": "直轄市、縣市主管機關需要定期舉辦哪些服務來維護老年人的健康狀況呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-21"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-002",
+   "question": "如果長照法實施前已經從事長照服務的人員，在新法上路後兩年內還能繼續提供服務，那他們的訓練方式是由誰來決定的？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-61"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-008",
+   "question": "為了讓更多長者參與社會服務，地方政府應該協調哪些部門來鼓勵他們呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-28"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "calibration-ambiguous-001",
+   "question": "我說的那一種服務也算在裡面嗎？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "calibration-unanswerable-003",
+   "question": "勞工加班一小時的工資怎麼計算？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "calibration-ambiguous-004",
+   "question": "那個機構需要多久檢查一次？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "calibration-ambiguous-002",
+   "question": "如果資料少了剛才提到的那份可以補嗎？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "calibration-unanswerable-005",
+   "question": "食品營養標示違規會被罰多少？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "v2-cal-single-032",
+   "question": "如何協助地方政府整合警政、衛生等資源，以建立更完善的老人保護體系？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-44"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-031",
+   "question": "針對行動不便的老年人，政府提供哪些到宅協助的服務？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-17"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-036",
+   "question": "在提供長照服務時，中央主管機關應該協調哪些不同的服務體系，以確保使用者獲得有效的轉介和整合性服務？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-32"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "v2-cal-single-030",
+   "question": "長照機構在提供服務時，是否需要與接受服務的人簽訂書面文件？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-42"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  }
+ ],
+ "dataset_sha256": "c5dfaacc8a9daecb6c45c89bdec0fd750ec9005733c7ee95b3ded9d03542caa6"
+}

@@ -11,5 +11,8 @@ def test_env_example_matches_config() -> None:
 
     src_text = (REPO_ROOT / "src" / "twlongcare" / "config.py").read_text(encoding="utf-8")
     read_vars = set(re.findall(r'os\.getenv\("([A-Z0-9_]+)"', src_text))
+    read_vars.update(
+        re.findall(r'_runtime_path\("([A-Z0-9_]+)"', src_text)
+    )
 
     assert env_vars == read_vars, f".env.example 與 config.py 讀取的變數不一致：{sorted(env_vars ^ read_vars)}"

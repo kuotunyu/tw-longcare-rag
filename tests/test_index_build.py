@@ -8,7 +8,12 @@ import json
 
 from twlongcare.chunking import Chunk
 from twlongcare.contextual import ContextualCache
-from twlongcare.index_build import ContextualCostConfirmationRequired, build_index, ensure_contextual
+from twlongcare.index_build import (
+    ContextualCostConfirmationRequired,
+    build_chroma_incremental,
+    build_index,
+    ensure_contextual,
+)
 
 
 def _chunk(chunk_id: str, text: str) -> Chunk:
@@ -84,3 +89,60 @@ def test_build_index_with_external_embedder_produces_loadable_index(tmp_path, mo
     bm25_dir = tmp_path / "bm25s" / "ctx"
     bm25s.BM25.load(str(bm25_dir))  # 不拋錯即代表可重新載入
     assert json.loads((bm25_dir / "chunk_ids.json").read_text(encoding="utf-8"))
+
+
+def test_versioned_chroma_reuses_only_unchanged_embeddings(tmp_path, monkeypatch):
+    import chromadb
+    import twlongcare.index_build as index_build
+
+    monkeypatch.setattr(index_build, "CHROMA_DIR", tmp_path / "chroma")
+
+    class RecordingEmbedder:
+        def __init__(self):
+            self.calls = []
+
+        def embed_documents(self, texts):
+            self.calls.append(list(texts))
+            return [[float(len(text)), 1.0] for text in texts]
+
+    embedder = RecordingEmbedder()
+    chunks = [_chunk("T-1", "甲"), _chunk("T-2", "乙")]
+    first_name, _dim, reused, embedded = build_chroma_incremental(
+        chunks,
+        ["甲", "乙"],
+        "test",
+        False,
+        "v1",
+        embedder=embedder,
+    )
+    assert (reused, embedded) == (0, 2)
+
+    second_name, _dim, reused, embedded = build_chroma_incremental(
+        chunks,
+        ["甲", "乙已修正"],
+        "test",
+        False,
+        "v2",
+        embedder=embedder,
+        previous_collection_name=first_name,
+    )
+    assert (reused, embedded) == (1, 1)
+    assert embedder.calls[-1] == ["乙已修正"]
+    assert chromadb.PersistentClient(path=str(tmp_path / "chroma")).get_collection(
+        second_name
+    ).count() == 2
+
+    repair_name, _dim, reused, embedded = build_chroma_incremental(
+        chunks,
+        ["甲", "乙已修正"],
+        "test",
+        False,
+        "v2",
+        embedder=embedder,
+        previous_collection_name=second_name,
+    )
+    client = chromadb.PersistentClient(path=str(tmp_path / "chroma"))
+    assert repair_name != second_name
+    assert (reused, embedded) == (2, 0)
+    assert client.get_collection(second_name).count() == 2
+    assert client.get_collection(repair_name).count() == 2

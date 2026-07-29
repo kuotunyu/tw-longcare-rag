@@ -1,12 +1,13 @@
 # PROGRESS — 進度日誌
 
-## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-23）
+## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-30）
 
-- **現在做到哪**：**Phase 7 完整收尾，`project-wrapup-audit` workflow 稽核出的所有缺口皆已處理完畢**——https://huggingface.co/spaces/steven0226/tw-longcare-rag ，CPU Basic 硬體（作者訂閱 HF PRO），`git tag phase-7` 已打在 HEAD。金鑰額度上限（Google NT$600/月、OpenAI $60/月）已設定；「開一家日照中心要什麼許可」修正後已在線上重新驗證正確；grounding 降級決定不做（PLAN.md D20，濫用防護收斂為三項）；真實冷啟動時間已實測記錄（115.4 秒，見下方 Phase 7 log）。
-- **下一步**：（無——目前沒有已知待辦，若要繼續可考慮：README 補 30 秒 demo GIF、README「成本透明」標題與 TL;DR 英文段落的用詞是否要微調，皆屬錦上添花，非缺口）
-- **未決問題**：（無）
-- **待使用者人工處理**：（無）
-- **⚠️ 已知坑**：（無）
+- **現在做到哪**：本機 production-readiness 已通過：乾淨 prospective cycle 2、44 題真實 answer/grounding/token 遙測、官方 2026-07-17 metadata refresh、active law/index 配對、強制 retrieval regression 與 Space persistent-volume bootstrap 均已完成。沒有改框架或引入 LlamaIndex。
+- **預設決策**：Adaptive 維持關閉，`current_baseline` 不變（D22/D29/D31）。Cycle 2 candidate 雖降低 false activation，但 correction recall 95.7%→87.0%；完整端到端 shadow 又有 79.5% activation 與 257,309 tokens。
+- **下一步**：維持 rule gate shadow；累積真實、去識別化流量後再開新的 calibration/holdout cycle。現有 holdout 不再讀取或調參。
+- **未決問題**：redaction 是 best-effort、非完整 DLP；synthetic proxy 不代表 production distribution；TAIDE strict citation proxy 僅 16.1%，不能冒充語意 correctness。
+- **待使用者人工處理**：只有外部發布：若要持久 Living KB，需在 HF Space 掛 Storage Bucket volume；若要更新遠端，需明確授權 commit/push（本輪仍未做）。
+- **⚠️ 已知坑**：Space 外部 volume 與新 bundle 尚未實際部署驗證；本機 readiness 通過不代表遠端設定完成。完整限制見 `docs/production-rag.md`。
 
 ## 📜 Phase 日誌（append-only）
 
@@ -886,3 +887,181 @@
     `PROGRESS.md`／`CLAUDE.md`／`space/README.md`）
   - 決策變更：**D20**（grounding 降級決定不做，見 PLAN.md Decision Log）
   - 實際成本：$0（僅文件修正、線上驗證與既有 API 呼叫測試，量級可忽略）
+
+### Production RAG hardening（2026-07-29）
+
+- **完成內容**：
+  - 先凍結既有 30 題 testset 與 retrieval/refusal/faithfulness/rewrite artifact
+    SHA-256；新增獨立 16 題 calibration、30 題 route eval 與分類 label
+    manifest，沒有依新方法輸出改標籤。
+  - `RouteResult` 正式定義五種 route、reason/confidence/handler；route eval
+    30/30，輸出 confusion matrix、per-route latency/token/cost 欄位。
+  - 新增生成前 multi-signal retrieval grade（top-1、margin、BM25/dense
+    overlap、明示條文 coverage、graph rescue、ambiguous/multi-hop）與
+    `answer/refine_once/refuse` contract；refinement 模型輸出若像答案或說明，
+    改用不新增事實的 deterministic fallback。管線與 budget 皆硬限制最多一次。
+  - 明確拆開 pre-generation grading、bounded refinement、post-generation
+    sentence grounding；既有 grounding 保留。
+  - 每次 pipeline 建立 `rag-trace-v1` JSONL：request/run ID、route、queries、
+    全檢索分數、graph、gate、provider/model、grounding 刪句、stage latency、
+    token/retry、index/parser/prompt/schema versions；加無 backend 依賴的
+    OpenTelemetry adapter。
+  - Living KB：immutable law snapshot、article/document/corpus hash、
+    idempotent publish、new/changed/deleted diff；versioned Chroma 複用 unchanged
+    embeddings，只重算 changed/new；BM25 因 global IDF 在新目錄重建；
+    locked candidate Recall@20 通過才 atomic activate，失敗保留舊 manifest。
+  - CLI 新增四種 eval/runtime mode 與 token/refinement budget；預設仍是
+    `current_baseline`，app/HF public API 未改。
+- **實跑證據**：
+  - 修改前 `uv run pytest -q`：146 passed；第一批相容修改後相關測試
+    86 passed；新增 Adaptive/Living KB targeted tests 43 passed；全部完成後
+    `uv run pytest -q`：162 passed、1 個既有 jieba warning。
+  - calibration end-to-end gate accuracy 93.8%；保留「停業期限」一個失敗，
+    未用 locked 結果回頭調 threshold。
+  - locked 只跑一次：baseline R@5/MRR 93.5%/0.785；refinement/full adaptive
+    100%/0.871。baseline refusal P/R 84.6%/84.6%；refinement 80.0%/92.3%。
+    baseline p50/p95 pre-gen 219/236ms；refinement 1.28/5.71s；activation
+    77.3%、rescue 8.8%、regression 2.9%、每組新增 24,398 地端 tokens。
+  - 結論為 mixed/negative trade-off，依 D22 保持預設關閉；完整 raw result
+    位於 `docs/eval/production/`。
+  - 真實 versioned index build：208 chunks、candidate Recall@20=1.000 後
+    啟用 `hybrid-index-v1-e941dcc3e345-gtaide-native-ctx`；重跑同命令直接
+    命中 active manifest、不重建。現行 frozen law snapshot 再發布回報
+    `changed=False`、new/changed/deleted 皆 0。
+- **相關 commit**：本輪依使用者要求未 commit、未 push、未改 remote。
+- **決策變更**：PLAN D21（相容擴充與 CRAG 分層）、D22（Adaptive 預設關閉）、
+  D23（Living KB version/rollback）。
+- **實際成本**：US$0（refinement/calibration 用本機 Ollama；沒有新增雲端
+  judge 呼叫）。算力成本反映在 latency/token 指標，不宣稱為零成本。
+
+### Production shadow 與新 calibration cycle 基礎（2026-07-29）
+
+- **完成內容**：
+  - `ShadowAdaptiveConfig` 只允許 baseline-serving shadow；decision-only
+    共用初始 retrieval，`control_path_affected=false`。只有明確開啟
+    `--shadow-refine` 才額外執行一次修正，shadow token 不計入 baseline
+    budget，shadow retrieval 不覆寫回傳給使用者的 evidence。
+  - `rag-trace-v2` 新增 shadow/evidence requirements；`TracePolicy` 加
+    deterministic sampling、常見台灣電話/身分證/email/地址 best-effort
+    redaction、query hash、error retention 與 atomic expiry pruning。
+  - `summarize_traces.py` 輸出 route/status/gate/shadow activation/rescue、
+    p50/p95、token、grounding removal、privacy 與 index version；沒有把
+    query 放入彙總 artifact。
+  - `evidence.py` 對 citation-graph multi-hop 建 qualification/application/
+    establishment/benefit/restriction requirements；缺第二 hop 時明示
+    `unresolved_second_hop`，coverage 進 gate signals。
+  - `export_gate_features.py` 自動排除所有已知 eval query；純 Python
+    standardized logistic candidate 少於 40 筆獨立標註拒絕訓練，artifact
+    固定 `offline_candidate`、serving 不載入。
+  - `prepare_production_holdout.py` 要求至少 100 題、零既有 eval overlap、
+    不含系統輸出的盲評與完整 reviewer/route/answerable/article labels；
+    操作說明在 `docs/eval/production/HOLDOUT_ANNOTATION.md`。
+  - `drill_law_update.py` 在 disposable workspace 演練 new/change/delete、
+    idempotent publish、failed index candidate 保留 active、成功切換保留
+    previous version 與 rollback；不假裝已建立 production embeddings。
+- **實跑證據**：
+  - 真實 retriever＋Ollama decision-only shadow smoke：baseline 正常完成，
+    shadow 判定 `refine_once`、gate latency 0.089ms、額外 token 0；此單筆
+    只證明串接，不作品質結論。
+  - Windows CLI 原先在最後 emoji disclaimer 命中 cp950
+    `UnicodeEncodeError`；補 UTF-8 reconfigure 後 meta 問題 CLI exit 0。
+  - disposable law update drill `passed=true`：new 1、changed 1、deleted 1、
+    unchanged 203、failed candidate rejected、rollback 回 `stable-v1`。
+  - targeted production tests 28 passed；最終 `uv run pytest -q`：
+    **171 passed、1 個既有 jieba warning**。
+- **相關 commit**：依使用者要求未 commit、未 push、未改 remote。
+- **決策變更**：PLAN D24（baseline-serving shadow）、D25（trace privacy/
+  retention）、D26（新 calibration/holdout 防污染）、D27（evidence plan/
+  disposable rollback drill）。
+- **實際成本**：US$0；smoke 使用本機 Ollama。尚未進行新的 paid judge。
+
+### 零人工操作 prospective proxy（2026-07-30）
+
+- **完成內容**：
+  - 因使用者無法負擔 100 題人工蒐集/盲評，改由
+    `generate_prospective_proxy.py` 全自動建立 synthetic proxy；先排除
+    76 個既有 eval questions 與 32 個已用來源法條，再用固定 seed 選
+    105 個 single sources＋15 組 disjoint graph edges。Expected article IDs
+    在出題前固定，本機 Ollama 只負責白話改寫，不選 label。
+  - 自動分層 calibration 50 與 prospective holdout 100；holdout 設計為
+    55 single、15 typo long-tail、10 multi-hop、10 ambiguous、10
+    out-of-corpus。加入法名/條號洩漏、單問句、duplicate、source/question
+    split disjoint、舊 eval overlap 與 dataset hash hard gates。
+  - `run_prospective_gate_eval.py` 只量初始 evidence completeness，不冒充
+    answer correctness；threshold 由 calibration 5-fold out-of-fold risk
+    決定，holdout 只讀一次。
+- **實跑結果與負面發現**：
+  - Calibration：rule activation 50%、false activation 38.5%、correction
+    recall 90.9%；offline logistic OOF activation 20%、false activation 0%、
+    recall 同為 90.9%，threshold 凍結 0.92。
+  - Read-once holdout 表面結果：rule activation 70%、false activation 63.0%、
+    recall 88.9%；candidate activation 17%、false activation 0%、但 recall
+    降至 63.0%（漏 10/27），故 adoption criteria 原本就失敗。
+  - 後置完整性檢查發現 calibration 前 5 題 ambiguous＋5 題 out-of-corpus
+    被 holdout 前 10+10 模板重複包含，`question_splits_disjoint=false`。
+    因此整批 evaluation 進一步標記
+    `invalid_question_split_leakage`；datasets、summaries、candidate artifact
+    皆留存負面證據並禁止重用，沒有重跑或看結果調 threshold。
+  - Generator 已修成兩 split 使用不同 fixed-negative slices，並新增 strict
+    validation 與「invalidated dataset 不可被 evaluator 再載入」測試；修正
+    只保護未來 regression，不回頭改寫本次結果。
+- **驗證證據**：
+  - 本機 Ollama 120 題生成成本 US$0；問題 cache 原子保存。
+  - 新增 prospective generator/evaluator/invalidation tests；最終
+    `uv run pytest -q`：**175 passed、1 個既有 jieba warning**。
+- **相關 commit**：未 commit、未 push、未改 remote。
+- **決策變更**：PLAN D28；人工 holdout 改為選配，rule gate、baseline 與
+  serving 均維持原狀。
+- **實際成本**：US$0；僅使用本機 Ollama、embedding 與 reranker。
+
+### Production readiness 收斂（2026-07-30）
+
+- **完成內容**：
+  - 建立乾淨的 `prospective-v2-unseen-sources`：排除 locked eval 與無效
+    cycle 1 的 167 個來源 ID；calibration/holdout source、question、hash
+    validation 全通過。50 題 calibration 凍結 threshold=0.21，100 題
+    holdout 只讀一次。
+  - Candidate 在 holdout 的 accuracy 94.0%、false activation 3.9%，但
+    correction recall 87.0% 低於 rule gate 95.7%，故標記
+    `offline_candidate_rejected`；沒有修改 serving gate。
+  - `run_end_to_end_telemetry.py` 對 frozen 44 題執行真實 baseline answer、
+    sentence grounding 與 bounded adaptive shadow，保存 raw rows、完整 JSONL
+    trace、latency、token、citation/refusal 與 loop 指標。
+  - `fetch_laws.py --source api --refresh` 取得 2026-07-17 官方 packages；
+    205 條內容 hash 與 2026-07-10 相同，建立 metadata-only immutable
+    snapshot。修正 metadata-only refresh 沒有推進 current manifest 的 bug。
+  - `active_laws_path()` 讓 serving law text 永遠與 active index manifest
+    配對；metadata-only rebind 也必須通過 `--force-regression`。實跑
+    Recall@20=1.0，0 個 embedding 重算。
+  - `RAG_DATA_DIR` / `RAG_LOGS_DIR` 支援任意 mount；新增空白 persistent
+    volume bootstrap，只補白名單 seed 缺檔、不覆蓋既有資料。Space bundle
+    納入 immutable law snapshots、manifest 與 regression testset。
+  - `check_production_readiness.py` 統一檢查 cycle 2、44 rows/traces、candidate
+    adoption、active law/index 配對與 post-refresh regression。
+- **實跑結果**：
+  - Cycle 2 holdout：rule/candidate activation 68.0%/23.0%，false activation
+    59.7%/3.9%，correction recall 95.7%/87.0%；candidate 拒絕。
+  - 44 題端到端：R@5/MRR 87.1%/0.694；refusal P/R 66.7%/76.9%；
+    p50/p95 8.56/20.16s；main/shadow/combined tokens
+    224,549/32,760/257,309；shadow activation/rescue/regression
+    79.5%/57.1%/0%。
+  - Grounding pre-filter support 91.8%、移除 9 句、judge error 0。
+    Strict expected-citation correctness 16.1%、validity 22.6%，只作
+    operational proxy，不當成語意 correctness。
+  - 官方 metadata refresh 後 active law version
+    `2026-07-17-e941dcc3e345`；active index
+    `hybrid-index-v1-e941dcc3e345-gtaide-native-ctx`；forced locked
+    Recall@20=1.0。
+  - `check_production_readiness.py`：
+    `local_readiness_passed=true`；外部 Space volume 刻意另列未設定。
+- **驗證證據**：targeted production/adaptive tests 35 passed；加入 storage/
+  readiness 守門後 targeted 15 passed；最終 `uv run pytest -q`：
+  **183 passed、1 個既有 jieba warning**。`compileall`、`git diff --check`、
+  public-copy/secret scan、Space bundle import 與本機 Space checkout
+  `git diff --check` 全部通過。
+- **相關 commit**：依使用者原始要求未 commit、未 push、未改 remote。
+- **決策變更**：PLAN D29（cycle 2 candidate rejected）、D30（active snapshot
+  transaction + persistent runtime）、D31（真實端到端成本支持 Adaptive
+  default-off）。
+- **實際成本**：US$0 API；全部使用本機 Ollama/embedding/reranker。總 token
+  是算力成本，不宣稱零成本。

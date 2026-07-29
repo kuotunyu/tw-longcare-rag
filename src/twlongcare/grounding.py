@@ -193,6 +193,8 @@ def judge_sentences(
     model,
     retries: int = 1,
     related: list | None = None,
+    on_response=None,
+    on_retry=None,
 ) -> list[SentenceVerdict]:
     """一次呼叫批次判定全部候選句；judge 沒回覆到的句子保守視為不支持。
 
@@ -231,7 +233,16 @@ def judge_sentences(
     verdicts: list[SentenceVerdict] = []
     for start in range(0, len(sentences), batch_size):
         batch = sentences[start : start + batch_size]
-        batch_items = _judge_batch(batch, context, articles, model, is_ollama, retries)
+        batch_items = _judge_batch(
+            batch,
+            context,
+            articles,
+            model,
+            is_ollama,
+            retries,
+            on_response,
+            on_retry,
+        )
         verdicts.extend(batch_items)
     return verdicts
 
@@ -243,6 +254,8 @@ def _judge_batch(
     model,
     is_ollama: bool,
     retries: int,
+    on_response=None,
+    on_retry=None,
 ) -> list[SentenceVerdict]:
     """對一小批句子（可能只有 1 句）呼叫 judge 並回傳對應 verdict，保持原順序。"""
     from langchain_core.messages import HumanMessage
@@ -260,11 +273,15 @@ def _judge_batch(
     for attempt in range(retries + 1):
         try:
             reply = model.invoke([HumanMessage(content=prompt)])
+            if on_response is not None:
+                on_response("sentence_grounding", reply)
             raw = extract_text(reply.content)
             items = _parse_json_array(raw)
             break
         except Exception as e:  # noqa: BLE001 - 涵蓋解析錯誤與呼叫例外，統一重試
             last_err = e
+            if attempt < retries and on_retry is not None:
+                on_retry()
     if items is None:
         raise JudgeUnavailable(f"judge 呼叫/解析連續失敗（重試 {retries} 次）：{last_err}")
 
@@ -329,6 +346,8 @@ REFUSAL_FINAL_TEXT = f"{REFUSAL_TEXT}。建議撥打 1966 長照服務專線洽�
 def apply_grounding(
     text: str, retrieved: list[RetrievedChunk], lookup: LawsLookup, model,
     related: list | None = None,
+    on_response=None,
+    on_retry=None,
 ) -> GroundingResult:
     """生成後查核：不受支持的句子從最終回答中移除，保留段落結構。
 
@@ -336,7 +355,15 @@ def apply_grounding(
     """
     pairs = _split_with_paragraphs(text)
     sentences = [s for _, s in pairs]
-    verdicts = judge_sentences(sentences, retrieved, lookup, model, related=related)
+    verdicts = judge_sentences(
+        sentences,
+        retrieved,
+        lookup,
+        model,
+        related=related,
+        on_response=on_response,
+        on_retry=on_retry,
+    )
 
     kept_by_para: dict[int, list[str]] = {}
     for (p_idx, _s), v in zip(pairs, verdicts):

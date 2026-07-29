@@ -1,0 +1,59 @@
+{
+ "schema_version": "trace-summary-v1",
+ "generated_at": "2026-07-29T16:15:31+00:00",
+ "record_count": 10,
+ "malformed_line_count": 0,
+ "window": {
+  "first": "2026-07-29T15:07:32.177000+00:00",
+  "last": "2026-07-29T16:14:54.871000+00:00"
+ },
+ "route_counts": {
+  "no_retrieval": 1,
+  "single_hop": 9
+ },
+ "status_counts": {
+  "answered": 10
+ },
+ "gate_decision_counts": {
+  "answer": 9,
+  "missing": 1
+ },
+ "latency_ms": {
+  "p50": 10909.347,
+  "p95": 76947.307
+ },
+ "tokens": {
+  "total": 25425,
+  "mean_per_trace": 2542.5
+ },
+ "grounding": {
+  "removed_sentence_count": 7,
+  "traces_with_removals": 6
+ },
+ "shadow_adaptive": {
+  "trace_count": 1,
+  "initial_decision_counts": {
+   "refine_once": 1
+  },
+  "final_decision_counts": {
+   "refine_once": 1
+  },
+  "would_activate_rate": 1.0,
+  "refinement_executed_count": 0,
+  "observed_rescue_count": 0,
+  "observed_rescue_rate": null,
+  "latency_ms": {
+   "p50": 0.089,
+   "p95": 0.089
+  },
+  "additional_tokens": 0
+ },
+ "privacy": {
+  "redacted_trace_count": 1,
+  "records_without_privacy_metadata": 5
+ },
+ "index_versions": {
+  "hybrid-index-v1-e941dcc3e345-gtaide-native-ctx": 7,
+  "legacy-unversioned": 3
+ }
+}

@@ -46,6 +46,7 @@ from twlongcare.graph_expand import GRAPH_PATH, load_graph
 from twlongcare.grounding import log_grounding
 from twlongcare.pipeline import run_pipeline
 from twlongcare.retriever import HybridRetriever
+from twlongcare.runtime_storage import bootstrap_runtime_data
 
 IS_SPACE = bool(os.environ.get("SPACE_ID"))
 MAX_QUESTIONS_PER_SESSION = 20  # Space 濫用防護；本機開發不受限
@@ -71,6 +72,14 @@ SOURCES_INTRO = (
     "（關聯條文）。每一條都可以點連結到全國法規資料庫核對官方原文，"
     "送出問題前這裡不會有內容。</p>"
 )
+
+_storage_bootstrap = bootstrap_runtime_data()
+if _storage_bootstrap["copied"]:
+    print(
+        "[app] bootstrapped "
+        f"{len(_storage_bootstrap['copied'])} seed files into persistent storage",
+        file=sys.stderr,
+    )
 
 _settings = get_settings()
 _lookup = LawsLookup()

@@ -1,0 +1,20 @@
+{
+ "schema_version": "prospective-proxy-validation-v1",
+ "all_passed": true,
+ "checks": {
+  "calibration_count": true,
+  "holdout_count": true,
+  "source_splits_disjoint": true,
+  "questions_unique_within_calibration": true,
+  "questions_unique_within_holdout": true,
+  "question_splits_disjoint": true,
+  "existing_eval_sources_excluded": true,
+  "existing_eval_questions_excluded": true,
+  "calibration_hash_valid": true,
+  "holdout_hash_valid": true
+ },
+ "calibration_source_count": 9,
+ "holdout_source_count": 21,
+ "excluded_source_count": 167,
+ "cycle_id": "prospective-v2-unseen-sources"
+}

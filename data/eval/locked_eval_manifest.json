@@ -1,0 +1,66 @@
+{
+  "schema_version": "locked-eval-v1",
+  "locked_at": "2026-07-29",
+  "policy": "Questions and semantic labels are immutable for this evaluation cycle. Labels were assigned from question intent and legal scope, not from adaptive-method output.",
+  "answerable_source": {
+    "path": "data/testset.json",
+    "sha256": "ba9d84bf75b42592e62117aa98141fc1d71a2f30629758f09aaea41419794a7f",
+    "count": 30
+  },
+  "unanswerable_source": {
+    "path": "scripts/eval_refusal.py::TRAP_QUESTIONS",
+    "count": 13,
+    "verification": "docs/eval/trap_verification.json"
+  },
+  "frozen_artifacts": [
+    {
+      "path": "docs/eval/retrieval_matrix.json",
+      "sha256": "1d16b92adb9f98f303b6c00603a1de12ec0cc505895754f088c7d492ad99c906"
+    },
+    {
+      "path": "docs/eval/refusal_results.json",
+      "sha256": "fdd065ccf3e2e3ccd4941ccc435ffc79442a99bd60310921d31b2e6fa0cad309"
+    },
+    {
+      "path": "docs/eval/faithfulness_results.json",
+      "sha256": "64af8f90a51286c24a6e71117eb56f42d5da1171be90d48a8a3c10994ce69b62"
+    },
+    {
+      "path": "data/eval_rewrite_cache.json",
+      "sha256": "ae0db158dfb9c83b06d6874f4e702b3ce9aa9b668caed5932069a15647249fc3"
+    }
+  ],
+  "labels": {
+    "1": "general",
+    "2": "ambiguous",
+    "3": "general",
+    "4": "general",
+    "5": "long_tail",
+    "6": "general",
+    "7": "ambiguous",
+    "8": "long_tail",
+    "9": "long_tail",
+    "10": "general",
+    "11": "general",
+    "12": "general",
+    "13": "general",
+    "14": "multi_hop",
+    "15": "general",
+    "16": "long_tail",
+    "17": "multi_hop",
+    "18": "general",
+    "19": "long_tail",
+    "20": "general",
+    "21": "general",
+    "22": "general",
+    "23": "multi_hop",
+    "24": "multi_hop",
+    "25": "general",
+    "26": "long_tail",
+    "27": "multi_hop",
+    "28": "multi_hop",
+    "29": "multi_hop",
+    "30": "ambiguous"
+  },
+  "coverage_note": "The original 30-item retrieval set contains no global or unanswerable items. Global/meta/structured routes are covered by route_eval.json; the 13 independently verified traps cover unanswerable questions."
+}

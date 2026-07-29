@@ -35,9 +35,12 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
+from twlongcare.config import DATA_DIR
+from twlongcare.knowledge_base import publish_law_version
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
-RAW_DIR = REPO_ROOT / "data" / "raw"
-OUT_PATH = REPO_ROOT / "data" / "laws.json"
+RAW_DIR = DATA_DIR / "raw"
+OUT_PATH = DATA_DIR / "laws.json"
 
 USER_AGENT = "Mozilla/5.0 (tw-longcare-rag; personal research project)"
 
@@ -436,14 +439,17 @@ def main() -> None:
     args = parser.parse_args()
 
     result = fetch_all(args.source, args.refresh)
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUT_PATH.write_text(
-        json.dumps(result, ensure_ascii=False, indent=1),
-        encoding="utf-8",
-        newline="\n",  # 固定 LF：跨平台重跑位元組一致（laws.json 進 git）
-    )
+    publication = publish_law_version(result, out_path=OUT_PATH)
 
-    print(f"\n已寫出 {OUT_PATH.relative_to(REPO_ROOT)}")
+    state = "已發布新版本" if publication.changed else "內容未變，沿用現有版本"
+    print(f"\n{state}：{publication.version}")
+    print(f"immutable snapshot：{publication.snapshot_path}")
+    print(
+        "diff："
+        f"new={len(publication.diff['new'])} "
+        f"changed={len(publication.diff['changed'])} "
+        f"deleted={len(publication.diff['deleted'])}"
+    )
     print(f"來源：{result['meta']['source']}  "
           f"資料版本 UpdateDate：{result['meta']['source_update_date'] or '（html 無整包版本）'}")
     print(f"{'法規':<24} {'條數':>4} {'章節':>4} {'異動日期':>10}")

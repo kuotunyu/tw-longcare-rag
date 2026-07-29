@@ -1,0 +1,512 @@
+{
+ "長照中心拿到了設立許可卻一直沒有開張，政府會把許可證收回去嗎？": {
+  "query": "長照機構 許可證 撤銷條件 未開業",
+  "usage": {
+   "input_tokens": 680,
+   "output_tokens": 9,
+   "total_tokens": 689,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 680,
+     "output_tokens": 9,
+     "total_tokens": 689
+    }
+   }
+  }
+ },
+ "隨便一間公司可以自己掛長照中心的招牌嗎？": {
+  "query": "隨便一間公司可以自己掛長照中心的招牌嗎？ 長期照顧服務機構許可證照",
+  "usage": {
+   "input_tokens": 685,
+   "output_tokens": 102,
+   "total_tokens": 787,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 685,
+     "output_tokens": 102,
+     "total_tokens": 787
+    }
+   }
+  }
+ },
+ "社區型的長照服務大概包含哪些項目呢？": {
+  "query": "社區型的長照服務大概包含哪些項目呢？ 社區型的長照服務大致可分為以下幾類：",
+  "usage": {
+   "input_tokens": 663,
+   "output_tokens": 83,
+   "total_tokens": 746,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 663,
+     "output_tokens": 83,
+     "total_tokens": 746
+    }
+   }
+  }
+ },
+ "我開的私立老人安養中心，名字是不是一定要加上私立兩個字？": {
+  "query": "老人福利機構名稱 法規規定",
+  "usage": {
+   "input_tokens": 602,
+   "output_tokens": 80,
+   "total_tokens": 682,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 602,
+     "output_tokens": 80,
+     "total_tokens": 682
+    }
+   }
+  }
+ },
+ "本來就在經營長照服務的機構，現在要正式轉型申請設立許可的話，需要準備哪些文件呢？": {
+  "query": "5. 長期照顧服務機構設立許可及管理辦法 第7條",
+  "usage": {
+   "input_tokens": 701,
+   "output_tokens": 94,
+   "total_tokens": 795,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 701,
+     "output_tokens": 94,
+     "total_tokens": 795
+    }
+   }
+  }
+ },
+ "政府會不會限制某些地區不能再開新的長照機構？": {
+  "query": "2. 「長期照顧服務法 第14條、第47-1條、第29條、第22條、第48條",
+  "usage": {
+   "input_tokens": 599,
+   "output_tokens": 68,
+   "total_tokens": 667,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 599,
+     "output_tokens": 68,
+     "total_tokens": 667
+    }
+   }
+  }
+ },
+ "我自己開的長照機構可以把業務外包給別人做嗎？": {
+  "query": "住宿式長照機構 委託經營 法規依據",
+  "usage": {
+   "input_tokens": 656,
+   "output_tokens": 12,
+   "total_tokens": 668,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 656,
+     "output_tokens": 12,
+     "total_tokens": 668
+    }
+   }
+  }
+ },
+ "非營利長照機構要租用政府閒置的房子，租金是怎麼算的？": {
+  "query": "非營利長照機構要租用政府閒置的房子，租金是怎麼算的？ 非法人住宿式長照機構 租賃 政府閒置房地 租金計算方式",
+  "usage": {
+   "input_tokens": 651,
+   "output_tokens": 178,
+   "total_tokens": 829,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 651,
+     "output_tokens": 178,
+     "total_tokens": 829
+    }
+   }
+  }
+ },
+ "家裡的長輩失智了需要幫他申請監護宣告，政府單位可以幫忙嗎？": {
+  "query": "長輩失智，需要聲請監護/輔助宣告，政府單位可以協助嗎？",
+  "usage": {
+   "input_tokens": 693,
+   "output_tokens": 17,
+   "total_tokens": 710,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 693,
+     "output_tokens": 17,
+     "total_tokens": 710
+    }
+   }
+  }
+ },
+ "申請開辦長照機構送件後，政府大概要多久才會審核完畢？": {
+  "query": "8. 長期照顧服務機構設立許可及管理辦法 第36條（續）：規範機構申請設立許可，經直轄市、縣市主管機關完成...",
+  "usage": {
+   "input_tokens": 708,
+   "output_tokens": 342,
+   "total_tokens": 1050,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 708,
+     "output_tokens": 342,
+     "total_tokens": 1050
+    }
+   }
+  }
+ },
+ "政府人員來檢查沒立案的長照機構時，我可以拒絕讓他們進去嗎？": {
+  "query": "政府人員來檢查沒立案的長照機構時，我可以拒絕讓他們進去嗎？ 未立案機構 稽查權 拒絕進入 法規依據",
+  "usage": {
+   "input_tokens": 606,
+   "output_tokens": 135,
+   "total_tokens": 741,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 606,
+     "output_tokens": 135,
+     "total_tokens": 741
+    }
+   }
+  }
+ },
+ "以前立案的老人安養機構如果不符合現在的規定，是不是一定要改進？": {
+  "query": "老人福利法 第47條、第46條、第53條、第49條、第48條",
+  "usage": {
+   "input_tokens": 621,
+   "output_tokens": 27,
+   "total_tokens": 648,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 621,
+     "output_tokens": 27,
+     "total_tokens": 648
+    }
+   }
+  }
+ },
+ "長照評估等級幾級以上才會有政府提供的服務補助呢？": {
+  "query": "長照評估等級幾級以上才會有政府提供的服務補助呢？ 失能老人 長照服務 補助資格 長照需要等級",
+  "usage": {
+   "input_tokens": 646,
+   "output_tokens": 28,
+   "total_tokens": 674,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 646,
+     "output_tokens": 28,
+     "total_tokens": 674
+    }
+   }
+  }
+ },
+ "長照中心的設立許可證書不見了要怎麼補辦？": {
+  "query": "長照中心的設立許可證書不見了要怎麼補辦？ 長期照顧服務機構設立許可申請文件補發",
+  "usage": {
+   "input_tokens": 673,
+   "output_tokens": 62,
+   "total_tokens": 735,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 673,
+     "output_tokens": 62,
+     "total_tokens": 735
+    }
+   }
+  }
+ },
+ "開養護中心是不是一定要跟醫院簽約才可以？": {
+  "query": "開養護中心是不是一定要跟醫院簽約才可以？ 住宿式長照機構 醫療機構合作契約 法規要求",
+  "usage": {
+   "input_tokens": 615,
+   "output_tokens": 110,
+   "total_tokens": 725,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 615,
+     "output_tokens": 110,
+     "total_tokens": 725
+    }
+   }
+  }
+ },
+ "長照機構的監事可以同時在裡面上班嗎": {
+  "query": "長照機構 工作人員資格 兼任限制 機構監督機制",
+  "usage": {
+   "input_tokens": 574,
+   "output_tokens": 12,
+   "total_tokens": 586,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 574,
+     "output_tokens": 12,
+     "total_tokens": 586
+    }
+   }
+  }
+ },
+ "平常照顧長輩壓力很大，政府有沒有提供什麼資源可以幫忙照顧者？": {
+  "query": "平常照顧長輩壓力很大，政府有沒有提供什麼資源可以幫忙照顧者？ 長照2.0、喘息服務、家庭照顧者支援服務等。",
+  "usage": {
+   "input_tokens": 702,
+   "output_tokens": 22,
+   "total_tokens": 724,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 702,
+     "output_tokens": 22,
+     "total_tokens": 724
+    }
+   }
+  }
+ },
+ "我想開一家長照機構，名字可以隨便取嗎？": {
+  "query": "長照機構命名規範」與「機構名稱法規」及「長照機構命名限制」的查詢",
+  "usage": {
+   "input_tokens": 501,
+   "output_tokens": 20,
+   "total_tokens": 521,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 501,
+     "output_tokens": 20,
+     "total_tokens": 521
+    }
+   }
+  }
+ },
+ "長照機構的收費標準是他們自己決定的嗎，還是政府有規定？": {
+  "query": "C：長期照顧服務法",
+  "usage": {
+   "input_tokens": 674,
+   "output_tokens": 23,
+   "total_tokens": 697,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 674,
+     "output_tokens": 23,
+     "total_tokens": 697
+    }
+   }
+  }
+ },
+ "到底怎麼樣才算是有失能需要申請長照服務？": {
+  "query": "失能老人 長照需要等級 申請資格",
+  "usage": {
+   "input_tokens": 642,
+   "output_tokens": 13,
+   "total_tokens": 655,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 642,
+     "output_tokens": 13,
+     "total_tokens": 655
+    }
+   }
+  }
+ },
+ "失智老人走失了政府有協尋服務嗎": {
+  "query": "失智症老人走失協尋政府",
+  "usage": {
+   "input_tokens": 634,
+   "output_tokens": 8,
+   "total_tokens": 642,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 634,
+     "output_tokens": 8,
+     "total_tokens": 642
+    }
+   }
+  }
+ },
+ "勞保老年給付一次領可以領多少錢": {
+  "query": "勞工保險 老年給付 一次請領 金額 法規",
+  "usage": {
+   "input_tokens": 676,
+   "output_tokens": 12,
+   "total_tokens": 688,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 676,
+     "output_tokens": 12,
+     "total_tokens": 688
+    }
+   }
+  }
+ },
+ "國民年金每個月要繳多少保費": {
+  "query": "國民年金保險費率 繳納金額 給付條件",
+  "usage": {
+   "input_tokens": 682,
+   "output_tokens": 12,
+   "total_tokens": 694,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 682,
+     "output_tokens": 12,
+     "total_tokens": 694
+    }
+   }
+  }
+ },
+ "健保住院的部分負擔比例是多少": {
+  "query": "健保住院的部分負擔比例是多少 住院醫療自付額比例",
+  "usage": {
+   "input_tokens": 644,
+   "output_tokens": 367,
+   "total_tokens": 1011,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 644,
+     "output_tokens": 367,
+     "total_tokens": 1011
+    }
+   }
+  }
+ },
+ "身心障礙證明要去哪裡申請、要準備什麼文件": {
+  "query": "身心障礙者 鑑定醫院 申請流程 文件清單",
+  "usage": {
+   "input_tokens": 674,
+   "output_tokens": 10,
+   "total_tokens": 684,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 674,
+     "output_tokens": 10,
+     "total_tokens": 684
+    }
+   }
+  }
+ },
+ "聘僱外籍看護工需要符合什麼資格條件": {
+  "query": "聘僱外籍看護工需要符合什麼資格條件 聘僱外籍看護工 資格條件",
+  "usage": {
+   "input_tokens": 659,
+   "output_tokens": 63,
+   "total_tokens": 722,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 659,
+     "output_tokens": 63,
+     "total_tokens": 722
+    }
+   }
+  }
+ },
+ "照顧生病的家人可以跟公司請家庭照顧假嗎": {
+  "query": "家庭照顧假 勞工請假規定 台灣勞動法規",
+  "usage": {
+   "input_tokens": 677,
+   "output_tokens": 12,
+   "total_tokens": 689,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 677,
+     "output_tokens": 12,
+     "total_tokens": 689
+    }
+   }
+  }
+ },
+ "扶養七十歲的爸爸報稅時可以增加多少免稅額": {
+  "query": "扶養七十歲的爸爸報稅時可以增加多少免稅額 納稅義務人扶養年滿70歲或身心障礙的納稅人，每人每年可額外增加13.2萬元的免稅額。",
+  "usage": {
+   "input_tokens": 552,
+   "output_tokens": 61,
+   "total_tokens": 613,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 552,
+     "output_tokens": 61,
+     "total_tokens": 613
+    }
+   }
+  }
+ },
+ "爸爸過世後他的存款和房子要怎麼繼承": {
+  "query": "被繼承人遺產繼承、繼承權、繼承順位、遺產分割、不動產繼承登記",
+  "usage": {
+   "input_tokens": 548,
+   "output_tokens": 14,
+   "total_tokens": 562,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 548,
+     "output_tokens": 14,
+     "total_tokens": 562
+    }
+   }
+  }
+ },
+ "長照保險每個月的保費是多少": {
+  "query": "長照保險每個月的保費是多少 長期照顧保險 每月保費",
+  "usage": {
+   "input_tokens": 636,
+   "output_tokens": 503,
+   "total_tokens": 1139,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 636,
+     "output_tokens": 503,
+     "total_tokens": 1139
+    }
+   }
+  }
+ },
+ "老人假牙補助可以補助多少錢": {
+  "query": "失能老人假牙補助額度",
+  "usage": {
+   "input_tokens": 632,
+   "output_tokens": 8,
+   "total_tokens": 640,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 632,
+     "output_tokens": 8,
+     "total_tokens": 640
+    }
+   }
+  }
+ },
+ "機車紅燈右轉會被罰多少錢": {
+  "query": "道路交通管理處罰條例 機車 紅燈右轉 罰則",
+  "usage": {
+   "input_tokens": 618,
+   "output_tokens": 37,
+   "total_tokens": 655,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 618,
+     "output_tokens": 37,
+     "total_tokens": 655
+    }
+   }
+  }
+ },
+ "獨居老人的緊急救援系統怎麼申請": {
+  "query": "針對獨居老人的緊急救援系統申請流程",
+  "usage": {
+   "input_tokens": 682,
+   "output_tokens": 10,
+   "total_tokens": 692,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 682,
+     "output_tokens": 10,
+     "total_tokens": 692
+    }
+   }
+  }
+ },
+ "中低收入老人生活津貼一個月可以領多少錢": {
+  "query": "中低收入老人生活津貼」的給付金額是多少？",
+  "usage": {
+   "input_tokens": 624,
+   "output_tokens": 14,
+   "total_tokens": 638,
+   "by_stage": {
+    "query_refinement": {
+     "input_tokens": 624,
+     "output_tokens": 14,
+     "total_tokens": 638
+    }
+   }
+  }
+ }
+}

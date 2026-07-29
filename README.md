@@ -42,24 +42,35 @@ flowchart LR
     ROUTER -->|彙總列舉<br/>指名整部法+列舉意圖| TOC[法規目錄直出<br/>laws.json 章節+官方連結<br/>零幻覺零成本]
     ROUTER -->|meta 問題<br/>問系統本身| META[固定範圍說明<br/>零幻覺零成本]
     ROUTER -->|全局/跨章節<br/>整體規範/比較/最高| RAPTOR[章節摘要 RAPTOR-lite<br/>+ 章節層級引用驗證]
-    ROUTER -->|一般主題問題| RW[Query 改寫<br/>口語→法規用語<br/>解決用詞對不上]
+    ROUTER -->|一般/修正候選| RW[Query 改寫<br/>口語→法規用語<br/>解決用詞對不上]
     RW --> BM25[BM25 檢索 top-20<br/>解決精確字詞/條號]
     RW --> VEC[向量檢索 top-20<br/>解決語意/換句話說]
     BM25 --> RRF[RRF 融合<br/>公平合併兩套排名]
     VEC --> RRF
     RRF --> RR[bge-reranker-v2-m3<br/>重排取 top-5<br/>更精準的第二輪篩選]
     RR --> GE[引用圖譜一階擴展<br/>關聯條文，上限+5]
-    RR --> GATE1{top-1 分數<br/>< 門檻 0.636?}
-    GATE1 -->|是，跳過生成| A2[查無明確法源<br/>+ 1966 專線]
-    GATE1 -->|否| GEN[LLM 生成<br/>每句附法條引用]
+    RR --> MODE{執行模式}
+    MODE -->|公開預設：baseline| GATE1{legacy top-1<br/>< 0.636?}
+    MODE -->|實驗：adaptive| GATEA{多訊號 retrieval grade<br/>answer / refine_once / refuse}
+    GATEA -->|refine_once，最多一次| RW2[bounded query refinement<br/>再檢索一次後必須終止]
+    RW2 --> GATEA2{terminal grade<br/>answer / refuse}
+    GATEA -->|refuse| A2[查無明確法源<br/>+ 1966 專線]
+    GATEA -->|answer| GEN[LLM 生成<br/>每句附法條引用]
+    GATEA2 -->|refuse| A2
+    GATEA2 -->|answer| GEN
+    GATE1 -->|是，跳過生成| A2
+    GATE1 -->|否| GEN
     GE --> GEN
-    GEN --> GND[CRAG 逐句 groundedness 查核<br/>不受支持者刪除/改寫]
+    GEN --> GND[生成後逐句 groundedness<br/>不受支持者刪除；不同於生成前 CRAG grading]
     GND --> GATE2{全部句子<br/>皆不支持?}
     GATE2 -->|是| A2
     GATE2 -->|否| A[回答 + 法條引用]
 ```
 
-**三種查詢路由**（Phase 6 作者驗收過程實測發現需要，D12/D13）：問題若明確
+**五種 typed route contract**：`no_retrieval`、`structured`、`single_hop`、
+`global_or_multi_hop`、`corrective_candidate`。前四類把既有 Phase 6
+路由正式化，最後一類只標示低資訊量或多條件問題，仍須由 retrieval confidence
+gate 根據實際證據決定是否修正。問題若明確
 指名整部法規並要求逐條列舉、或是在問系統本身的能力範圍，都不適合走
 「改寫→檢索→生成」這條標準路徑——實測發現改寫模型對這兩類問題會失控
 （捏造具體問題或內容），因此改走繞過檢索的確定性/固定回答。「全局/跨
@@ -71,6 +82,53 @@ top-5 檢索天生看不到全貌，直覺解法是把整部法全文塞進 cont
 比較**這個更難的子任務，地端模型仍會混淆兩部法的統計數字（temperature=0
 仍重現），建議搭配雲端模型交叉確認——誠實記錄為已知限制，細節見
 PROGRESS.md Phase 6 日誌（D13）。
+
+### Production RAG 強化（實驗功能，預設關閉）
+
+本次沒有換框架或重寫既有 BM25 + dense + RRF + reranker 架構，而是在其上增加：
+typed route（含理由與信心）、生成前多訊號 retrieval grading、最多一次的 bounded
+query refinement、`rag-trace-v2` JSONL trace、可選 OpenTelemetry adapter，以及
+法規 snapshot/hash/diff/增量 embedding/索引原子切換。
+
+Locked eval 的結果不是全面改善：refinement 把 answerable Recall@5 從 93.5%
+提高到 100%，但 loop 啟動率高達 77.3%、p95 生成前延遲從 236ms 增至
+5.71s、refusal precision 從 84.6% 降到 80.0%，且 loop regression rate
+為 2.9%。因此公開 API 與 HF Space 仍預設 `current_baseline`；Adaptive 模式
+只能由 CLI 明確開啟，不宣稱它已優於 baseline。完整方法、限制與原始結果見
+[Production RAG 設計與實測](docs/production-rag.md)。
+
+若要在不改答案的前提下收集真實 gate 分布，可開 shadow：
+
+```powershell
+# 仍由 current_baseline 回答，只記錄 would-answer/refine/refuse
+uv run python -m twlongcare.cli "問題" --shadow-adaptive
+
+# 明確接受額外延遲時，shadow 才實跑一次 refinement；結果仍不影響回答
+uv run python -m twlongcare.cli "問題" --shadow-adaptive --shadow-refine
+
+uv run python scripts/summarize_traces.py --since-days 7
+```
+
+Trace sampling、PII redaction 與 retention 可由 `.env` 的
+`RAG_TRACE_SAMPLE_RATE`、`RAG_TRACE_REDACT_PII`、
+`RAG_TRACE_RETENTION_DAYS` 控制。學習式 gate 目前只提供 feature export
+與 offline candidate 訓練，不會被 serving pipeline 自動載入。
+
+不方便蒐集或人工標註真實問題時，可用
+`scripts/generate_prospective_proxy.py` 從未出現在既有 eval 的來源法條建立
+synthetic regression proxy；它明確不代表 production distribution。首次自動
+實驗在 read-once 後發現 calibration/holdout 的固定負例模板重複，結果已標記
+invalid 且禁止重用。之後另開完全排除舊題、舊來源與無效 cycle 1 來源的
+cycle 2：100 題 read-once holdout 上，candidate 把 false activation
+59.7% 降到 3.9%，但 correction recall 也由 rule gate 的 95.7% 降到
+87.0%，仍未通過 adoption gate。兩次結果都完整保留，預設與 shadow rule
+gate 沒有改動，也沒有用 holdout 回頭調 threshold。
+
+另以本機 TAIDE 對 frozen 44 題跑過真實 answer + sentence grounding 端到端
+遙測：p50/p95 為 8.56/20.16 秒，baseline 與 shadow 合計 257,309 tokens，
+shadow 啟動率 79.5%。嚴格 expected-citation proxy 僅 16.1%，主要反映已知的
+地端模型句尾引用格式弱點，不能冒充語意 correctness；既有 DeepEval
+faithfulness 仍是獨立指標。這批成本證據進一步支持 Adaptive 預設關閉。
 
 技術選型與各階段解決的問題，詳見 [開發藍圖 PLAN.md](PLAN.md) 與 [進度日誌 PROGRESS.md](PROGRESS.md)。
 
@@ -114,6 +172,18 @@ uv run python app.py
 本機直接跑，唯一的外部依賴是 Ollama（地端 TAIDE 12B 生成），以 host 服務
 方式連線（`ChatOllama` 打本機 `localhost:11434`）。整套架構可以完全離線運作
 （雲端 provider 除外），不依賴任何常駐容器。
+
+**Production 持久化**：`RAG_DATA_DIR` 與 `RAG_LOGS_DIR` 可指向任意掛載路徑。
+Space 第一次掛載空白 volume 時，app 只會把部署包內缺少的 law snapshot、
+manifest、cache、graph 與 regression testset 補入，不會覆蓋 volume 上已有
+資料；索引仍在該 runtime directory 現場重建。Hugging Face 目前建議以
+[Storage Bucket volume](https://huggingface.co/docs/hub/main/spaces-storage)
+提供持久空間，mount path 由部署者選擇，不應寫死為 `/data`。
+
+```text
+RAG_DATA_DIR=<volume-mount>/data
+RAG_LOGS_DIR=<volume-mount>/logs
+```
 
 ### 範例輸出（`--provider gemini`）
 
@@ -252,6 +322,26 @@ citation 覆蓋率落差一致，這次用第三方評審量化出實際勝率�
 事實錯誤。樣本量小（30 題單次執行），不代表零幻覺保證，僅反映這批測試題目
 的實測結果。
 
+**Adaptive / Corrective retrieval locked eval**（30 原題＋1 long-tail
+answerable＋13 不可回答題；threshold 只在獨立 calibration set 決定）：
+
+| 模式 | answerable Recall@5 | MRR | refusal P / R | p50 / p95 生成前延遲 | loop 啟動 / rescue / regression |
+|---|---:|---:|---:|---:|---:|
+| current baseline | 93.5% | 0.785 | 84.6% / 84.6% | 219 / 236ms | 0 / 0 / 0 |
+| confidence gate only | 93.5% | 0.785 | 38.2% / 100% | 219 / 236ms | 0 / 0 / 0 |
+| refinement enabled | 100% | 0.871 | 80.0% / 92.3% | 1.28 / 5.71s | 77.3% / 8.8% / 2.9% |
+| full adaptive route | 100% | 0.871 | 80.0% / 92.3% | 1.28 / 5.71s | 77.3% / 8.8% / 2.9% |
+
+Route eval 為 30/30（confusion matrix 見
+`docs/eval/production/route_results.json`）。Legacy answer 的 DeepEval
+faithfulness 仍是 1.0；新方法改變 evidence 的題目沒有冒充成已完成
+DeepEval 重評，只有 evidence 未變的 frozen answer 可重用，因此新方法的
+answer correctness 評估覆蓋率為 41.9%，faithfulness 評估覆蓋率為
+32.3%。此外，44 題真實 baseline generation + grounding 遙測已補齊 operational
+latency/token/refusal/citation proxy；它沒有取代獨立語意 correctness judge。
+詳見結果檔中的 evaluated fraction 與
+`docs/eval/production/end_to_end/summary.json`，均不作未實跑的改善宣稱。
+
 ## 關鍵套件版本
 
 以 `uv lock` 鎖定；下表為規劃期查證的目標版本（2026-07-20，隨開發以 uv.lock 為準更新）：
@@ -288,7 +378,9 @@ Phase 2 contextual 摘要（205 條、208 chunks，gemini-3.1-flash-lite）估�
 ## 資料來源與授權
 
 - 法規條文資料取自法務部「全國法規資料庫」（https://law.moj.gov.tw/ ）官方 Open API 及政府資料開放平臺（https://data.gov.tw/dataset/18289 、https://data.gov.tw/dataset/18290 ），依《政府資料開放授權條款－第1版》規定利用並註明出處；法規內容以全國法規資料庫公布之最新版本為準。
-- **資料快照版本：2026-07-10**（Open API 整包 UpdateDate；官網最新異動最多可能領先整包約一個月）。條數已與官網逐法核對一致，並抽樣比對條文原文。
+- **資料快照版本：2026-07-17**（Open API 整包 UpdateDate；此次相較
+  2026-07-10 為 metadata-only refresh，205 條內容 hash 全數不變）。版本化
+  索引已強制重跑 locked Recall@20=1.0 後綁定新 snapshot。
 
 | 法規（pcode） | 條數 | 最新異動 | 備註 |
 |---|---:|---|---|

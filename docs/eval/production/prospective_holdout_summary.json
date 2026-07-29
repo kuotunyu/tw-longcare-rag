@@ -1,0 +1,64 @@
+{
+ "schema_version": "prospective-gate-holdout-result-v1",
+ "dataset_sha256": "f99ec0bdb80bca80399e17420c62b296a4564424319494ece46332f63b9bf47e",
+ "calibration_dataset_sha256": "16a297ef23f30ad69a48ee1ac40319e5c1eabe1fa4deaa49b05c8f66c36cfbde",
+ "synthetic_proxy": true,
+ "represents_production_distribution": false,
+ "item_count": 100,
+ "strata": {
+  "ambiguous": 10,
+  "long_tail_typo": 15,
+  "multi_hop": 10,
+  "single_hop": 55,
+  "unanswerable": 10
+ },
+ "needs_correction_count": 27,
+ "route_accuracy": 0.84,
+ "latency_ms": {
+  "p50": 273.255,
+  "p95": 305.734
+ },
+ "rule_gate": {
+  "count": 100,
+  "accuracy": 0.51,
+  "precision": 0.34285714285714286,
+  "recall": 0.8888888888888888,
+  "specificity": 0.3698630136986301,
+  "activation_rate": 0.7,
+  "false_activation_rate": 0.6301369863013698,
+  "missed_correction_rate": 0.1111111111111111,
+  "confusion": {
+   "tp": 24,
+   "fp": 46,
+   "fn": 3,
+   "tn": 27
+  }
+ },
+ "candidate_gate": {
+  "count": 100,
+  "accuracy": 0.9,
+  "precision": 1.0,
+  "recall": 0.6296296296296297,
+  "specificity": 1.0,
+  "activation_rate": 0.17,
+  "false_activation_rate": 0.0,
+  "missed_correction_rate": 0.37037037037037035,
+  "confusion": {
+   "tp": 17,
+   "fp": 0,
+   "fn": 10,
+   "tn": 73
+  }
+ },
+ "decision_threshold": 0.92,
+ "adoption_criteria_passed": false,
+ "decision": "keep_rule_gate_and_do_not_adopt_candidate",
+ "limitations": [
+  "synthetic proxy does not represent production distribution",
+  "labels measure evidence completeness, not answer correctness",
+  "questions are retrieved directly without LLM query rewrite",
+  "calibration and holdout repeated deterministic negative questions; result invalidated after first holdout read"
+ ],
+ "holdout_read_count_for_this_candidate": 1,
+ "evaluation_validity": "invalid_question_split_leakage"
+}

@@ -1,0 +1,1329 @@
+{
+ "schema_version": "prospective-gate-proxy-v1",
+ "synthetic_proxy": true,
+ "represents_production_distribution": false,
+ "seed": 20260730,
+ "created_at": "2026-07-29T16:26:35+00:00",
+ "selection_policy": "unused source articles and graph edges selected before question generation; existing eval articles/questions excluded",
+ "split": "holdout",
+ "locked": true,
+ "read_policy": "read once after candidate threshold is frozen",
+ "item_count": 100,
+ "items": [
+  {
+   "id": "hold-single-067",
+   "question": "如果長輩需要照顧，法律上誰應該負責扶養？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-30"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-unanswerable-005",
+   "question": "健保有沒有補助成人牙齒矯正？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "hold-single-013",
+   "question": "在施行之前，已經提供長炤服務的單位，現在如何適用新法規？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-62"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-066",
+   "question": "長照人員提供的服務紀錄，醫療機構需要保存多久呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-38"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-023",
+   "question": "使用長照服務時，低收入戶、中低收入戶或符合領取特定津貼資格的長者，需自行負擔多少比例的費用？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070059-14"
+   ],
+   "source_laws": [
+    "長期照顧服務申請及給付辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-unanswerable-004",
+   "question": "房東提前終止租約要賠房客多少？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "hold-single-045",
+   "question": "主管機關在制定長照服務相關政策時，會邀請哪些代表參與協調和研究？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-7"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-unanswerable-003",
+   "question": "酒駕被抓會有什麼刑事責任？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "hold-multi-008",
+   "question": "當發現老人有疑似被虐待或遺棄的狀況時，哪些人員有義務要通報主管機關呢？",
+   "stratum": "multi_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "global_or_multi_hop",
+   "expected_article_ids": [
+    "D0050037-43",
+    "D0050037-41"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-007",
+   "question": "長炤服務的聯繫和規劃，主要由哪個單位來負責呢？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070059-4"
+   ],
+   "source_laws": [
+    "長期照顧服務申請及給付辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-020",
+   "question": "如果長照機構被發現虐待或危害服務對象的健康安全，可能會被處以多少罰鍰？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-48"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-026",
+   "question": "長照機構申請設立許可證書時，需要包含哪些資訊？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-13"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-047",
+   "question": "針對失能老人的家庭照護者，政府有提供哪些協助措施來提升他們的照顧能力與生活品質？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-31"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-unanswerable-010",
+   "question": "買預售屋後想解約可以拿回多少錢？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "hold-single-050",
+   "question": "哪些事務是由直轄市或縣市政府負責辦理的呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-5"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-027",
+   "question": "如果住在原住民族地區或離島，長照費用申報的價格會怎麼計算？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070059-17"
+   ],
+   "source_laws": [
+    "長期照顧服務申請及給付辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-055",
+   "question": "長照機構的設立計畫書需要包含哪些資訊？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-7"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-021",
+   "question": "長照機構如果不符合設立的標準，會有什麼處罰？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-48"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-069",
+   "question": "針對居家式服務、社區式服務及機構式服務的提供者，其資格要件及服務標準是由哪個單位共同制定的？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-20"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-025",
+   "question": "榮譽國民之家附設的長照機構在許可和核定程序上有什麼特別規定？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-63"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-068",
+   "question": "長照人員在提供照護時，如果知道服務對象的隱私資訊，在什麼情況下可以公開分享呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-20"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-001",
+   "question": "如果非長炤人員提供了中央主管機關公告的長期照顧服務特定項目，可能會面臨什麼樣的處罰？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-50"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-041",
+   "question": "如果長輩有經濟上的需求，他們的某些權利會受到哪些法律的保障？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-12-1"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-044",
+   "question": "如果老人福利機構沒有按照規定收費或財務管理不當，可能會面臨什麼樣的處罰？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-46"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-043",
+   "question": "哪些人不能擔任長照機構的負責人？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-5"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-005",
+   "question": "居家式長炤服務包含哪些項目？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-10"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-unanswerable-008",
+   "question": "車禍後強制險最高可以賠多少？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "holdout-ambiguous-005",
+   "question": "家裡遇到這種狀況該怎麼辦？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "holdout-unanswerable-009",
+   "question": "申請育嬰留職停薪需要什麼資格？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "hold-single-009",
+   "question": "長炤服務的特約單位資格、申請流程和審查標準是如何規定的？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-32-1"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-multi-005",
+   "question": "設立居家式長照服務機構時，需要哪些文件資料才能申請許可呢？",
+   "stratum": "multi_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "global_or_multi_hop",
+   "expected_article_ids": [
+    "L0070044-11",
+    "L0070044-10"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-028",
+   "question": "如果老人扶養人沒有好好照顧老人，政府會怎麼處理？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-52"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-039",
+   "question": "長照特約單位必須為所僱用的長照人員辦理哪些保險和提繳退休金？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-32-2"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-058",
+   "question": "長照機構如果暫時停止服務，應該在什麼時候向主管機關提出申請？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-24"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-024",
+   "question": "中低收入老人如果不接受安置，可以申請什麼樣的補助？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-12"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-018",
+   "question": "長照機構如果改名字或換負責人，需要準備什麼文件並多久前申請呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-22"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-065",
+   "question": "老人福利機構需要提供哪些保障來維護服務對象的權益呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-39"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-multi-009",
+   "question": "如果已經使用過輔具或居家無障礙環境改善服務，還能再申請相同的項目嗎？",
+   "stratum": "multi_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "global_or_multi_hop",
+   "expected_article_ids": [
+    "L0070059-22",
+    "L0070059-10"
+   ],
+   "source_laws": [
+    "長期照顧服務申請及給付辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-049",
+   "question": "長照機構在什麼情況下需要提出申請開放使用服務規模？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-17"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-031",
+   "question": "提供居家照顧和日間照顧服務的長照服務人員需要什麼資格或訓練？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070059-18"
+   ],
+   "source_laws": [
+    "長期照顧服務申請及給付辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-022",
+   "question": "私立長照機構的會計制度應該如何建立？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-30"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-064",
+   "question": "長照機構要申請設立、擴大或搬遷的許可時，應該向哪個政府單位提出申請？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-2"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-multi-004",
+   "question": "長照機構的負責人和員工若違反相關規定，可能會被罰多少錢？",
+   "stratum": "multi_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "global_or_multi_hop",
+   "expected_article_ids": [
+    "L0070040-54",
+    "L0070040-43"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-056",
+   "question": "政府或機構收到民眾捐款時，應該如何處理這些錢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-40"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-029",
+   "question": "中，關於教育主管機關的權責有哪些？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-6"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-053",
+   "question": "政府可以怎麼幫助老年人保持活躍呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-27"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-006",
+   "question": "長炤機構如果提供住宿式服務，需要和醫療機構簽訂什麼樣的契約？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-34"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-017",
+   "question": "長照人員如果沒有完成登錄程序，或者是其他醫事人員和社工人員沒有經過主管機關同意就提供服務，會被罰多少錢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-58"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-ambiguous-001",
+   "question": "這個情況到底可以嗎？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "hold-single-037",
+   "question": "當長照機構想要申請設立許可時，需要向哪個單位提出申請？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-6-1"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-011",
+   "question": "使用輔具或改善居家無障礙環境時，有哪些相關補住辦法可以參考？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070059-20"
+   ],
+   "source_laws": [
+    "長期照顧服務申請及給付辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-multi-002",
+   "question": "長照機構在提供長照服務時，如果聘用了非長照人員，會有什麼規定？",
+   "stratum": "multi_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "global_or_multi_hop",
+   "expected_article_ids": [
+    "L0070040-19",
+    "L0070040-18"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-unanswerable-006",
+   "question": "勞退新制雇主每個月要提撥多少？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "hold-single-046",
+   "question": "長照機構的負責人要變更時，需要提供哪些文件給主管機關審核同意？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-23"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-010",
+   "question": "長炤機構在開始營運前，需要完成哪些法律程序？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-14"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-054",
+   "question": "長照機構如果沒按照規定簽書面契約，會有什麼樣的罰則？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-52"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-030",
+   "question": "長照機構內的人員紀錄保存期限是多久？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-33"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-multi-007",
+   "question": "哪些機構可以採用簡便設立的方式，而不需要以財團法人形式設立呢？",
+   "stratum": "multi_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "global_or_multi_hop",
+   "expected_article_ids": [
+    "L0070043-4",
+    "L0070040-22"
+   ],
+   "source_laws": [
+    "長期照顧服務法施行細則",
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-multi-010",
+   "question": "沒有經過許可就擅自提供長照服務的機構，負責人會面臨什麼樣的處罰呢？",
+   "stratum": "multi_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "global_or_multi_hop",
+   "expected_article_ids": [
+    "L0070040-47-1",
+    "L0070040-23"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-002",
+   "question": "長炤機構的負責人是誰？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-4"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-multi-003",
+   "question": "長照人員的會議要怎麼開？",
+   "stratum": "multi_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "global_or_multi_hop",
+   "expected_article_ids": [
+    "L0070043-12",
+    "L0070043-11"
+   ],
+   "source_laws": [
+    "長期照顧服務法施行細則"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-008",
+   "question": "想請問一下，政府為了照顧長輩，會怎麼協助他們持續學習和適應退休生活呢？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-26"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-032",
+   "question": "失能老人在接受長期照顧服務時，如果經濟狀況不好，政府有提供經費補助嗎？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-15"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-ambiguous-007",
+   "question": "這樣做會不會被處罰？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "hold-single-014",
+   "question": "長炤機構的籌設許可如果被廢止，有哪些原因？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-9"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-052",
+   "question": "主管機關在什麼情況下可以要求長照機構提供相關資料並進行檢查？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-31"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-multi-006",
+   "question": "長照機構的負責人要是哪一種類型的單位，就必須以財團法人的形式來設立呢？",
+   "stratum": "multi_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "global_or_multi_hop",
+   "expected_article_ids": [
+    "L0070040-8-1",
+    "L0070040-8"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-033",
+   "question": "如果長照服務機構未在規定的時間內向主管機關報備長照人員的異動情況，可能會面臨什麼樣的處罰？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-53"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-ambiguous-010",
+   "question": "這種服務政府會幫忙嗎？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "hold-single-036",
+   "question": "這部法律是什麼時候開始施行？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-66"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-070",
+   "question": "中央和地方政府在中的主管機關分別是什麼？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-2"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-004",
+   "question": "設立老人福利機搆需要哪些程序和條件呢？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-36"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-019",
+   "question": "長照服務的給付專案有哪些？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070059-9"
+   ],
+   "source_laws": [
+    "長期照顧服務申請及給付辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-051",
+   "question": "如果長照機構沒有取得許可就開始提供服務，主管機關有權利進入檢查嗎？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-39-1"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-unanswerable-002",
+   "question": "公司資遣員工要提前幾天通知？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "hold-single-042",
+   "question": "長照機構在照顧長者時，有哪些行為是絕對不能做的？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-44"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-ambiguous-009",
+   "question": "之前說的資格我有符合嗎？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "hold-single-012",
+   "question": "想請問一下，如果老人沒有扶養人，生活陷入困境，政府可以提供什麼協助？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-22"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-016",
+   "question": "當老人因為無人扶養而面臨生命、身體上的危險或生活困境時，地方政府有什麼責任和措施？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-42"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-ambiguous-004",
+   "question": "這件事是不是一定要先核准？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "hold-single-038",
+   "question": "如果老人福利機構要停辦、停業或歇業，對於收容的服務對象應該如何處理？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-50"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-035",
+   "question": "在提供老人照顧服務時，應該依照哪些原則來規劃辦理？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-16"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-unanswerable-007",
+   "question": "綜合所得稅可以列報哪些扶養親屬？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "hold-single-040",
+   "question": "當長照機構經直轄市、縣（市）主管機關撤銷或廢止其設立許可時，有哪些義務需要履行？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-28"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-unanswerable-001",
+   "question": "遺產稅目前的免稅額是多少？",
+   "stratum": "unanswerable",
+   "answerable_from_corpus": false,
+   "expected_route": "single_hop",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_out_of_corpus_topic"
+  },
+  {
+   "id": "hold-single-057",
+   "question": "長照機構如果發生管理上的明顯疏失，導致接受長照服務的人受到傷害或死亡，可能會被如何處理？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-59"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-034",
+   "question": "長照機構在進行服務內容、總樓地板面積或服務規模縮減時，需要向哪個單位提出申請許可？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-20"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-ambiguous-006",
+   "question": "那個期限到底是多久？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "hold-single-048",
+   "question": "在制定長照服務品質標準時，主管機關應該考慮哪些原則來確保服務品質？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-40"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-003",
+   "question": "對於符合資格的長炤服務使用者，地方主管機關或照管中心多久會進行一次複評？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070059-6"
+   ],
+   "source_laws": [
+    "長期照顧服務申請及給付辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-015",
+   "question": "照管中心或地方主管機關在核定長炤需要等級時，會制定什麼樣的文件來記錄個案的狀況？",
+   "stratum": "long_tail_typo",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070059-5"
+   ],
+   "source_laws": [
+    "長期照顧服務申請及給付辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-ambiguous-002",
+   "question": "那這樣有符合規定嗎？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "hold-single-062",
+   "question": "如何確保長者維持良好的生活品質？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-1"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "holdout-ambiguous-008",
+   "question": "如果沒有辦那個手續會怎樣？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "holdout-ambiguous-003",
+   "question": "前面提到的那個要怎麼申請？",
+   "stratum": "ambiguous",
+   "answerable_from_corpus": false,
+   "expected_route": "corrective_candidate",
+   "expected_article_ids": [],
+   "label_origin": "deterministic_missing_referent_template"
+  },
+  {
+   "id": "hold-single-060",
+   "question": "如果違反長照法規，罰鍰是由哪個單位來開罰呢？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-60"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-063",
+   "question": "如果長照服務人員在執業時做假記錄，可能會被處以多少罰鍰？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070040-56"
+   ],
+   "source_laws": [
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-061",
+   "question": "如果長照機構過去三年服務的人數不多，或者最近一次被政府評定為不夠好，那他們還能擴大規模嗎？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "L0070044-21"
+   ],
+   "source_laws": [
+    "長期照顧服務機構設立許可及管理辦法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-multi-001",
+   "question": "長照機構在標示名稱和類別時，有哪些服務內容是法律規定的？",
+   "stratum": "multi_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "global_or_multi_hop",
+   "expected_article_ids": [
+    "L0070043-6",
+    "L0070040-21"
+   ],
+   "source_laws": [
+    "長期照顧服務法施行細則",
+    "長期照顧服務法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  },
+  {
+   "id": "hold-single-059",
+   "question": "針對原住民長者，提供照護服務時，有哪些特別的規定？",
+   "stratum": "single_hop",
+   "answerable_from_corpus": true,
+   "expected_route": "single_hop",
+   "expected_article_ids": [
+    "D0050037-8"
+   ],
+   "source_laws": [
+    "老人福利法"
+   ],
+   "label_origin": "source_articles_fixed_before_question_generation"
+  }
+ ],
+ "dataset_sha256": "f99ec0bdb80bca80399e17420c62b296a4564424319494ece46332f63b9bf47e",
+ "evaluation_validity": "invalid_question_split_leakage",
+ "do_not_reuse_for_model_selection": true
+}

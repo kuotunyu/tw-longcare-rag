@@ -26,6 +26,7 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 from twlongcare.index_build import (  # noqa: E402
     ContextualCostConfirmationRequired,
     build_index,
+    build_versioned_index,
 )
 
 
@@ -37,13 +38,53 @@ def main() -> None:
     parser.add_argument("--no-contextual", action="store_true")
     parser.add_argument("--confirm-cost", action="store_true",
                         help="作者已確認 contextual 摘要成本，允許呼叫 API")
+    parser.add_argument(
+        "--versioned",
+        action="store_true",
+        help="建立不可變候選索引，locked retrieval regression 通過後才原子切換",
+    )
+    parser.add_argument(
+        "--regression-min-recall",
+        type=float,
+        default=0.90,
+        help="versioned index 啟用前的 locked candidate Recall@20 下限",
+    )
+    parser.add_argument(
+        "--force-regression",
+        action="store_true",
+        help="即使 corpus hash 未變，也重新驗證 active index 的 locked Recall@20",
+    )
     args = parser.parse_args()
 
     try:
-        build_index(
-            embedding_key=args.embedding, dim=args.dim,
-            contextual=not args.no_contextual, confirm_cost=args.confirm_cost,
-        )
+        kwargs = {
+            "embedding_key": args.embedding,
+            "dim": args.dim,
+            "contextual": not args.no_contextual,
+            "confirm_cost": args.confirm_cost,
+        }
+        if args.versioned:
+            manifest = build_versioned_index(
+                **kwargs,
+                regression_minimum_recall=args.regression_min_recall,
+                force_regression=args.force_regression,
+            )
+            if manifest.get("source_metadata_only_refresh"):
+                print(
+                    f"沿用索引：{manifest['active_version']}；"
+                    f"Recall@20={manifest['regression']['recall_at_20']:.3f}；"
+                    f"內容 hash 未變，embedding 重算=0；"
+                    f"法規快照={manifest['law_version']}"
+                )
+            else:
+                print(
+                    f"啟用索引：{manifest['active_version']}；"
+                    f"Recall@20={manifest['regression']['recall_at_20']:.3f}；"
+                    f"重用 embeddings={manifest['reused_embedding_count']}；"
+                    f"重算={manifest['embedded_chunk_count']}"
+                )
+        else:
+            build_index(**kwargs)
     except ContextualCostConfirmationRequired as e:
         print(f"\n{e}")
         print("尚未確認成本：請作者確認後改跑 --confirm-cost 執行（或 --no-contextual 跳過）")

@@ -1,0 +1,30 @@
+{
+ "schema_version": "law-update-drill-v1",
+ "executed_at": "2026-07-29T16:09:47+00:00",
+ "disposable_workspace": true,
+ "source_article_count": 205,
+ "baseline_version": "drill-baseline-e941dcc3e345",
+ "staged_version": "drill-staged-87b7e9e3f2ce",
+ "diff": {
+  "schema_version": "law-diff-v1",
+  "from_version": "drill-baseline-e941dcc3e345",
+  "to_version": "drill-staged-87b7e9e3f2ce",
+  "new": [
+   "TDRILL01-1"
+  ],
+  "deleted": [
+   "L0070059-22"
+  ],
+  "changed": [
+   "L0070040-1"
+  ],
+  "unchanged_count": 203
+ },
+ "idempotent_second_publish": true,
+ "failed_index_candidate_rejected": true,
+ "active_preserved_after_failure": true,
+ "successful_candidate_previous_version": "stable-v1",
+ "rollback_active_version": "stable-v1",
+ "scope": "law snapshot/diff/idempotency and index-manifest activation/rollback; does not build production embeddings",
+ "passed": true
+}

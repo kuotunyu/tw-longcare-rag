@@ -1,0 +1,56 @@
+{
+ "schema_version": "baseline-freeze-v1",
+ "git_commit": "5ab864b017cb4d15f6aee1156d50e360b8f07923",
+ "locked_manifest": "data/eval/locked_eval_manifest.json",
+ "frozen_raw_sources": {
+  "answers": "data/faithfulness_gen_cache.json",
+  "faithfulness": "docs/eval/faithfulness_results.json",
+  "refusal": "docs/eval/refusal_results.json",
+  "retrieval": "docs/eval/retrieval_matrix.json",
+  "route": "docs/eval/production/route_results.json"
+ },
+ "legacy_metrics": {
+  "retrieval_hit_at_5": 0.9333333333333333,
+  "mrr": 0.7944444444444444,
+  "combined_hit_at_5": 0.9333333333333333,
+  "mean_faithfulness": 1.0,
+  "mean_answer_relevancy": 0.9570119503740193,
+  "refusal_threshold": 0.636,
+  "false_refusals": 2,
+  "missed_traps": 2
+ },
+ "new_measurement": {
+  "mode": "current_baseline",
+  "n": 44,
+  "route_accuracy": "see route_eval.json (shared deterministic contract)",
+  "recall_at_5": 0.9354838709677419,
+  "mrr": 0.7849462365591399,
+  "answer_correctness": 0.6451612903225806,
+  "answer_correctness_method": "strict expected-citation proxy on frozen answers; refused answerable items score 0; changed-evidence answers remain null",
+  "answer_correctness_evaluated_fraction": 1.0,
+  "citation_coverage": 0.6935483870967742,
+  "citation_validity": 0.7873563218390804,
+  "faithfulness": 1.0,
+  "faithfulness_evaluated_fraction": 0.9354838709677419,
+  "refusal_precision": 0.8461538461538461,
+  "refusal_recall": 0.8461538461538461,
+  "latency_scope": "route + retrieval + optional refinement; frozen legacy generation had no timing telemetry",
+  "latency_ms": {
+   "p50": 218.75449999788543,
+   "p95": 235.76898499886738
+  },
+  "token_cost_scope": "incremental corrective calls only; frozen legacy generation token usage was not recorded",
+  "additional_tokens": 0,
+  "additional_cost_usd": 0.0,
+  "corrective_loop_activation_rate": 0.0,
+  "corrective_loop_rescue_rate": 0.0,
+  "corrective_loop_regression_rate": 0.0,
+  "gate_requested_refinement_rate": 0.0
+ },
+ "raw_result": "docs/eval/production/adaptive_raw_results.json::modes.current_baseline",
+ "limitations": [
+  "The legacy run did not record generation latency or token usage.",
+  "Route/retrieval latency was re-measured without changing the frozen questions.",
+  "Frozen answers and faithfulness are reused only when evidence order is unchanged."
+ ]
+}

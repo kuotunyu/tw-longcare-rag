@@ -1,0 +1,24 @@
+{
+  "schema_version": "gate-calibration-set-v1",
+  "locked_before_test_evaluation": true,
+  "annotation_policy": "Development-only questions; no item is copied from data/testset.json or the 13 locked refusal traps.",
+  "items": [
+    {"id": "a-01", "question": "長照法第 27 條是否禁止非長照機構使用長照機構名稱？", "answerable": true, "expected_parent_ids": ["L0070040-27"]},
+    {"id": "a-02", "question": "老人福利法第 2 條如何定義老人？", "answerable": true, "expected_parent_ids": ["D0050037-2"]},
+    {"id": "a-03", "question": "長照服務申請後由哪個單位進行評估？", "answerable": true, "expected_parent_ids": ["L0070059-3"]},
+    {"id": "a-04", "question": "機構設立許可證書遺失後幾日內要申請補發？", "answerable": true, "expected_parent_ids": ["L0070044-15"]},
+    {"id": "a-05", "question": "家庭照顧者支持服務包含哪些類型？", "answerable": true, "expected_parent_ids": ["L0070040-13"]},
+    {"id": "a-06", "question": "長照機構停業最長可以多久？", "answerable": true, "expected_parent_ids": ["L0070040-34"]},
+    {"id": "a-07", "question": "老人財產信託是哪一條規定？", "answerable": true, "expected_parent_ids": ["D0050037-14"]},
+    {"id": "a-08", "question": "長照給付超過核定額度後由誰負擔？", "answerable": true, "expected_parent_ids": ["L0070059-15"]},
+
+    {"id": "u-01", "question": "勞退新制雇主要提撥百分之多少？", "answerable": false, "expected_parent_ids": []},
+    {"id": "u-02", "question": "汽車酒駕的刑事責任是什麼？", "answerable": false, "expected_parent_ids": []},
+    {"id": "u-03", "question": "綜合所得稅的標準扣除額是多少？", "answerable": false, "expected_parent_ids": []},
+    {"id": "u-04", "question": "健保牙齒矯正有沒有給付？", "answerable": false, "expected_parent_ids": []},
+    {"id": "u-05", "question": "房屋租賃契約提前解約要賠多少？", "answerable": false, "expected_parent_ids": []},
+    {"id": "u-06", "question": "遺產稅免稅額目前是多少？", "answerable": false, "expected_parent_ids": []},
+    {"id": "u-07", "question": "這個規定到底可不可以？", "answerable": false, "expected_parent_ids": []},
+    {"id": "u-08", "question": "公司解僱員工要提前幾天通知？", "answerable": false, "expected_parent_ids": []}
+  ]
+}

@@ -34,16 +34,91 @@ REWRITE_SYSTEM = (
 )
 
 
-def rewrite_query(question: str, model, system: str = REWRITE_SYSTEM) -> str:
+def rewrite_query(
+    question: str,
+    model,
+    system: str = REWRITE_SYSTEM,
+    on_response=None,
+) -> str:
     """改寫失敗（空回覆/例外）時回退原問題，不讓改寫成為單點故障。"""
     try:
         reply = model.invoke([
             SystemMessage(content=system),
             HumanMessage(content=question),
         ])
+        if on_response is not None:
+            on_response("query_rewrite", reply)
         text = extract_text(reply.content)
         rewritten = text.strip().splitlines()[0].strip() if text.strip() else ""
         return rewritten or question
     except Exception as e:  # noqa: BLE001 - 改寫非關鍵路徑，仍印出真實原因供除錯
         print(f"[rewrite] 改寫失敗，退回原始問題：{e!r}", file=sys.stderr)
         return question
+
+
+REFINE_SYSTEM = (
+    "你是法規檢索查詢修正器。第一次檢索的證據不足或互相衝突。"
+    "根據原始問題、第一次查詢與候選條文標題，產生一個更明確的檢索查詢。"
+    "不得改變原意、不得假定使用者未提供的事實、不得回答問題。"
+    "只輸出一行查詢。"
+)
+
+
+def refine_query(
+    question: str,
+    previous_query: str,
+    retrieved,
+    model,
+    *,
+    on_response=None,
+) -> str:
+    """One-shot corrective query refinement.
+
+    The caller owns the iteration budget.  This function performs exactly one
+    model call and falls back to the previous query on any failure.
+    """
+    candidates = "\n".join(
+        f"- {chunk.law_name} 第{chunk.article_no}條：{chunk.text[:180]}"
+        for chunk in retrieved[:5]
+    )
+    prompt = (
+        f"原始問題：{question}\n"
+        f"第一次查詢：{previous_query}\n"
+        f"第一次候選：\n{candidates or '- 無候選'}"
+    )
+    try:
+        reply = model.invoke([
+            SystemMessage(content=REFINE_SYSTEM),
+            HumanMessage(content=prompt),
+        ])
+        if on_response is not None:
+            on_response("query_refinement", reply)
+        text = extract_text(reply.content)
+        lines = [
+            line.strip().lstrip("-•").strip()
+            for line in text.splitlines()
+            if line.strip() and not line.strip().startswith("```")
+        ]
+        # Small local models occasionally prepend “以下是更明確的查詢：”
+        # despite the output contract.  Prefer the final non-explanatory line.
+        explanatory = ("以下", "根據", "說明", "修正理由", "原始問題")
+        candidates = [
+            line for line in lines
+            if not line.startswith(explanatory)
+        ]
+        refined = (candidates[-1] if candidates else (lines[-1] if lines else ""))
+        refined = refined.strip("「」\"' ")
+        refined = refined.removeprefix("修正後查詢：").removeprefix("查詢：").strip()
+        if (
+            len(refined) < 4
+            or len(refined) > 64
+            or any(mark in refined for mark in ("。", "；", "這個查詢", "查詢策略"))
+        ):
+            # Reject answer-like or malformed model output.  Combining the
+            # original intent with the first query is a deterministic, bounded
+            # corrective fallback and cannot invent a new user fact.
+            refined = f"{question} {previous_query}".strip()[:160]
+        return refined or previous_query
+    except Exception as e:  # noqa: BLE001 - bounded corrective path must degrade safely
+        print(f"[refine] 修正失敗，保留第一次查詢：{e!r}", file=sys.stderr)
+        return previous_query

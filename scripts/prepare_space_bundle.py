@@ -33,6 +33,9 @@ FILES = [
     ("data/contextual_cache.json", "data/contextual_cache.json"),
     ("data/chapter_summaries.json", "data/chapter_summaries.json"),
     ("data/law_graph.json", "data/law_graph.json"),
+    ("data/testset.json", "data/testset.json"),
+    ("data/law_version_manifest.json", "data/law_version_manifest.json"),
+    ("data/versions/laws", "data/versions/laws"),
     ("space/README.md", "README.md"),
     ("space/requirements.txt", "requirements.txt"),
 ]

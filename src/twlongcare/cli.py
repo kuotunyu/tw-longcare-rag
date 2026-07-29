@@ -25,6 +25,11 @@ from .config import LOGS_DIR
 
 
 def main(argv: list[str] | None = None) -> None:
+    # Windows legacy consoles may default to cp950, which cannot encode emoji
+    # used by the existing disclaimer/progress output.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(description="台灣長照法規 RAG 問答（非官方服務）")
     parser.add_argument("question")
     parser.add_argument("--provider", choices=["ollama", "gemini", "openai"],
@@ -41,12 +46,37 @@ def main(argv: list[str] | None = None) -> None:
                         help="關閉 Phase 4 法條引用圖譜一階擴展（對照展示用）")
     parser.add_argument("--show-chunks", action="store_true",
                         help="顯示檢索到的 chunk 與分數（除錯用）")
+    parser.add_argument(
+        "--adaptive-mode",
+        choices=[
+            "current_baseline",
+            "confidence_gate_only",
+            "refinement_enabled",
+            "full_adaptive_route",
+        ],
+        default="current_baseline",
+        help="預設保留 locked baseline；只有明確指定才啟用實驗性 gate/refinement",
+    )
+    parser.add_argument("--max-refinements", type=int, choices=[0, 1], default=1)
+    parser.add_argument("--max-total-tokens", type=int, default=16_000)
+    parser.add_argument(
+        "--shadow-adaptive",
+        action="store_true",
+        help="仍以 baseline 回答，只記錄 Adaptive gate 若啟用時的決策",
+    )
+    parser.add_argument(
+        "--shadow-refine",
+        action="store_true",
+        help="shadow 命中 refine_once 時實跑一次修正；不改 baseline 回答但增加延遲",
+    )
     args = parser.parse_args(argv)
+    if args.shadow_refine and not args.shadow_adaptive:
+        parser.error("--shadow-refine 需要同時指定 --shadow-adaptive")
 
     from .generate import LawsLookup
     from .graph_expand import GRAPH_PATH, load_graph
     from .grounding import log_grounding
-    from .pipeline import run_pipeline
+    from .pipeline import PipelineBudget, ShadowAdaptiveConfig, run_pipeline
     from .retriever import HybridRetriever
 
     retriever = HybridRetriever(
@@ -72,6 +102,15 @@ def main(argv: list[str] | None = None) -> None:
         args.question, retriever, lookup,
         provider=args.provider, ollama_model=args.ollama_model,
         use_grounding=not args.no_grounding, graph=graph, on_progress=on_progress,
+        adaptive_mode=args.adaptive_mode,
+        budget=PipelineBudget(
+            max_refinements=args.max_refinements,
+            max_total_tokens=args.max_total_tokens,
+        ),
+        shadow_adaptive=ShadowAdaptiveConfig(
+            enabled=args.shadow_adaptive,
+            execute_refinement=args.shadow_refine,
+        ),
     )
 
     if result.rewritten_query != args.question:
@@ -86,6 +125,21 @@ def main(argv: list[str] | None = None) -> None:
         print(f"    ⚠️ judge 失敗，改為拒答：{result.grounding_error}", file=sys.stderr)
     if result.grounding_removed_count > 0:
         print(f"    移除 {result.grounding_removed_count} 句不受支持的內容", file=sys.stderr)
+    if result.confidence_gate is not None:
+        print(
+            f"    confidence gate：{result.confidence_gate.decision.value} "
+            f"({result.confidence_gate.reason})",
+            file=sys.stderr,
+        )
+    if result.shadow_adaptive is not None:
+        initial = result.shadow_adaptive["initial_gate"]["decision"]
+        final = result.shadow_adaptive.get("final_gate", {}).get("decision")
+        suffix = f" → {final}" if final else ""
+        print(
+            f"    shadow adaptive：{initial}{suffix} "
+            f"（baseline 回答未受影響）",
+            file=sys.stderr,
+        )
 
     if result.grounding is not None:
         log_grounding(

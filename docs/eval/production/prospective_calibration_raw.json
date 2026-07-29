@@ -1,0 +1,5514 @@
+[
+ {
+  "id": "cal-multi-001",
+  "question": "如果長照機構沒有將設立許可等訊息清楚標示在顯眼位置，可能會面臨什麼樣的處罰？",
+  "stratum": "multi_hop",
+  "expected_route": "global_or_multi_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070040-55",
+   "L0070040-37"
+  ],
+  "available_article_ids": [
+   "L0070040-23",
+   "L0070040-34",
+   "L0070040-37",
+   "L0070040-39-1",
+   "L0070040-41",
+   "L0070040-44",
+   "L0070040-47",
+   "L0070040-47-1",
+   "L0070040-48",
+   "L0070040-55"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7178487340588982,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.020660948216747133,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 11.0,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7178487340588982,
+   "top1_top2_margin": 0.020660948216747133,
+   "bm25_dense_overlap_count": 11,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-37",
+    "L0070040-47-1",
+    "L0070040-48",
+    "L0070040-47",
+    "L0070040-55"
+   ],
+   "graph_articles": [
+    "L0070040-23",
+    "L0070040-39-1",
+    "L0070040-34",
+    "L0070040-41",
+    "L0070040-44"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070040-37",
+    "rerank_score": 0.7178487340588982,
+    "rrf_score": 0.01639344262295082,
+    "bm25_rank": null,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-47-1",
+    "rerank_score": 0.697187785842151,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": null,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-48",
+    "rerank_score": 0.6784017560196154,
+    "rrf_score": 0.015873015873015872,
+    "bm25_rank": null,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070040-47",
+    "rerank_score": 0.6762946416760868,
+    "rrf_score": 0.030090497737556562,
+    "bm25_rank": 5,
+    "dense_rank": 8
+   },
+   {
+    "article_id": "L0070040-55",
+    "rerank_score": 0.6457056473612717,
+    "rrf_score": 0.029236022193768675,
+    "bm25_rank": 11,
+    "dense_rank": 6
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-23",
+   "L0070040-39-1",
+   "L0070040-34",
+   "L0070040-41",
+   "L0070040-44"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 10426.616,
+  "candidate_oof_risk": 0.020226481630348167,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-032",
+  "question": "長期照顧服務在提供時，是否應該因為人的性別、性傾向等因素而有所區別？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070040-1"
+  ],
+  "available_article_ids": [
+   "L0070040-1",
+   "L0070040-18",
+   "L0070040-21",
+   "L0070040-3",
+   "L0070040-9",
+   "L0070043-3"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7301829749950783,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.17594008936630523,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 7.0,
+   "bm25_dense_overlap_jaccard": 0.21212121212121213,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7301829749950783,
+   "top1_top2_margin": 0.17594008936630523,
+   "bm25_dense_overlap_count": 7,
+   "bm25_dense_overlap_jaccard": 0.21212121212121213,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-1",
+    "L0070040-18",
+    "L0070043-3",
+    "L0070040-3",
+    "L0070040-21"
+   ],
+   "graph_articles": [
+    "L0070040-9"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070040-1",
+    "rerank_score": 0.7301829749950783,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-18",
+    "rerank_score": 0.5542428856287731,
+    "rrf_score": 0.02928692699490662,
+    "bm25_rank": 2,
+    "dense_rank": 16
+   },
+   {
+    "article_id": "L0070043-3",
+    "rerank_score": 0.5138512325400486,
+    "rrf_score": 0.02844551282051282,
+    "bm25_rank": 18,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070040-3",
+    "rerank_score": 0.5085190652876552,
+    "rrf_score": 0.031054405392392875,
+    "bm25_rank": 7,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-21",
+    "rerank_score": 0.5040625506119945,
+    "rrf_score": 0.014925373134328358,
+    "bm25_rank": null,
+    "dense_rank": 7
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-9"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 250.608,
+  "candidate_oof_risk": 0.026435115575090068,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "calibration-ambiguous-003",
+  "question": "前面提到的那個要怎麼申請？",
+  "stratum": "ambiguous",
+  "expected_route": "corrective_candidate",
+  "actual_route": "corrective_candidate",
+  "answerable_from_corpus": false,
+  "expected_article_ids": [],
+  "available_article_ids": [
+   "L0070040-6",
+   "L0070040-9",
+   "L0070044-10",
+   "L0070044-12",
+   "L0070044-17",
+   "L0070044-24",
+   "L0070044-35",
+   "L0070044-5",
+   "L0070044-6",
+   "L0070044-6-1"
+  ],
+  "evidence_complete": false,
+  "needs_correction": true,
+  "features": {
+   "top1_rerank": 0.5011021827422963,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 5.337524672888172e-05,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 14.0,
+   "bm25_dense_overlap_jaccard": 0.5384615384615384,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 1.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.5011021827422963,
+   "top1_top2_margin": 5.337524672888172e-05,
+   "bm25_dense_overlap_count": 14,
+   "bm25_dense_overlap_jaccard": 0.5384615384615384,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070044-24",
+    "L0070044-17",
+    "L0070044-35",
+    "L0070044-6",
+    "L0070044-6-1"
+   ],
+   "graph_articles": [
+    "L0070044-12",
+    "L0070040-9",
+    "L0070040-6",
+    "L0070044-5",
+    "L0070044-10"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": true,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070044-24",
+    "rerank_score": 0.5011021827422963,
+    "rrf_score": 0.02889344262295082,
+    "bm25_rank": 1,
+    "dense_rank": 20
+   },
+   {
+    "article_id": "L0070044-17",
+    "rerank_score": 0.5010488074955675,
+    "rrf_score": 0.027272727272727275,
+    "bm25_rank": 17,
+    "dense_rank": 10
+   },
+   {
+    "article_id": "L0070044-35",
+    "rerank_score": 0.5009582849360409,
+    "rrf_score": 0.028309409888357256,
+    "bm25_rank": 6,
+    "dense_rank": 16
+   },
+   {
+    "article_id": "L0070044-6",
+    "rerank_score": 0.5009131323638972,
+    "rrf_score": 0.030798389007344232,
+    "bm25_rank": 3,
+    "dense_rank": 7
+   },
+   {
+    "article_id": "L0070044-6-1",
+    "rerank_score": 0.5009129207215478,
+    "rrf_score": 0.027313266443701224,
+    "bm25_rank": 18,
+    "dense_rank": 9
+   }
+  ],
+  "graph_article_ids": [
+   "L0070044-12",
+   "L0070040-9",
+   "L0070040-6",
+   "L0070044-5",
+   "L0070044-10"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 272.895,
+  "candidate_oof_risk": 0.9833304741508379,
+  "candidate_oof_activates": true
+ },
+ {
+  "id": "cal-single-003",
+  "question": "醫師出具的意見書需要包含哪些資訊，才能符合長期照顧服務法的規定？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070043-2"
+  ],
+  "available_article_ids": [
+   "L0070040-38",
+   "L0070040-8",
+   "L0070043-2",
+   "L0070043-8",
+   "L0070044-6-1",
+   "L0070044-7",
+   "L0070059-2"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7308508558299605,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.08103315895376018,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 7.0,
+   "bm25_dense_overlap_jaccard": 0.21212121212121213,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7308508558299605,
+   "top1_top2_margin": 0.08103315895376018,
+   "bm25_dense_overlap_count": 7,
+   "bm25_dense_overlap_jaccard": 0.21212121212121213,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070043-2",
+    "L0070040-8",
+    "L0070059-2",
+    "L0070043-8",
+    "L0070044-7"
+   ],
+   "graph_articles": [
+    "L0070040-38",
+    "L0070044-6-1"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070043-2",
+    "rerank_score": 0.7308508558299605,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-8",
+    "rerank_score": 0.6498176968762003,
+    "rrf_score": 0.03200204813108039,
+    "bm25_rank": 2,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070059-2",
+    "rerank_score": 0.5342451426270022,
+    "rrf_score": 0.014705882352941176,
+    "bm25_rank": null,
+    "dense_rank": 8
+   },
+   {
+    "article_id": "L0070043-8",
+    "rerank_score": 0.5289568127969729,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": null,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070044-7",
+    "rerank_score": 0.5131284735486888,
+    "rrf_score": 0.015625,
+    "bm25_rank": null,
+    "dense_rank": 4
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-38",
+   "L0070044-6-1"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 228.111,
+  "candidate_oof_risk": 0.04901534258192784,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-028",
+  "question": "日間照顧服務的對象，在白天需要往返社區式長照機構接受哪些類型的照顧呢？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070043-3"
+  ],
+  "available_article_ids": [
+   "L0070040-11",
+   "L0070040-21",
+   "L0070040-7",
+   "L0070040-9",
+   "L0070043-3",
+   "L0070044-34"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7293046583516396,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.07098854943988753,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 9.0,
+   "bm25_dense_overlap_jaccard": 0.2903225806451613,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7293046583516396,
+   "top1_top2_margin": 0.07098854943988753,
+   "bm25_dense_overlap_count": 9,
+   "bm25_dense_overlap_jaccard": 0.2903225806451613,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070043-3",
+    "L0070040-9",
+    "L0070040-11",
+    "L0070044-34",
+    "L0070040-21"
+   ],
+   "graph_articles": [
+    "L0070040-7"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070043-3",
+    "rerank_score": 0.7293046583516396,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-9",
+    "rerank_score": 0.6583161089117521,
+    "rrf_score": 0.03149801587301587,
+    "bm25_rank": 4,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070040-11",
+    "rerank_score": 0.6362437552562086,
+    "rrf_score": 0.030621785881252923,
+    "bm25_rank": 9,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070044-34",
+    "rerank_score": 0.6067345816422516,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": 2,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070040-21",
+    "rerank_score": 0.5623777584496481,
+    "rrf_score": 0.014705882352941176,
+    "bm25_rank": null,
+    "dense_rank": 8
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-7"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 277.984,
+  "candidate_oof_risk": 0.043521147422053555,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-013",
+  "question": "機構住宿式長照服務契約中，應載明哪些與醫事照護服務相關的事項？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070043-7"
+  ],
+  "available_article_ids": [
+   "L0070040-12",
+   "L0070040-33",
+   "L0070040-38",
+   "L0070043-7",
+   "L0070044-34"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7310406950839162,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.0011004003975565446,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 12.0,
+   "bm25_dense_overlap_jaccard": 0.42857142857142855,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7310406950839162,
+   "top1_top2_margin": 0.0011004003975565446,
+   "bm25_dense_overlap_count": 12,
+   "bm25_dense_overlap_jaccard": 0.42857142857142855,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070043-7",
+    "L0070044-34",
+    "L0070040-12",
+    "L0070040-33",
+    "L0070040-38"
+   ],
+   "graph_articles": [],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070043-7",
+    "rerank_score": 0.7310406950839162,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070044-34",
+    "rerank_score": 0.7299402946863597,
+    "rrf_score": 0.031754032258064516,
+    "bm25_rank": 2,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070040-12",
+    "rerank_score": 0.7265914712816437,
+    "rrf_score": 0.03125763125763126,
+    "bm25_rank": 5,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070040-33",
+    "rerank_score": 0.7252531148468779,
+    "rrf_score": 0.03200204813108039,
+    "bm25_rank": 3,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-38",
+    "rerank_score": 0.7123287209452828,
+    "rrf_score": 0.02786377708978328,
+    "bm25_rank": 8,
+    "dense_rank": 16
+   }
+  ],
+  "graph_article_ids": [],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 217.309,
+  "candidate_oof_risk": 0.01336274198026197,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-030",
+  "question": "如果家庭照顧者無法協助照顧，或正在使用身心障礙者的臨時短期照顧服務，是否還能申請喘息服務？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070059-11"
+  ],
+  "available_article_ids": [
+   "D0050037-31",
+   "L0070040-13",
+   "L0070040-3",
+   "L0070040-8",
+   "L0070059-11",
+   "L0070059-12",
+   "L0070059-7"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7264751314513382,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.0520819913549283,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 13.0,
+   "bm25_dense_overlap_jaccard": 0.48148148148148145,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7264751314513382,
+   "top1_top2_margin": 0.0520819913549283,
+   "bm25_dense_overlap_count": 13,
+   "bm25_dense_overlap_jaccard": 0.48148148148148145,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070059-11",
+    "D0050037-31",
+    "L0070040-13",
+    "L0070059-12",
+    "L0070059-7"
+   ],
+   "graph_articles": [
+    "L0070040-3",
+    "L0070040-8"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070059-11",
+    "rerank_score": 0.7264751314513382,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-31",
+    "rerank_score": 0.6743931400964099,
+    "rrf_score": 0.03225806451612903,
+    "bm25_rank": 2,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-13",
+    "rerank_score": 0.5270817055960813,
+    "rrf_score": 0.031009615384615385,
+    "bm25_rank": 5,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070059-12",
+    "rerank_score": 0.5183213932527697,
+    "rrf_score": 0.030303030303030304,
+    "bm25_rank": 6,
+    "dense_rank": 6
+   },
+   {
+    "article_id": "L0070059-7",
+    "rerank_score": 0.5118652523460471,
+    "rrf_score": 0.028790389395194696,
+    "bm25_rank": 8,
+    "dense_rank": 11
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-3",
+   "L0070040-8"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 249.204,
+  "candidate_oof_risk": 0.031345623635956596,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "calibration-ambiguous-002",
+  "question": "那這樣有符合規定嗎？",
+  "stratum": "ambiguous",
+  "expected_route": "corrective_candidate",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": false,
+  "expected_article_ids": [],
+  "available_article_ids": [
+   "D0050037-12",
+   "D0050037-36",
+   "L0070040-22",
+   "L0070040-32-2",
+   "L0070040-57",
+   "L0070040-64",
+   "L0070040-8",
+   "L0070059-2"
+  ],
+  "evidence_complete": false,
+  "needs_correction": true,
+  "features": {
+   "top1_rerank": 0.5149773037716278,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.010811808007244461,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 1.0,
+   "bm25_dense_overlap_jaccard": 0.02564102564102564,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.5149773037716278,
+   "top1_top2_margin": 0.010811808007244461,
+   "bm25_dense_overlap_count": 1,
+   "bm25_dense_overlap_jaccard": 0.02564102564102564,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-57",
+    "L0070059-2",
+    "L0070040-32-2",
+    "D0050037-12",
+    "D0050037-36"
+   ],
+   "graph_articles": [
+    "L0070040-64",
+    "L0070040-8",
+    "L0070040-22"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070040-57",
+    "rerank_score": 0.5149773037716278,
+    "rrf_score": 0.014925373134328358,
+    "bm25_rank": 7,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070059-2",
+    "rerank_score": 0.5041654957643833,
+    "rrf_score": 0.014705882352941176,
+    "bm25_rank": 8,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070040-32-2",
+    "rerank_score": 0.5037278645477394,
+    "rrf_score": 0.01639344262295082,
+    "bm25_rank": 1,
+    "dense_rank": null
+   },
+   {
+    "article_id": "D0050037-12",
+    "rerank_score": 0.5024961782456174,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": 2,
+    "dense_rank": null
+   },
+   {
+    "article_id": "D0050037-36",
+    "rerank_score": 0.5020462826201311,
+    "rrf_score": 0.015625,
+    "bm25_rank": 4,
+    "dense_rank": null
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-64",
+   "L0070040-8",
+   "L0070040-22"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 272.681,
+  "candidate_oof_risk": 0.9271206717021936,
+  "candidate_oof_activates": true
+ },
+ {
+  "id": "cal-single-011",
+  "question": "老人搭乘國內交通工具時，有哪些優惠措施？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "D0050037-25"
+  ],
+  "available_article_ids": [
+   "D0050037-11",
+   "D0050037-25",
+   "D0050037-3",
+   "D0050037-31",
+   "L0070059-7",
+   "L0070059-8"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7227407467305977,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.1975455733561341,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 7.0,
+   "bm25_dense_overlap_jaccard": 0.21212121212121213,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7227407467305977,
+   "top1_top2_margin": 0.1975455733561341,
+   "bm25_dense_overlap_count": 7,
+   "bm25_dense_overlap_jaccard": 0.21212121212121213,
+   "required_articles": [],
+   "retrieved_articles": [
+    "D0050037-25",
+    "D0050037-3",
+    "L0070059-8",
+    "D0050037-11",
+    "D0050037-31"
+   ],
+   "graph_articles": [
+    "L0070059-7"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "D0050037-25",
+    "rerank_score": 0.7227407467305977,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-3",
+    "rerank_score": 0.5251951733744636,
+    "rrf_score": 0.03125763125763126,
+    "bm25_rank": 3,
+    "dense_rank": 5
+   },
+   {
+    "article_id": "L0070059-8",
+    "rerank_score": 0.5013482458808342,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": null,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "D0050037-11",
+    "rerank_score": 0.5008954532417087,
+    "rrf_score": 0.015625,
+    "bm25_rank": null,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "D0050037-31",
+    "rerank_score": 0.5003340190245283,
+    "rrf_score": 0.027984344422700584,
+    "bm25_rank": 13,
+    "dense_rank": 10
+   }
+  ],
+  "graph_article_ids": [
+   "L0070059-7"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 263.359,
+  "candidate_oof_risk": 0.03304320796329076,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-022",
+  "question": "根據長照法，提供方式有哪幾種？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070040-9"
+  ],
+  "available_article_ids": [
+   "L0070040-11",
+   "L0070040-12",
+   "L0070040-21",
+   "L0070040-7",
+   "L0070040-9",
+   "L0070043-3"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7293298745332722,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.07096101012688649,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 3.0,
+   "bm25_dense_overlap_jaccard": 0.08108108108108109,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7293298745332722,
+   "top1_top2_margin": 0.07096101012688649,
+   "bm25_dense_overlap_count": 3,
+   "bm25_dense_overlap_jaccard": 0.08108108108108109,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-9",
+    "L0070040-12",
+    "L0070040-21",
+    "L0070043-3",
+    "L0070040-11"
+   ],
+   "graph_articles": [
+    "L0070040-7"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070040-9",
+    "rerank_score": 0.7293298745332722,
+    "rrf_score": 0.032266458495966696,
+    "bm25_rank": 3,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-12",
+    "rerank_score": 0.6583688644063858,
+    "rrf_score": 0.03200204813108039,
+    "bm25_rank": 2,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070040-21",
+    "rerank_score": 0.6480013351426934,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": null,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070043-3",
+    "rerank_score": 0.628259638872774,
+    "rrf_score": 0.014925373134328358,
+    "bm25_rank": null,
+    "dense_rank": 7
+   },
+   {
+    "article_id": "L0070040-11",
+    "rerank_score": 0.6083209801481153,
+    "rrf_score": 0.015384615384615385,
+    "bm25_rank": null,
+    "dense_rank": 5
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-7"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 234.701,
+  "candidate_oof_risk": 0.08813479832718334,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-020",
+  "question": "在長照服務中，有哪些類型的服務被歸類為居家照顧服務呢？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070059-8"
+  ],
+  "available_article_ids": [
+   "L0070040-10",
+   "L0070040-12",
+   "L0070040-21",
+   "L0070040-7",
+   "L0070040-9",
+   "L0070059-7",
+   "L0070059-8"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7305863817450748,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.000989798055105462,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 11.0,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7305863817450748,
+   "top1_top2_margin": 0.000989798055105462,
+   "bm25_dense_overlap_count": 11,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-10",
+    "L0070040-21",
+    "L0070040-9",
+    "L0070059-8",
+    "L0070040-12"
+   ],
+   "graph_articles": [
+    "L0070040-7",
+    "L0070059-7"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070040-10",
+    "rerank_score": 0.7305863817450748,
+    "rrf_score": 0.03177805800756621,
+    "bm25_rank": 5,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-21",
+    "rerank_score": 0.7295965836899694,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": null,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-9",
+    "rerank_score": 0.726573401789692,
+    "rrf_score": 0.029513888888888888,
+    "bm25_rank": 12,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070059-8",
+    "rerank_score": 0.7218665324777982,
+    "rrf_score": 0.03131881575727918,
+    "bm25_rank": 1,
+    "dense_rank": 7
+   },
+   {
+    "article_id": "L0070040-12",
+    "rerank_score": 0.7209669205294452,
+    "rrf_score": 0.015151515151515152,
+    "bm25_rank": null,
+    "dense_rank": 6
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-7",
+   "L0070059-7"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 242.981,
+  "candidate_oof_risk": 0.018003484291659443,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-multi-005",
+  "question": "長照機構如果違反規定刊登廣告，除了會被罰款之外，主管機關還會採取什麼措施？",
+  "stratum": "multi_hop",
+  "expected_route": "global_or_multi_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070040-51",
+   "L0070040-25"
+  ],
+  "available_article_ids": [
+   "L0070040-23",
+   "L0070040-25",
+   "L0070040-29",
+   "L0070040-34",
+   "L0070040-41",
+   "L0070040-44",
+   "L0070040-47",
+   "L0070040-48",
+   "L0070040-51",
+   "L0070040-53"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7258452673391602,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.02800173972379072,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 9.0,
+   "bm25_dense_overlap_jaccard": 0.2903225806451613,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7258452673391602,
+   "top1_top2_margin": 0.02800173972379072,
+   "bm25_dense_overlap_count": 9,
+   "bm25_dense_overlap_jaccard": 0.2903225806451613,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-51",
+    "L0070040-47",
+    "L0070040-53",
+    "L0070040-29",
+    "L0070040-48"
+   ],
+   "graph_articles": [
+    "L0070040-25",
+    "L0070040-23",
+    "L0070040-34",
+    "L0070040-41",
+    "L0070040-44"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070040-51",
+    "rerank_score": 0.7258452673391602,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-47",
+    "rerank_score": 0.6978435276153695,
+    "rrf_score": 0.030330882352941176,
+    "bm25_rank": 4,
+    "dense_rank": 8
+   },
+   {
+    "article_id": "L0070040-53",
+    "rerank_score": 0.6960736779890767,
+    "rrf_score": 0.029857397504456328,
+    "bm25_rank": 8,
+    "dense_rank": 6
+   },
+   {
+    "article_id": "L0070040-29",
+    "rerank_score": 0.6838057839536414,
+    "rrf_score": 0.03225806451612903,
+    "bm25_rank": 2,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-48",
+    "rerank_score": 0.6708035847609211,
+    "rrf_score": 0.015625,
+    "bm25_rank": null,
+    "dense_rank": 4
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-25",
+   "L0070040-23",
+   "L0070040-34",
+   "L0070040-41",
+   "L0070040-44"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 287.999,
+  "candidate_oof_risk": 0.05497651604102008,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-027",
+  "question": "的特種基金，有哪些主要的經費來源呢？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070040-15"
+  ],
+  "available_article_ids": [
+   "D0050037-6",
+   "L0070040-15",
+   "L0070040-3",
+   "L0070044-10",
+   "L0070044-11",
+   "L0070044-6-1",
+   "L0070044-7"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7281584093404578,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.2215997558609214,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 5.0,
+   "bm25_dense_overlap_jaccard": 0.14285714285714285,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7281584093404578,
+   "top1_top2_margin": 0.2215997558609214,
+   "bm25_dense_overlap_count": 5,
+   "bm25_dense_overlap_jaccard": 0.14285714285714285,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-15",
+    "D0050037-6",
+    "L0070040-3",
+    "L0070044-7",
+    "L0070044-11"
+   ],
+   "graph_articles": [
+    "L0070044-6-1",
+    "L0070044-10"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070040-15",
+    "rerank_score": 0.7281584093404578,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-6",
+    "rerank_score": 0.5065586534795364,
+    "rrf_score": 0.03225806451612903,
+    "bm25_rank": 2,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-3",
+    "rerank_score": 0.5000396052782061,
+    "rrf_score": 0.014492753623188406,
+    "bm25_rank": 9,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070044-7",
+    "rerank_score": 0.5000243309532187,
+    "rrf_score": 0.015625,
+    "bm25_rank": 4,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070044-11",
+    "rerank_score": 0.5000198788220482,
+    "rrf_score": 0.015873015873015872,
+    "bm25_rank": 3,
+    "dense_rank": null
+   }
+  ],
+  "graph_article_ids": [
+   "L0070044-6-1",
+   "L0070044-10"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 243.876,
+  "candidate_oof_risk": 0.025550350449252256,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-024",
+  "question": "長照機構在歇業前，需要向哪個單位提交申請並註銷許可證書呢？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070044-25"
+  ],
+  "available_article_ids": [
+   "L0070044-22",
+   "L0070044-23",
+   "L0070044-24",
+   "L0070044-25",
+   "L0070044-27",
+   "L0070044-28",
+   "L0070044-3"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.730656052271787,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.013928287475784229,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 11.0,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.730656052271787,
+   "top1_top2_margin": 0.013928287475784229,
+   "bm25_dense_overlap_count": 11,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070044-25",
+    "L0070044-28",
+    "L0070044-27",
+    "L0070044-22",
+    "L0070044-24"
+   ],
+   "graph_articles": [
+    "L0070044-3",
+    "L0070044-23"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070044-25",
+    "rerank_score": 0.730656052271787,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070044-28",
+    "rerank_score": 0.7167277647960028,
+    "rrf_score": 0.03200204813108039,
+    "bm25_rank": 3,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070044-27",
+    "rerank_score": 0.7130696003578703,
+    "rrf_score": 0.03055037313432836,
+    "bm25_rank": 7,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070044-22",
+    "rerank_score": 0.7110292062163626,
+    "rrf_score": 0.03128054740957967,
+    "bm25_rank": 2,
+    "dense_rank": 6
+   },
+   {
+    "article_id": "L0070044-24",
+    "rerank_score": 0.7106064113757432,
+    "rrf_score": 0.02946912242686891,
+    "bm25_rank": 5,
+    "dense_rank": 11
+   }
+  ],
+  "graph_article_ids": [
+   "L0070044-3",
+   "L0070044-23"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 290.836,
+  "candidate_oof_risk": 0.04187460028154507,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-007",
+  "question": "個人看護者需要接受什麼樣的訓練，才能符合的規定？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070040-64"
+  ],
+  "available_article_ids": [
+   "D0050037-20",
+   "L0070040-57",
+   "L0070040-6",
+   "L0070040-64",
+   "L0070059-18",
+   "L0070059-7"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7296491908015863,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.012943184964709697,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 10.0,
+   "bm25_dense_overlap_jaccard": 0.3333333333333333,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7296491908015863,
+   "top1_top2_margin": 0.012943184964709697,
+   "bm25_dense_overlap_count": 10,
+   "bm25_dense_overlap_jaccard": 0.3333333333333333,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-64",
+    "L0070040-57",
+    "L0070040-6",
+    "L0070059-18",
+    "D0050037-20"
+   ],
+   "graph_articles": [
+    "L0070059-7"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070040-64",
+    "rerank_score": 0.7296491908015863,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 2,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-57",
+    "rerank_score": 0.7167060058368766,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 1,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-6",
+    "rerank_score": 0.5238363262881364,
+    "rrf_score": 0.014285714285714285,
+    "bm25_rank": 10,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070059-18",
+    "rerank_score": 0.5232632724195294,
+    "rrf_score": 0.03076923076923077,
+    "bm25_rank": 5,
+    "dense_rank": 5
+   },
+   {
+    "article_id": "D0050037-20",
+    "rerank_score": 0.5224934601674108,
+    "rrf_score": 0.0293236301369863,
+    "bm25_rank": 13,
+    "dense_rank": 4
+   }
+  ],
+  "graph_article_ids": [
+   "L0070059-7"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 281.138,
+  "candidate_oof_risk": 0.05353189963640967,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-004",
+  "question": "在原住民族地區設立長照機構時，如果找不到符合規定的場地和專業人員，有哪些替代方式可以辦理？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070044-16"
+  ],
+  "available_article_ids": [
+   "L0070040-14",
+   "L0070040-24",
+   "L0070040-6",
+   "L0070040-7",
+   "L0070044-12",
+   "L0070044-16",
+   "L0070044-6",
+   "L0070044-8"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7281442746673272,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.14246949180724033,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 6.0,
+   "bm25_dense_overlap_jaccard": 0.17647058823529413,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7281442746673272,
+   "top1_top2_margin": 0.14246949180724033,
+   "bm25_dense_overlap_count": 6,
+   "bm25_dense_overlap_jaccard": 0.17647058823529413,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070044-16",
+    "L0070040-24",
+    "L0070040-14",
+    "L0070040-6",
+    "L0070040-7"
+   ],
+   "graph_articles": [
+    "L0070044-8",
+    "L0070044-12",
+    "L0070044-6"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070044-16",
+    "rerank_score": 0.7281442746673272,
+    "rrf_score": 0.03225806451612903,
+    "bm25_rank": 2,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-24",
+    "rerank_score": 0.5856747828600869,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-14",
+    "rerank_score": 0.5637721158294148,
+    "rrf_score": 0.030158730158730156,
+    "bm25_rank": 3,
+    "dense_rank": 10
+   },
+   {
+    "article_id": "L0070040-6",
+    "rerank_score": 0.5101997837728219,
+    "rrf_score": 0.014705882352941176,
+    "bm25_rank": 8,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070040-7",
+    "rerank_score": 0.5059332828396323,
+    "rrf_score": 0.015151515151515152,
+    "bm25_rank": null,
+    "dense_rank": 6
+   }
+  ],
+  "graph_article_ids": [
+   "L0070044-8",
+   "L0070044-12",
+   "L0070044-6"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 309.425,
+  "candidate_oof_risk": 0.022506550236004143,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "calibration-ambiguous-004",
+  "question": "這件事是不是一定要先核准？",
+  "stratum": "ambiguous",
+  "expected_route": "corrective_candidate",
+  "actual_route": "corrective_candidate",
+  "answerable_from_corpus": false,
+  "expected_article_ids": [],
+  "available_article_ids": [
+   "L0070040-23",
+   "L0070044-10",
+   "L0070044-12",
+   "L0070044-14",
+   "L0070044-20",
+   "L0070044-24",
+   "L0070044-5",
+   "L0070044-6",
+   "L0070044-8"
+  ],
+  "evidence_complete": false,
+  "needs_correction": true,
+  "features": {
+   "top1_rerank": 0.5016077275392831,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.0005800222088631068,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 3.0,
+   "bm25_dense_overlap_jaccard": 0.08108108108108109,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 1.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.5016077275392831,
+   "top1_top2_margin": 0.0005800222088631068,
+   "bm25_dense_overlap_count": 3,
+   "bm25_dense_overlap_jaccard": 0.08108108108108109,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070044-6",
+    "L0070040-23",
+    "L0070044-20",
+    "L0070044-14",
+    "L0070044-24"
+   ],
+   "graph_articles": [
+    "L0070044-10",
+    "L0070044-8",
+    "L0070044-5",
+    "L0070044-12"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": true,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070044-6",
+    "rerank_score": 0.5016077275392831,
+    "rrf_score": 0.025974025974025976,
+    "bm25_rank": 17,
+    "dense_rank": 17
+   },
+   {
+    "article_id": "L0070040-23",
+    "rerank_score": 0.50102770533042,
+    "rrf_score": 0.015873015873015872,
+    "bm25_rank": null,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070044-20",
+    "rerank_score": 0.5009287418593676,
+    "rrf_score": 0.015384615384615385,
+    "bm25_rank": 5,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070044-14",
+    "rerank_score": 0.5006281576539854,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": null,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070044-24",
+    "rerank_score": 0.5005014622648881,
+    "rrf_score": 0.01639344262295082,
+    "bm25_rank": 1,
+    "dense_rank": null
+   }
+  ],
+  "graph_article_ids": [
+   "L0070044-10",
+   "L0070044-8",
+   "L0070044-5",
+   "L0070044-12"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 278.476,
+  "candidate_oof_risk": 0.994572466384798,
+  "candidate_oof_activates": true
+ },
+ {
+  "id": "calibration-ambiguous-001",
+  "question": "這個情況到底可以嗎？",
+  "stratum": "ambiguous",
+  "expected_route": "corrective_candidate",
+  "actual_route": "corrective_candidate",
+  "answerable_from_corpus": false,
+  "expected_article_ids": [],
+  "available_article_ids": [
+   "D0050037-42",
+   "L0070040-3",
+   "L0070040-35",
+   "L0070044-18",
+   "L0070059-11",
+   "L0070059-15",
+   "L0070059-21"
+  ],
+  "evidence_complete": false,
+  "needs_correction": true,
+  "features": {
+   "top1_rerank": 0.5001588497199225,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 4.474311235924677e-05,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 2.0,
+   "bm25_dense_overlap_jaccard": 0.05263157894736842,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 1.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.5001588497199225,
+   "top1_top2_margin": 4.474311235924677e-05,
+   "bm25_dense_overlap_count": 2,
+   "bm25_dense_overlap_jaccard": 0.05263157894736842,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070059-15",
+    "L0070059-11",
+    "D0050037-42",
+    "L0070059-21",
+    "L0070044-18"
+   ],
+   "graph_articles": [
+    "L0070040-35",
+    "L0070040-3"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": true,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070059-15",
+    "rerank_score": 0.5001588497199225,
+    "rrf_score": 0.014705882352941176,
+    "bm25_rank": 8,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070059-11",
+    "rerank_score": 0.5001141066075633,
+    "rrf_score": 0.03028233151183971,
+    "bm25_rank": 12,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-42",
+    "rerank_score": 0.5000828786498145,
+    "rrf_score": 0.015625,
+    "bm25_rank": null,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070059-21",
+    "rerank_score": 0.5000245061491827,
+    "rrf_score": 0.031054405392392875,
+    "bm25_rank": 2,
+    "dense_rank": 7
+   },
+   {
+    "article_id": "L0070044-18",
+    "rerank_score": 0.5000220083638709,
+    "rrf_score": 0.015384615384615385,
+    "bm25_rank": null,
+    "dense_rank": 5
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-35",
+   "L0070040-3"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 197.684,
+  "candidate_oof_risk": 0.990841718534457,
+  "candidate_oof_activates": true
+ },
+ {
+  "id": "cal-single-029",
+  "question": "長照機構收到捐款後，應該如何管理和使用？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070044-32"
+  ],
+  "available_article_ids": [
+   "D0050037-40",
+   "L0070044-12",
+   "L0070044-17",
+   "L0070044-31",
+   "L0070044-32",
+   "L0070059-12"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7296532236691843,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.09923206757316372,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 6.0,
+   "bm25_dense_overlap_jaccard": 0.17647058823529413,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7296532236691843,
+   "top1_top2_margin": 0.09923206757316372,
+   "bm25_dense_overlap_count": 6,
+   "bm25_dense_overlap_jaccard": 0.17647058823529413,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070044-32",
+    "D0050037-40",
+    "L0070059-12",
+    "L0070044-17",
+    "L0070044-31"
+   ],
+   "graph_articles": [
+    "L0070044-12"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070044-32",
+    "rerank_score": 0.7296532236691843,
+    "rrf_score": 0.03177805800756621,
+    "bm25_rank": 5,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-40",
+    "rerank_score": 0.6304211560960206,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": null,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070059-12",
+    "rerank_score": 0.5179197001027842,
+    "rrf_score": 0.014925373134328358,
+    "bm25_rank": 7,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070044-17",
+    "rerank_score": 0.5109235973676645,
+    "rrf_score": 0.031054405392392875,
+    "bm25_rank": 2,
+    "dense_rank": 7
+   },
+   {
+    "article_id": "L0070044-31",
+    "rerank_score": 0.5079862695637348,
+    "rrf_score": 0.014084507042253521,
+    "bm25_rank": null,
+    "dense_rank": 11
+   }
+  ],
+  "graph_article_ids": [
+   "L0070044-12"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 276.015,
+  "candidate_oof_risk": 0.05157759360920109,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "calibration-unanswerable-004",
+  "question": "房東提前終止租約要賠房客多少？",
+  "stratum": "unanswerable",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": false,
+  "expected_article_ids": [],
+  "available_article_ids": [
+   "L0070040-44",
+   "L0070040-52",
+   "L0070040-56",
+   "L0070044-10",
+   "L0070044-12",
+   "L0070044-5",
+   "L0070044-6",
+   "L0070044-8",
+   "L0070044-9",
+   "L0070059-22"
+  ],
+  "evidence_complete": false,
+  "needs_correction": true,
+  "features": {
+   "top1_rerank": 0.5002712386801663,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.00015018650205633755,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 5.0,
+   "bm25_dense_overlap_jaccard": 0.14285714285714285,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.5002712386801663,
+   "top1_top2_margin": 0.00015018650205633755,
+   "bm25_dense_overlap_count": 5,
+   "bm25_dense_overlap_jaccard": 0.14285714285714285,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070044-12",
+    "L0070044-6",
+    "L0070040-56",
+    "L0070040-52",
+    "L0070059-22"
+   ],
+   "graph_articles": [
+    "L0070044-10",
+    "L0070044-9",
+    "L0070044-8",
+    "L0070044-5",
+    "L0070040-44"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070044-12",
+    "rerank_score": 0.5002712386801663,
+    "rrf_score": 0.015625,
+    "bm25_rank": 4,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070044-6",
+    "rerank_score": 0.50012105217811,
+    "rrf_score": 0.03200204813108039,
+    "bm25_rank": 3,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-56",
+    "rerank_score": 0.500103366123204,
+    "rrf_score": 0.014925373134328358,
+    "bm25_rank": null,
+    "dense_rank": 7
+   },
+   {
+    "article_id": "L0070040-52",
+    "rerank_score": 0.5000962593537155,
+    "rrf_score": 0.014285714285714285,
+    "bm25_rank": null,
+    "dense_rank": 10
+   },
+   {
+    "article_id": "L0070059-22",
+    "rerank_score": 0.5000846958274536,
+    "rrf_score": 0.014705882352941176,
+    "bm25_rank": 8,
+    "dense_rank": null
+   }
+  ],
+  "graph_article_ids": [
+   "L0070044-10",
+   "L0070044-9",
+   "L0070044-8",
+   "L0070044-5",
+   "L0070040-44"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 285.826,
+  "candidate_oof_risk": 0.938368287265183,
+  "candidate_oof_activates": true
+ },
+ {
+  "id": "cal-single-033",
+  "question": "長照機構在完成籌設後，要向哪個機關申請設立許可呢？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070044-12"
+  ],
+  "available_article_ids": [
+   "L0070040-22",
+   "L0070040-23",
+   "L0070040-63",
+   "L0070044-10",
+   "L0070044-12",
+   "L0070044-2",
+   "L0070044-26",
+   "L0070044-9"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7307558634205212,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.0033013481867082417,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 12.0,
+   "bm25_dense_overlap_jaccard": 0.42857142857142855,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7307558634205212,
+   "top1_top2_margin": 0.0033013481867082417,
+   "bm25_dense_overlap_count": 12,
+   "bm25_dense_overlap_jaccard": 0.42857142857142855,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070044-12",
+    "L0070044-2",
+    "L0070044-26",
+    "L0070040-23",
+    "L0070044-9"
+   ],
+   "graph_articles": [
+    "L0070044-10",
+    "L0070040-63",
+    "L0070040-22"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070044-12",
+    "rerank_score": 0.7307558634205212,
+    "rrf_score": 0.0304147465437788,
+    "bm25_rank": 2,
+    "dense_rank": 10
+   },
+   {
+    "article_id": "L0070044-2",
+    "rerank_score": 0.727454515233813,
+    "rrf_score": 0.030776515151515152,
+    "bm25_rank": 6,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070044-26",
+    "rerank_score": 0.7265254299515417,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-23",
+    "rerank_score": 0.7251715012548662,
+    "rrf_score": 0.013333333333333334,
+    "bm25_rank": null,
+    "dense_rank": 15
+   },
+   {
+    "article_id": "L0070044-9",
+    "rerank_score": 0.72294100250005,
+    "rrf_score": 0.028404512489927477,
+    "bm25_rank": 13,
+    "dense_rank": 8
+   }
+  ],
+  "graph_article_ids": [
+   "L0070044-10",
+   "L0070040-63",
+   "L0070040-22"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 297.403,
+  "candidate_oof_risk": 0.013208479870099587,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-005",
+  "question": "長照特約單位在什麼情況下可以申請支付服務費用？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070059-16"
+  ],
+  "available_article_ids": [
+   "L0070040-35",
+   "L0070040-8",
+   "L0070040-8-1",
+   "L0070059-15",
+   "L0070059-16",
+   "L0070059-17",
+   "L0070059-21"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7303322853882104,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.00033628893567561047,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 11.0,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7303322853882104,
+   "top1_top2_margin": 0.00033628893567561047,
+   "bm25_dense_overlap_count": 11,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070059-16",
+    "L0070059-21",
+    "L0070059-15",
+    "L0070059-17",
+    "L0070040-8-1"
+   ],
+   "graph_articles": [
+    "L0070040-35",
+    "L0070040-8"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070059-16",
+    "rerank_score": 0.7303322853882104,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070059-21",
+    "rerank_score": 0.7299959964525348,
+    "rrf_score": 0.03225806451612903,
+    "bm25_rank": 2,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070059-15",
+    "rerank_score": 0.7063640031241675,
+    "rrf_score": 0.015625,
+    "bm25_rank": null,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070059-17",
+    "rerank_score": 0.7049654359160733,
+    "rrf_score": 0.02886002886002886,
+    "bm25_rank": 3,
+    "dense_rank": 17
+   },
+   {
+    "article_id": "L0070040-8-1",
+    "rerank_score": 0.6611684192895992,
+    "rrf_score": 0.02819138376017471,
+    "bm25_rank": 13,
+    "dense_rank": 9
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-35",
+   "L0070040-8"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 200.528,
+  "candidate_oof_risk": 0.04778778831290692,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-026",
+  "question": "如果依法令有扶養義務的人遺棄老人，會面臨什麼樣的處罰？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "D0050037-51"
+  ],
+  "available_article_ids": [
+   "D0050037-24",
+   "D0050037-30",
+   "D0050037-41",
+   "D0050037-51",
+   "D0050037-52"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7301021281583443,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.03501949411990346,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 10.0,
+   "bm25_dense_overlap_jaccard": 0.3333333333333333,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7301021281583443,
+   "top1_top2_margin": 0.03501949411990346,
+   "bm25_dense_overlap_count": 10,
+   "bm25_dense_overlap_jaccard": 0.3333333333333333,
+   "required_articles": [],
+   "retrieved_articles": [
+    "D0050037-51",
+    "D0050037-52",
+    "D0050037-30",
+    "D0050037-41",
+    "D0050037-24"
+   ],
+   "graph_articles": [],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "D0050037-51",
+    "rerank_score": 0.7301021281583443,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 2,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-52",
+    "rerank_score": 0.6950826340384408,
+    "rrf_score": 0.03200204813108039,
+    "bm25_rank": 3,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "D0050037-30",
+    "rerank_score": 0.5181445935620718,
+    "rrf_score": 0.030536130536130537,
+    "bm25_rank": 6,
+    "dense_rank": 5
+   },
+   {
+    "article_id": "D0050037-41",
+    "rerank_score": 0.5168669181673524,
+    "rrf_score": 0.030536130536130537,
+    "bm25_rank": 5,
+    "dense_rank": 6
+   },
+   {
+    "article_id": "D0050037-24",
+    "rerank_score": 0.5071848220600002,
+    "rrf_score": 0.032266458495966696,
+    "bm25_rank": 1,
+    "dense_rank": 3
+   }
+  ],
+  "graph_article_ids": [],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 284.4,
+  "candidate_oof_risk": 0.04064212849961052,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-001",
+  "question": "主管機關多久會舉辦一次老人生活狀況調查，並出版相關報告？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "D0050037-10"
+  ],
+  "available_article_ids": [
+   "D0050037-10",
+   "D0050037-21",
+   "D0050037-23",
+   "D0050037-3",
+   "D0050037-42"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7309678171362548,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.1557081205569273,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 6.0,
+   "bm25_dense_overlap_jaccard": 0.17647058823529413,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7309678171362548,
+   "top1_top2_margin": 0.1557081205569273,
+   "bm25_dense_overlap_count": 6,
+   "bm25_dense_overlap_jaccard": 0.17647058823529413,
+   "required_articles": [],
+   "retrieved_articles": [
+    "D0050037-10",
+    "D0050037-42",
+    "D0050037-21",
+    "D0050037-3",
+    "D0050037-23"
+   ],
+   "graph_articles": [],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "D0050037-10",
+    "rerank_score": 0.7309678171362548,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-42",
+    "rerank_score": 0.5752596965793275,
+    "rrf_score": 0.029116045245077504,
+    "bm25_rank": 2,
+    "dense_rank": 17
+   },
+   {
+    "article_id": "D0050037-21",
+    "rerank_score": 0.5406427669966383,
+    "rrf_score": 0.015873015873015872,
+    "bm25_rank": null,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "D0050037-3",
+    "rerank_score": 0.5377888887803227,
+    "rrf_score": 0.030017921146953404,
+    "bm25_rank": 12,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "D0050037-23",
+    "rerank_score": 0.5074927831822195,
+    "rrf_score": 0.030309988518943745,
+    "bm25_rank": 7,
+    "dense_rank": 5
+   }
+  ],
+  "graph_article_ids": [],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 272.253,
+  "candidate_oof_risk": 0.03826076829131612,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-014",
+  "question": "如果是由法人設立的長照機構申請許可，應該由誰提出申請？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070044-3"
+  ],
+  "available_article_ids": [
+   "L0070040-22",
+   "L0070040-23",
+   "L0070040-63",
+   "L0070044-10",
+   "L0070044-17",
+   "L0070044-2",
+   "L0070044-3",
+   "L0070044-5",
+   "L0070044-6",
+   "L0070044-9"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7225329334031168,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.003472335430404927,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 12.0,
+   "bm25_dense_overlap_jaccard": 0.42857142857142855,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7225329334031168,
+   "top1_top2_margin": 0.003472335430404927,
+   "bm25_dense_overlap_count": 12,
+   "bm25_dense_overlap_jaccard": 0.42857142857142855,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070044-3",
+    "L0070044-2",
+    "L0070044-10",
+    "L0070044-6",
+    "L0070044-17"
+   ],
+   "graph_articles": [
+    "L0070040-22",
+    "L0070040-23",
+    "L0070040-63",
+    "L0070044-5",
+    "L0070044-9"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070044-3",
+    "rerank_score": 0.7225329334031168,
+    "rrf_score": 0.031544957774465976,
+    "bm25_rank": 6,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070044-2",
+    "rerank_score": 0.7190605979727118,
+    "rrf_score": 0.0315136476426799,
+    "bm25_rank": 5,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070044-10",
+    "rerank_score": 0.7126731297483794,
+    "rrf_score": 0.03128054740957967,
+    "bm25_rank": 2,
+    "dense_rank": 6
+   },
+   {
+    "article_id": "L0070044-6",
+    "rerank_score": 0.705825647695632,
+    "rrf_score": 0.032018442622950824,
+    "bm25_rank": 1,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070044-17",
+    "rerank_score": 0.6953747893504322,
+    "rrf_score": 0.014705882352941176,
+    "bm25_rank": 8,
+    "dense_rank": null
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-22",
+   "L0070040-23",
+   "L0070040-63",
+   "L0070044-5",
+   "L0070044-9"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 286.53,
+  "candidate_oof_risk": 0.050031725959472126,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-009",
+  "question": "長照機構在什麼情況下可以免除部分申請文件？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070044-19"
+  ],
+  "available_article_ids": [
+   "L0070040-6",
+   "L0070040-9",
+   "L0070044-10",
+   "L0070044-12",
+   "L0070044-16",
+   "L0070044-35",
+   "L0070044-36",
+   "L0070044-5",
+   "L0070044-8",
+   "L0070044-9"
+  ],
+  "evidence_complete": false,
+  "needs_correction": true,
+  "features": {
+   "top1_rerank": 0.708520505636542,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.06584065224266411,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 11.0,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.708520505636542,
+   "top1_top2_margin": 0.06584065224266411,
+   "bm25_dense_overlap_count": 11,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070044-35",
+    "L0070044-36",
+    "L0070044-12",
+    "L0070044-16",
+    "L0070044-9"
+   ],
+   "graph_articles": [
+    "L0070040-9",
+    "L0070040-6",
+    "L0070044-5",
+    "L0070044-10",
+    "L0070044-8"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070044-35",
+    "rerank_score": 0.708520505636542,
+    "rrf_score": 0.032018442622950824,
+    "bm25_rank": 4,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070044-36",
+    "rerank_score": 0.6426798533938779,
+    "rrf_score": 0.030117753623188408,
+    "bm25_rank": 9,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070044-12",
+    "rerank_score": 0.6197060978271094,
+    "rrf_score": 0.028404512489927477,
+    "bm25_rank": 8,
+    "dense_rank": 13
+   },
+   {
+    "article_id": "L0070044-16",
+    "rerank_score": 0.613968474453878,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 1,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070044-9",
+    "rerank_score": 0.6030613027464553,
+    "rrf_score": 0.014925373134328358,
+    "bm25_rank": null,
+    "dense_rank": 7
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-9",
+   "L0070040-6",
+   "L0070044-5",
+   "L0070044-10",
+   "L0070044-8"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 281.619,
+  "candidate_oof_risk": 0.01720130166421926,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "calibration-unanswerable-001",
+  "question": "遺產稅目前的免稅額是多少？",
+  "stratum": "unanswerable",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": false,
+  "expected_article_ids": [],
+  "available_article_ids": [
+   "D0050037-12",
+   "D0050037-41",
+   "L0070040-15",
+   "L0070059-10",
+   "L0070059-14",
+   "L0070059-2",
+   "L0070059-22",
+   "L0070059-5"
+  ],
+  "evidence_complete": false,
+  "needs_correction": true,
+  "features": {
+   "top1_rerank": 0.501273457583405,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.001249534536740038,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 6.0,
+   "bm25_dense_overlap_jaccard": 0.17647058823529413,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.501273457583405,
+   "top1_top2_margin": 0.001249534536740038,
+   "bm25_dense_overlap_count": 6,
+   "bm25_dense_overlap_jaccard": 0.17647058823529413,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-15",
+    "L0070059-22",
+    "D0050037-12",
+    "D0050037-41",
+    "L0070059-14"
+   ],
+   "graph_articles": [
+    "L0070059-2",
+    "L0070059-10",
+    "L0070059-5"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070040-15",
+    "rerank_score": 0.501273457583405,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070059-22",
+    "rerank_score": 0.500023923046665,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": 2,
+    "dense_rank": null
+   },
+   {
+    "article_id": "D0050037-12",
+    "rerank_score": 0.5000133659223106,
+    "rrf_score": 0.015873015873015872,
+    "bm25_rank": null,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "D0050037-41",
+    "rerank_score": 0.5000124585967544,
+    "rrf_score": 0.015625,
+    "bm25_rank": null,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070059-14",
+    "rerank_score": 0.5000111773333611,
+    "rrf_score": 0.029877369007803793,
+    "bm25_rank": 9,
+    "dense_rank": 5
+   }
+  ],
+  "graph_article_ids": [
+   "L0070059-2",
+   "L0070059-10",
+   "L0070059-5"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 236.79,
+  "candidate_oof_risk": 0.9305691124661909,
+  "candidate_oof_activates": true
+ },
+ {
+  "id": "cal-multi-003",
+  "question": "申請設立長照機構時，除了居家式服務類之外，需要事先向哪個主管機關提出籌設許可？",
+  "stratum": "multi_hop",
+  "expected_route": "global_or_multi_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070044-6",
+   "L0070044-8"
+  ],
+  "available_article_ids": [
+   "L0070040-22",
+   "L0070044-10",
+   "L0070044-12",
+   "L0070044-26",
+   "L0070044-5",
+   "L0070044-6",
+   "L0070044-6-1",
+   "L0070044-8",
+   "L0070044-9"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7307657963423572,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.0006716198088156933,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 14.0,
+   "bm25_dense_overlap_jaccard": 0.5384615384615384,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7307657963423572,
+   "top1_top2_margin": 0.0006716198088156933,
+   "bm25_dense_overlap_count": 14,
+   "bm25_dense_overlap_jaccard": 0.5384615384615384,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070044-6",
+    "L0070044-12",
+    "L0070044-10",
+    "L0070044-26",
+    "L0070044-6-1"
+   ],
+   "graph_articles": [
+    "L0070044-8",
+    "L0070044-5",
+    "L0070044-9",
+    "L0070040-22"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070044-6",
+    "rerank_score": 0.7307657963423572,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 2,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070044-12",
+    "rerank_score": 0.7300941765335415,
+    "rrf_score": 0.014925373134328358,
+    "bm25_rank": null,
+    "dense_rank": 7
+   },
+   {
+    "article_id": "L0070044-10",
+    "rerank_score": 0.7263949640699674,
+    "rrf_score": 0.029138513513513514,
+    "bm25_rank": 14,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070044-26",
+    "rerank_score": 0.7212927879013173,
+    "rrf_score": 0.02967032967032967,
+    "bm25_rank": 5,
+    "dense_rank": 10
+   },
+   {
+    "article_id": "L0070044-6-1",
+    "rerank_score": 0.7210766838179321,
+    "rrf_score": 0.028594771241830064,
+    "bm25_rank": 8,
+    "dense_rank": 12
+   }
+  ],
+  "graph_article_ids": [
+   "L0070044-8",
+   "L0070044-5",
+   "L0070044-9",
+   "L0070040-22"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 295.998,
+  "candidate_oof_risk": 0.037560590766692534,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-019",
+  "question": "如果一個機構原本依照老人福利法設立，後來想轉為長照住宿式服務，需要提供哪些文件或資料來申請許可？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070044-36"
+  ],
+  "available_article_ids": [
+   "L0070040-6",
+   "L0070040-9",
+   "L0070044-10",
+   "L0070044-12",
+   "L0070044-20",
+   "L0070044-35",
+   "L0070044-36",
+   "L0070044-5",
+   "L0070044-9"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.730871748739201,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.003176211753004088,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 9.0,
+   "bm25_dense_overlap_jaccard": 0.2903225806451613,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.730871748739201,
+   "top1_top2_margin": 0.003176211753004088,
+   "bm25_dense_overlap_count": 9,
+   "bm25_dense_overlap_jaccard": 0.2903225806451613,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070044-36",
+    "L0070044-35",
+    "L0070044-20",
+    "L0070044-12"
+   ],
+   "graph_articles": [
+    "L0070040-6",
+    "L0070044-5",
+    "L0070040-9",
+    "L0070044-10",
+    "L0070044-9"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070044-36",
+    "rerank_score": 0.730871748739201,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 2,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070044-35",
+    "rerank_score": 0.7276955369861969,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 1,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070044-36",
+    "rerank_score": 0.7272802789259709,
+    "rrf_score": 0.02976190476190476,
+    "bm25_rank": 12,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070044-20",
+    "rerank_score": 0.7272372912739432,
+    "rrf_score": 0.030536130536130537,
+    "bm25_rank": 5,
+    "dense_rank": 6
+   },
+   {
+    "article_id": "L0070044-12",
+    "rerank_score": 0.7236025006927068,
+    "rrf_score": 0.029418126757516764,
+    "bm25_rank": 9,
+    "dense_rank": 7
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-6",
+   "L0070044-5",
+   "L0070040-9",
+   "L0070044-10",
+   "L0070044-9"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 318.214,
+  "candidate_oof_risk": 0.0562005922374028,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-multi-004",
+  "question": "長照機構在廣告中可以包含哪些資訊？",
+  "stratum": "multi_hop",
+  "expected_route": "global_or_multi_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070040-29",
+   "L0070040-26"
+  ],
+  "available_article_ids": [
+   "L0070040-25",
+   "L0070040-26",
+   "L0070040-29",
+   "L0070040-37",
+   "L0070040-43",
+   "L0070040-51",
+   "L0070044-13"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7307736064819955,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.04909097091003378,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 5.0,
+   "bm25_dense_overlap_jaccard": 0.14285714285714285,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7307736064819955,
+   "top1_top2_margin": 0.04909097091003378,
+   "bm25_dense_overlap_count": 5,
+   "bm25_dense_overlap_jaccard": 0.14285714285714285,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-29",
+    "L0070040-37",
+    "L0070040-51",
+    "L0070040-43",
+    "L0070044-13"
+   ],
+   "graph_articles": [
+    "L0070040-26",
+    "L0070040-25"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070040-29",
+    "rerank_score": 0.7307736064819955,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-37",
+    "rerank_score": 0.6816826355719617,
+    "rrf_score": 0.03125,
+    "bm25_rank": 4,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070040-51",
+    "rerank_score": 0.5588635934031385,
+    "rrf_score": 0.03225806451612903,
+    "bm25_rank": 2,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-43",
+    "rerank_score": 0.5483174263207419,
+    "rrf_score": 0.014705882352941176,
+    "bm25_rank": null,
+    "dense_rank": 8
+   },
+   {
+    "article_id": "L0070044-13",
+    "rerank_score": 0.5203753166910752,
+    "rrf_score": 0.014084507042253521,
+    "bm25_rank": null,
+    "dense_rank": 11
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-26",
+   "L0070040-25"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 186.815,
+  "candidate_oof_risk": 0.07773437955623297,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-015",
+  "question": "當長照特約單位提供臨時性照顧服務時，後續流程為何？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070059-21"
+  ],
+  "available_article_ids": [
+   "L0070040-10",
+   "L0070040-11",
+   "L0070040-12",
+   "L0070040-13",
+   "L0070040-32-1",
+   "L0070059-15",
+   "L0070059-16",
+   "L0070059-21",
+   "L0070059-3",
+   "L0070059-5"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7297666105194119,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.20602239351243812,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 8.0,
+   "bm25_dense_overlap_jaccard": 0.25,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7297666105194119,
+   "top1_top2_margin": 0.20602239351243812,
+   "bm25_dense_overlap_count": 8,
+   "bm25_dense_overlap_jaccard": 0.25,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070059-21",
+    "L0070040-32-1",
+    "L0070059-16",
+    "L0070059-5",
+    "L0070040-11"
+   ],
+   "graph_articles": [
+    "L0070059-15",
+    "L0070040-10",
+    "L0070040-12",
+    "L0070040-13",
+    "L0070059-3"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070059-21",
+    "rerank_score": 0.7297666105194119,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-32-1",
+    "rerank_score": 0.5237442170069738,
+    "rrf_score": 0.0315136476426799,
+    "bm25_rank": 5,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070059-16",
+    "rerank_score": 0.5221349812362939,
+    "rrf_score": 0.03149801587301587,
+    "bm25_rank": 4,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070059-5",
+    "rerank_score": 0.5218676886684169,
+    "rrf_score": 0.030621785881252923,
+    "bm25_rank": 2,
+    "dense_rank": 9
+   },
+   {
+    "article_id": "L0070040-11",
+    "rerank_score": 0.5175669203577817,
+    "rrf_score": 0.014084507042253521,
+    "bm25_rank": null,
+    "dense_rank": 11
+   }
+  ],
+  "graph_article_ids": [
+   "L0070059-15",
+   "L0070040-10",
+   "L0070040-12",
+   "L0070040-13",
+   "L0070059-3"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 184.773,
+  "candidate_oof_risk": 0.007859050429280775,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-017",
+  "question": "長照機構在哪些情況下，地方主管機關需監督其服務品質？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070040-46"
+  ],
+  "available_article_ids": [
+   "L0070040-19",
+   "L0070040-31",
+   "L0070040-33",
+   "L0070040-38",
+   "L0070040-39",
+   "L0070040-46",
+   "L0070040-5",
+   "L0070040-53",
+   "L0070044-31"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7304892533867513,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.002165273790257216,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 7.0,
+   "bm25_dense_overlap_jaccard": 0.21212121212121213,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7304892533867513,
+   "top1_top2_margin": 0.002165273790257216,
+   "bm25_dense_overlap_count": 7,
+   "bm25_dense_overlap_jaccard": 0.21212121212121213,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-46",
+    "L0070040-39",
+    "L0070044-31",
+    "L0070040-5",
+    "L0070040-53"
+   ],
+   "graph_articles": [
+    "L0070040-19",
+    "L0070040-31",
+    "L0070040-33",
+    "L0070040-38"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070040-46",
+    "rerank_score": 0.7304892533867513,
+    "rrf_score": 0.03125,
+    "bm25_rank": 4,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070040-39",
+    "rerank_score": 0.7283239795964941,
+    "rrf_score": 0.03131881575727918,
+    "bm25_rank": 7,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070044-31",
+    "rerank_score": 0.7262499670184163,
+    "rrf_score": 0.015873015873015872,
+    "bm25_rank": null,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070040-5",
+    "rerank_score": 0.71675586358028,
+    "rrf_score": 0.03225806451612903,
+    "bm25_rank": 2,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-53",
+    "rerank_score": 0.7070618939056116,
+    "rrf_score": 0.015151515151515152,
+    "bm25_rank": null,
+    "dense_rank": 6
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-19",
+   "L0070040-31",
+   "L0070040-33",
+   "L0070040-38"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 269.823,
+  "candidate_oof_risk": 0.06950207757814067,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-021",
+  "question": "如果老人福利機構增加收容人數，主管機關會怎麼處理？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "D0050037-49"
+  ],
+  "available_article_ids": [
+   "D0050037-36",
+   "D0050037-37-1",
+   "D0050037-45",
+   "D0050037-46",
+   "D0050037-47",
+   "D0050037-48",
+   "D0050037-49",
+   "D0050037-50",
+   "D0050037-7"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7303134791634779,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.015422706997422209,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 11.0,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7303134791634779,
+   "top1_top2_margin": 0.015422706997422209,
+   "bm25_dense_overlap_count": 11,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_articles": [],
+   "retrieved_articles": [
+    "D0050037-49",
+    "D0050037-45",
+    "D0050037-50",
+    "D0050037-47",
+    "D0050037-7"
+   ],
+   "graph_articles": [
+    "D0050037-46",
+    "D0050037-48",
+    "D0050037-36",
+    "D0050037-37-1"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "D0050037-49",
+    "rerank_score": 0.7303134791634779,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-45",
+    "rerank_score": 0.7148907721660557,
+    "rrf_score": 0.030621785881252923,
+    "bm25_rank": 2,
+    "dense_rank": 9
+   },
+   {
+    "article_id": "D0050037-50",
+    "rerank_score": 0.6990096991899778,
+    "rrf_score": 0.02946912242686891,
+    "bm25_rank": 5,
+    "dense_rank": 11
+   },
+   {
+    "article_id": "D0050037-47",
+    "rerank_score": 0.6853158947353113,
+    "rrf_score": 0.013513513513513514,
+    "bm25_rank": null,
+    "dense_rank": 14
+   },
+   {
+    "article_id": "D0050037-7",
+    "rerank_score": 0.6691538906020796,
+    "rrf_score": 0.014705882352941176,
+    "bm25_rank": null,
+    "dense_rank": 8
+   }
+  ],
+  "graph_article_ids": [
+   "D0050037-46",
+   "D0050037-48",
+   "D0050037-36",
+   "D0050037-37-1"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 311.596,
+  "candidate_oof_risk": 0.04163435541104149,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-006",
+  "question": "老人福利機構與服務對象或家屬簽訂書面契約時，需要注意哪些事項？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "D0050037-38"
+  ],
+  "available_article_ids": [
+   "D0050037-34",
+   "D0050037-36",
+   "D0050037-37",
+   "D0050037-38",
+   "D0050037-39",
+   "D0050037-40",
+   "D0050037-46",
+   "L0070040-42"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7308260221843482,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.014313688967923066,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 11.0,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7308260221843482,
+   "top1_top2_margin": 0.014313688967923066,
+   "bm25_dense_overlap_count": 11,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_articles": [],
+   "retrieved_articles": [
+    "D0050037-38",
+    "D0050037-46",
+    "L0070040-42",
+    "D0050037-39",
+    "D0050037-37"
+   ],
+   "graph_articles": [
+    "D0050037-34",
+    "D0050037-36",
+    "D0050037-40"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "D0050037-38",
+    "rerank_score": 0.7308260221843482,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-46",
+    "rerank_score": 0.7165123332164252,
+    "rrf_score": 0.03125763125763126,
+    "bm25_rank": 5,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070040-42",
+    "rerank_score": 0.6942261153454192,
+    "rrf_score": 0.03225806451612903,
+    "bm25_rank": 2,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "D0050037-39",
+    "rerank_score": 0.5670810988485879,
+    "rrf_score": 0.028404512489927477,
+    "bm25_rank": 13,
+    "dense_rank": 8
+   },
+   {
+    "article_id": "D0050037-37",
+    "rerank_score": 0.5617116775795721,
+    "rrf_score": 0.029877369007803793,
+    "bm25_rank": 9,
+    "dense_rank": 5
+   }
+  ],
+  "graph_article_ids": [
+   "D0050037-34",
+   "D0050037-36",
+   "D0050037-40"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 287.852,
+  "candidate_oof_risk": 0.041649953979713966,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-012",
+  "question": "長照機構收費時，必須提供哪些資訊？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070040-36"
+  ],
+  "available_article_ids": [
+   "L0070040-26",
+   "L0070040-29",
+   "L0070040-35",
+   "L0070040-36",
+   "L0070040-37",
+   "L0070044-13"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7305082513573518,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.0013441858704857923,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 6.0,
+   "bm25_dense_overlap_jaccard": 0.17647058823529413,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7305082513573518,
+   "top1_top2_margin": 0.0013441858704857923,
+   "bm25_dense_overlap_count": 6,
+   "bm25_dense_overlap_jaccard": 0.17647058823529413,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-35",
+    "L0070040-37",
+    "L0070040-36",
+    "L0070040-29",
+    "L0070044-13"
+   ],
+   "graph_articles": [
+    "L0070040-26"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070040-35",
+    "rerank_score": 0.7305082513573518,
+    "rrf_score": 0.032266458495966696,
+    "bm25_rank": 1,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070040-37",
+    "rerank_score": 0.729164065486866,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 2,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-36",
+    "rerank_score": 0.7203129486053033,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": null,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-29",
+    "rerank_score": 0.7055066530263892,
+    "rrf_score": 0.029236022193768675,
+    "bm25_rank": 6,
+    "dense_rank": 11
+   },
+   {
+    "article_id": "L0070044-13",
+    "rerank_score": 0.6878194326724605,
+    "rrf_score": 0.015625,
+    "bm25_rank": null,
+    "dense_rank": 4
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-26"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 205.509,
+  "candidate_oof_risk": 0.09146270701629443,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "calibration-unanswerable-003",
+  "question": "酒駕被抓會有什麼刑事責任？",
+  "stratum": "unanswerable",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": false,
+  "expected_article_ids": [],
+  "available_article_ids": [
+   "D0050037-51",
+   "L0070040-44",
+   "L0070040-48",
+   "L0070040-56",
+   "L0070044-10",
+   "L0070044-12",
+   "L0070044-5",
+   "L0070044-9"
+  ],
+  "evidence_complete": false,
+  "needs_correction": true,
+  "features": {
+   "top1_rerank": 0.5000563241626315,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 1.1213665741305334e-05,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 3.0,
+   "bm25_dense_overlap_jaccard": 0.08108108108108109,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.5000563241626315,
+   "top1_top2_margin": 1.1213665741305334e-05,
+   "bm25_dense_overlap_count": 3,
+   "bm25_dense_overlap_jaccard": 0.08108108108108109,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-56",
+    "D0050037-51",
+    "L0070044-12",
+    "L0070040-48",
+    "L0070044-5"
+   ],
+   "graph_articles": [
+    "L0070040-44",
+    "L0070044-10",
+    "L0070044-9"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070040-56",
+    "rerank_score": 0.5000563241626315,
+    "rrf_score": 0.015151515151515152,
+    "bm25_rank": null,
+    "dense_rank": 6
+   },
+   {
+    "article_id": "D0050037-51",
+    "rerank_score": 0.5000451104968902,
+    "rrf_score": 0.032266458495966696,
+    "bm25_rank": 3,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070044-12",
+    "rerank_score": 0.5000399539348168,
+    "rrf_score": 0.015384615384615385,
+    "bm25_rank": 5,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070040-48",
+    "rerank_score": 0.5000281057327515,
+    "rrf_score": 0.014492753623188406,
+    "bm25_rank": 9,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070044-5",
+    "rerank_score": 0.5000179512789978,
+    "rrf_score": 0.014285714285714285,
+    "bm25_rank": null,
+    "dense_rank": 10
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-44",
+   "L0070044-10",
+   "L0070044-9"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 291.823,
+  "candidate_oof_risk": 0.9580472202495532,
+  "candidate_oof_activates": true
+ },
+ {
+  "id": "cal-single-034",
+  "question": "交通接送服務的費用是由哪個機關決定並公告的？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070059-19"
+  ],
+  "available_article_ids": [
+   "L0070040-11",
+   "L0070040-35",
+   "L0070059-12",
+   "L0070059-19",
+   "L0070059-7",
+   "L0070059-8"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7289608862655793,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.22421259658346637,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 8.0,
+   "bm25_dense_overlap_jaccard": 0.25,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7289608862655793,
+   "top1_top2_margin": 0.22421259658346637,
+   "bm25_dense_overlap_count": 8,
+   "bm25_dense_overlap_jaccard": 0.25,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070059-19",
+    "L0070059-12",
+    "L0070059-8",
+    "L0070040-35",
+    "L0070040-11"
+   ],
+   "graph_articles": [
+    "L0070059-7"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070059-19",
+    "rerank_score": 0.7289608862655793,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070059-12",
+    "rerank_score": 0.5047482896821129,
+    "rrf_score": 0.028373015873015873,
+    "bm25_rank": 20,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070059-8",
+    "rerank_score": 0.5029321631024755,
+    "rrf_score": 0.03225806451612903,
+    "bm25_rank": 2,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-35",
+    "rerank_score": 0.5024402613711213,
+    "rrf_score": 0.015625,
+    "bm25_rank": null,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "L0070040-11",
+    "rerank_score": 0.502374728282139,
+    "rrf_score": 0.015625,
+    "bm25_rank": 4,
+    "dense_rank": null
+   }
+  ],
+  "graph_article_ids": [
+   "L0070059-7"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 200.702,
+  "candidate_oof_risk": 0.018671518018207912,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-025",
+  "question": "如果六個月內的照顧計畫額度還沒用完，剩下的錢可以保留多久呢？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070059-12"
+  ],
+  "available_article_ids": [
+   "L0070044-32",
+   "L0070044-33",
+   "L0070059-10",
+   "L0070059-12",
+   "L0070059-13"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7142144810745331,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.12187448786109933,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 10.0,
+   "bm25_dense_overlap_jaccard": 0.3333333333333333,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7142144810745331,
+   "top1_top2_margin": 0.12187448786109933,
+   "bm25_dense_overlap_count": 10,
+   "bm25_dense_overlap_jaccard": 0.3333333333333333,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070059-12",
+    "L0070059-13",
+    "L0070059-10",
+    "L0070044-32",
+    "L0070044-33"
+   ],
+   "graph_articles": [],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070059-12",
+    "rerank_score": 0.7142144810745331,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 1,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070059-13",
+    "rerank_score": 0.5923399932134338,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 2,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070059-10",
+    "rerank_score": 0.5022703767709961,
+    "rrf_score": 0.028782894736842105,
+    "bm25_rank": 4,
+    "dense_rank": 16
+   },
+   {
+    "article_id": "L0070044-32",
+    "rerank_score": 0.5018760359818905,
+    "rrf_score": 0.029571646010002173,
+    "bm25_rank": 3,
+    "dense_rank": 13
+   },
+   {
+    "article_id": "L0070044-33",
+    "rerank_score": 0.5011251718603332,
+    "rrf_score": 0.03125763125763126,
+    "bm25_rank": 5,
+    "dense_rank": 3
+   }
+  ],
+  "graph_article_ids": [],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 243.39,
+  "candidate_oof_risk": 0.04167217764392263,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "calibration-unanswerable-005",
+  "question": "健保有沒有補助成人牙齒矯正？",
+  "stratum": "unanswerable",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": false,
+  "expected_article_ids": [],
+  "available_article_ids": [
+   "D0050037-12-1",
+   "D0050037-22",
+   "L0070059-12",
+   "L0070059-20",
+   "L0070059-7",
+   "L0070059-8"
+  ],
+  "evidence_complete": false,
+  "needs_correction": true,
+  "features": {
+   "top1_rerank": 0.5008441278607392,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.0005602018352576232,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 5.0,
+   "bm25_dense_overlap_jaccard": 0.14285714285714285,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.5008441278607392,
+   "top1_top2_margin": 0.0005602018352576232,
+   "bm25_dense_overlap_count": 5,
+   "bm25_dense_overlap_jaccard": 0.14285714285714285,
+   "required_articles": [],
+   "retrieved_articles": [
+    "D0050037-22",
+    "D0050037-12-1",
+    "L0070059-8",
+    "L0070059-20",
+    "L0070059-12"
+   ],
+   "graph_articles": [
+    "L0070059-7"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "D0050037-22",
+    "rerank_score": 0.5008441278607392,
+    "rrf_score": 0.032018442622950824,
+    "bm25_rank": 4,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-12-1",
+    "rerank_score": 0.5002839260254816,
+    "rrf_score": 0.01639344262295082,
+    "bm25_rank": 1,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070059-8",
+    "rerank_score": 0.5001487119399631,
+    "rrf_score": 0.015384615384615385,
+    "bm25_rank": 5,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070059-20",
+    "rerank_score": 0.5001433608373923,
+    "rrf_score": 0.014705882352941176,
+    "bm25_rank": 8,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070059-12",
+    "rerank_score": 0.5001376566471444,
+    "rrf_score": 0.014925373134328358,
+    "bm25_rank": 7,
+    "dense_rank": null
+   }
+  ],
+  "graph_article_ids": [
+   "L0070059-7"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 265.032,
+  "candidate_oof_risk": 0.9338825239675141,
+  "candidate_oof_activates": true
+ },
+ {
+  "id": "cal-single-035",
+  "question": "政府機關在推動老人相關的法規時，會設立專責人員來處理嗎？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "D0050037-7"
+  ],
+  "available_article_ids": [
+   "D0050037-3",
+   "D0050037-4",
+   "D0050037-5",
+   "D0050037-7",
+   "D0050037-9"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7242300006139264,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.13266970994154348,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 10.0,
+   "bm25_dense_overlap_jaccard": 0.3333333333333333,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7242300006139264,
+   "top1_top2_margin": 0.13266970994154348,
+   "bm25_dense_overlap_count": 10,
+   "bm25_dense_overlap_jaccard": 0.3333333333333333,
+   "required_articles": [],
+   "retrieved_articles": [
+    "D0050037-7",
+    "D0050037-4",
+    "D0050037-3",
+    "D0050037-9",
+    "D0050037-5"
+   ],
+   "graph_articles": [],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "D0050037-7",
+    "rerank_score": 0.7242300006139264,
+    "rrf_score": 0.030679156908665108,
+    "bm25_rank": 10,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-4",
+    "rerank_score": 0.5915602906723829,
+    "rrf_score": 0.029709507042253523,
+    "bm25_rank": 11,
+    "dense_rank": 4
+   },
+   {
+    "article_id": "D0050037-3",
+    "rerank_score": 0.5816282986046462,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 1,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "D0050037-9",
+    "rerank_score": 0.5755001303964332,
+    "rrf_score": 0.029857397504456328,
+    "bm25_rank": 8,
+    "dense_rank": 6
+   },
+   {
+    "article_id": "D0050037-5",
+    "rerank_score": 0.5409267288461632,
+    "rrf_score": 0.015384615384615385,
+    "bm25_rank": null,
+    "dense_rank": 5
+   }
+  ],
+  "graph_article_ids": [],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 267.008,
+  "candidate_oof_risk": 0.029311580353312872,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-023",
+  "question": "當製作紀錄時，需要包含哪些當事人的資訊？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070043-8"
+  ],
+  "available_article_ids": [
+   "L0070040-38",
+   "L0070040-43",
+   "L0070040-8",
+   "L0070043-2",
+   "L0070043-8",
+   "L0070044-33"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7135992619465523,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.21216963737805072,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 7.0,
+   "bm25_dense_overlap_jaccard": 0.21212121212121213,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7135992619465523,
+   "top1_top2_margin": 0.21216963737805072,
+   "bm25_dense_overlap_count": 7,
+   "bm25_dense_overlap_jaccard": 0.21212121212121213,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070043-8",
+    "L0070040-43",
+    "L0070043-2",
+    "L0070044-33",
+    "L0070040-38"
+   ],
+   "graph_articles": [
+    "L0070040-8"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070043-8",
+    "rerank_score": 0.7135992619465523,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-43",
+    "rerank_score": 0.5014296245685016,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": null,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070043-2",
+    "rerank_score": 0.5014243812651155,
+    "rrf_score": 0.015384615384615385,
+    "bm25_rank": null,
+    "dense_rank": 5
+   },
+   {
+    "article_id": "L0070044-33",
+    "rerank_score": 0.5012686551331691,
+    "rrf_score": 0.03149801587301587,
+    "bm25_rank": 4,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070040-38",
+    "rerank_score": 0.500474137373875,
+    "rrf_score": 0.031754032258064516,
+    "bm25_rank": 2,
+    "dense_rank": 4
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-8"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 278.255,
+  "candidate_oof_risk": 0.013725141514564856,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-010",
+  "question": "如果長照需要等級重新評估後結果不變，之前沒用完的額度還能用嗎？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070059-13"
+  ],
+  "available_article_ids": [
+   "L0070040-8",
+   "L0070040-8-1",
+   "L0070059-13",
+   "L0070059-2",
+   "L0070059-3",
+   "L0070059-6",
+   "L0070059-7"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7145095618944545,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.021769931482804816,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 14.0,
+   "bm25_dense_overlap_jaccard": 0.5384615384615384,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7145095618944545,
+   "top1_top2_margin": 0.021769931482804816,
+   "bm25_dense_overlap_count": 14,
+   "bm25_dense_overlap_jaccard": 0.5384615384615384,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070059-13",
+    "L0070059-6",
+    "L0070059-7",
+    "L0070040-8-1",
+    "L0070059-3"
+   ],
+   "graph_articles": [
+    "L0070040-8",
+    "L0070059-2"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070059-13",
+    "rerank_score": 0.7145095618944545,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 2,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070059-6",
+    "rerank_score": 0.6927396304116497,
+    "rrf_score": 0.03200204813108039,
+    "bm25_rank": 3,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070059-7",
+    "rerank_score": 0.6664572497246298,
+    "rrf_score": 0.032266458495966696,
+    "bm25_rank": 1,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070040-8-1",
+    "rerank_score": 0.5659291327979292,
+    "rrf_score": 0.029273504273504274,
+    "bm25_rank": 12,
+    "dense_rank": 5
+   },
+   {
+    "article_id": "L0070059-3",
+    "rerank_score": 0.5407758478069973,
+    "rrf_score": 0.03125,
+    "bm25_rank": 4,
+    "dense_rank": 4
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-8",
+   "L0070059-2"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 288.051,
+  "candidate_oof_risk": 0.04298590774077195,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-031",
+  "question": "在台灣，負責老人權益保障規劃的中央單位是哪個部門？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "D0050037-3"
+  ],
+  "available_article_ids": [
+   "D0050037-29",
+   "D0050037-3",
+   "D0050037-4",
+   "D0050037-5",
+   "L0070040-2"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7244531977704678,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.07661586968655176,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 12.0,
+   "bm25_dense_overlap_jaccard": 0.42857142857142855,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7244531977704678,
+   "top1_top2_margin": 0.07661586968655176,
+   "bm25_dense_overlap_count": 12,
+   "bm25_dense_overlap_jaccard": 0.42857142857142855,
+   "required_articles": [],
+   "retrieved_articles": [
+    "D0050037-3",
+    "D0050037-4",
+    "D0050037-29",
+    "D0050037-5",
+    "L0070040-2"
+   ],
+   "graph_articles": [],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "D0050037-3",
+    "rerank_score": 0.7244531977704678,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-4",
+    "rerank_score": 0.647837328083916,
+    "rrf_score": 0.03225806451612903,
+    "bm25_rank": 2,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "D0050037-29",
+    "rerank_score": 0.5367244149364278,
+    "rrf_score": 0.015873015873015872,
+    "bm25_rank": 3,
+    "dense_rank": null
+   },
+   {
+    "article_id": "D0050037-5",
+    "rerank_score": 0.535804261799828,
+    "rrf_score": 0.028693528693528692,
+    "bm25_rank": 18,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070040-2",
+    "rerank_score": 0.5146893503497234,
+    "rrf_score": 0.028404512489927477,
+    "bm25_rank": 8,
+    "dense_rank": 13
+   }
+  ],
+  "graph_article_ids": [],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 283.435,
+  "candidate_oof_risk": 0.035652587419511494,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-008",
+  "question": "根據長期照顧服務法，書面契約中必須包含哪些內容？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070043-10"
+  ],
+  "available_article_ids": [
+   "D0050037-38",
+   "L0070040-38",
+   "L0070040-42",
+   "L0070040-45",
+   "L0070040-59",
+   "L0070043-10",
+   "L0070043-8",
+   "L0070044-6-1",
+   "L0070044-7"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7286130803447115,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.018618094467147683,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 9.0,
+   "bm25_dense_overlap_jaccard": 0.2903225806451613,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7286130803447115,
+   "top1_top2_margin": 0.018618094467147683,
+   "bm25_dense_overlap_count": 9,
+   "bm25_dense_overlap_jaccard": 0.2903225806451613,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070043-10",
+    "D0050037-38",
+    "L0070040-42",
+    "L0070043-8",
+    "L0070044-7"
+   ],
+   "graph_articles": [
+    "L0070040-45",
+    "L0070040-59",
+    "L0070040-38",
+    "L0070044-6-1"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070043-10",
+    "rerank_score": 0.7286130803447115,
+    "rrf_score": 0.031009615384615385,
+    "bm25_rank": 4,
+    "dense_rank": 5
+   },
+   {
+    "article_id": "D0050037-38",
+    "rerank_score": 0.7099949858775638,
+    "rrf_score": 0.030798389007344232,
+    "bm25_rank": 3,
+    "dense_rank": 7
+   },
+   {
+    "article_id": "L0070040-42",
+    "rerank_score": 0.6261088846014347,
+    "rrf_score": 0.03252247488101534,
+    "bm25_rank": 2,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070043-8",
+    "rerank_score": 0.6076649390091482,
+    "rrf_score": 0.015873015873015872,
+    "bm25_rank": null,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070044-7",
+    "rerank_score": 0.5675684060697497,
+    "rrf_score": 0.015151515151515152,
+    "bm25_rank": null,
+    "dense_rank": 6
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-45",
+   "L0070040-59",
+   "L0070040-38",
+   "L0070044-6-1"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 228.044,
+  "candidate_oof_risk": 0.054688353310558525,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "calibration-unanswerable-002",
+  "question": "公司資遣員工要提前幾天通知？",
+  "stratum": "unanswerable",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": false,
+  "expected_article_ids": [],
+  "available_article_ids": [
+   "L0070040-22",
+   "L0070044-24",
+   "L0070044-25",
+   "L0070044-26",
+   "L0070044-31",
+   "L0070059-15",
+   "L0070059-21"
+  ],
+  "evidence_complete": false,
+  "needs_correction": true,
+  "features": {
+   "top1_rerank": 0.5001275266667649,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 2.8390937939382077e-05,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 0.0,
+   "bm25_dense_overlap_jaccard": 0.0,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.5001275266667649,
+   "top1_top2_margin": 2.8390937939382077e-05,
+   "bm25_dense_overlap_count": 0,
+   "bm25_dense_overlap_jaccard": 0.0,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070044-31",
+    "L0070044-24",
+    "L0070044-26",
+    "L0070044-25",
+    "L0070059-21"
+   ],
+   "graph_articles": [
+    "L0070040-22",
+    "L0070059-15"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070044-31",
+    "rerank_score": 0.5001275266667649,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": 2,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070044-24",
+    "rerank_score": 0.5000991357288255,
+    "rrf_score": 0.014285714285714285,
+    "bm25_rank": null,
+    "dense_rank": 10
+   },
+   {
+    "article_id": "L0070044-26",
+    "rerank_score": 0.500083779602517,
+    "rrf_score": 0.014285714285714285,
+    "bm25_rank": 10,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070044-25",
+    "rerank_score": 0.5000348980028663,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": null,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070059-21",
+    "rerank_score": 0.5000331386981512,
+    "rrf_score": 0.015873015873015872,
+    "bm25_rank": 3,
+    "dense_rank": null
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-22",
+   "L0070059-15"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 264.388,
+  "candidate_oof_risk": 0.9650406083837124,
+  "candidate_oof_activates": true
+ },
+ {
+  "id": "cal-multi-002",
+  "question": "長照機構在接受主管機關的輔導、監督時，有哪些相關的證明文件或標誌需要出示？",
+  "stratum": "multi_hop",
+  "expected_route": "global_or_multi_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070043-9",
+   "L0070040-39"
+  ],
+  "available_article_ids": [
+   "D0050037-37",
+   "L0070040-23",
+   "L0070040-39",
+   "L0070040-39-1",
+   "L0070043-9",
+   "L0070044-31"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7308673756168378,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.001026683060225131,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 9.0,
+   "bm25_dense_overlap_jaccard": 0.2903225806451613,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7308673756168378,
+   "top1_top2_margin": 0.001026683060225131,
+   "bm25_dense_overlap_count": 9,
+   "bm25_dense_overlap_jaccard": 0.2903225806451613,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070043-9",
+    "L0070044-31",
+    "D0050037-37",
+    "L0070040-39-1",
+    "L0070040-39"
+   ],
+   "graph_articles": [
+    "L0070040-23"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070043-9",
+    "rerank_score": 0.7308673756168378,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070044-31",
+    "rerank_score": 0.7298406925566127,
+    "rrf_score": 0.03200204813108039,
+    "bm25_rank": 3,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "D0050037-37",
+    "rerank_score": 0.7227411169935065,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": 2,
+    "dense_rank": null
+   },
+   {
+    "article_id": "L0070040-39-1",
+    "rerank_score": 0.7219435344504945,
+    "rrf_score": 0.029273504273504274,
+    "bm25_rank": 5,
+    "dense_rank": 12
+   },
+   {
+    "article_id": "L0070040-39",
+    "rerank_score": 0.7089829913026295,
+    "rrf_score": 0.03036576949620428,
+    "bm25_rank": 9,
+    "dense_rank": 3
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-23"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 284.195,
+  "candidate_oof_risk": 0.0307848155324608,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-016",
+  "question": "主管機關在推動老人權益和福利相關事宜時，需要邀請哪些人士參與？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "D0050037-9"
+  ],
+  "available_article_ids": [
+   "D0050037-28",
+   "D0050037-3",
+   "D0050037-7",
+   "D0050037-9",
+   "L0070040-7"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7310292332810339,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.009860431089067534,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 9.0,
+   "bm25_dense_overlap_jaccard": 0.2903225806451613,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7310292332810339,
+   "top1_top2_margin": 0.009860431089067534,
+   "bm25_dense_overlap_count": 9,
+   "bm25_dense_overlap_jaccard": 0.2903225806451613,
+   "required_articles": [],
+   "retrieved_articles": [
+    "D0050037-9",
+    "L0070040-7",
+    "D0050037-7",
+    "D0050037-3",
+    "D0050037-28"
+   ],
+   "graph_articles": [],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "D0050037-9",
+    "rerank_score": 0.7310292332810339,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-7",
+    "rerank_score": 0.7211688021919663,
+    "rrf_score": 0.029957522915269395,
+    "bm25_rank": 3,
+    "dense_rank": 11
+   },
+   {
+    "article_id": "D0050037-7",
+    "rerank_score": 0.6984194136003544,
+    "rrf_score": 0.02967032967032967,
+    "bm25_rank": 10,
+    "dense_rank": 5
+   },
+   {
+    "article_id": "D0050037-3",
+    "rerank_score": 0.6961709528002292,
+    "rrf_score": 0.03225806451612903,
+    "bm25_rank": 2,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "D0050037-28",
+    "rerank_score": 0.6937055782478361,
+    "rrf_score": 0.03057889822595705,
+    "bm25_rank": 8,
+    "dense_rank": 3
+   }
+  ],
+  "graph_article_ids": [],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 256.517,
+  "candidate_oof_risk": 0.0545268471037285,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "calibration-ambiguous-005",
+  "question": "家裡遇到這種狀況該怎麼辦？",
+  "stratum": "ambiguous",
+  "expected_route": "corrective_candidate",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": false,
+  "expected_article_ids": [],
+  "available_article_ids": [
+   "D0050037-17",
+   "D0050037-31",
+   "D0050037-33",
+   "D0050037-42",
+   "D0050037-51",
+   "D0050037-52"
+  ],
+  "evidence_complete": false,
+  "needs_correction": true,
+  "features": {
+   "top1_rerank": 0.5011108393432315,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.0003872999966655355,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 1.0,
+   "bm25_dense_overlap_jaccard": 0.02564102564102564,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.5011108393432315,
+   "top1_top2_margin": 0.0003872999966655355,
+   "bm25_dense_overlap_count": 1,
+   "bm25_dense_overlap_jaccard": 0.02564102564102564,
+   "required_articles": [],
+   "retrieved_articles": [
+    "D0050037-42",
+    "D0050037-31",
+    "D0050037-52",
+    "D0050037-17",
+    "D0050037-33"
+   ],
+   "graph_articles": [
+    "D0050037-51"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "D0050037-42",
+    "rerank_score": 0.5011108393432315,
+    "rrf_score": 0.03007688828584351,
+    "bm25_rank": 6,
+    "dense_rank": 7
+   },
+   {
+    "article_id": "D0050037-31",
+    "rerank_score": 0.500723539346566,
+    "rrf_score": 0.015384615384615385,
+    "bm25_rank": null,
+    "dense_rank": 5
+   },
+   {
+    "article_id": "D0050037-52",
+    "rerank_score": 0.5004366793490818,
+    "rrf_score": 0.01639344262295082,
+    "bm25_rank": null,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "D0050037-17",
+    "rerank_score": 0.5004203143354442,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": null,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "D0050037-33",
+    "rerank_score": 0.5002731049336375,
+    "rrf_score": 0.015625,
+    "bm25_rank": null,
+    "dense_rank": 4
+   }
+  ],
+  "graph_article_ids": [
+   "D0050037-51"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 203.836,
+  "candidate_oof_risk": 0.9488380989755754,
+  "candidate_oof_activates": true
+ },
+ {
+  "id": "cal-single-018",
+  "question": "當處理會作成之調查結果時，應該由誰來處理？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070043-14"
+  ],
+  "available_article_ids": [
+   "L0070040-59",
+   "L0070043-11",
+   "L0070043-12",
+   "L0070043-13",
+   "L0070043-14"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7306053401996196,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.21486707859654053,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 6.0,
+   "bm25_dense_overlap_jaccard": 0.17647058823529413,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7306053401996196,
+   "top1_top2_margin": 0.21486707859654053,
+   "bm25_dense_overlap_count": 6,
+   "bm25_dense_overlap_jaccard": 0.17647058823529413,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070043-14",
+    "L0070043-11",
+    "L0070043-12",
+    "L0070040-59",
+    "L0070043-13"
+   ],
+   "graph_articles": [],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "answer",
+  "rule_activates": false,
+  "retrieval": [
+   {
+    "article_id": "L0070043-14",
+    "rerank_score": 0.7306053401996196,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070043-11",
+    "rerank_score": 0.5157382616030791,
+    "rrf_score": 0.015151515151515152,
+    "bm25_rank": null,
+    "dense_rank": 6
+   },
+   {
+    "article_id": "L0070043-12",
+    "rerank_score": 0.5093553983509648,
+    "rrf_score": 0.016129032258064516,
+    "bm25_rank": null,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-59",
+    "rerank_score": 0.5077958042749369,
+    "rrf_score": 0.028283227848101264,
+    "bm25_rank": 4,
+    "dense_rank": 19
+   },
+   {
+    "article_id": "L0070043-13",
+    "rerank_score": 0.5037261212087484,
+    "rrf_score": 0.015873015873015872,
+    "bm25_rank": null,
+    "dense_rank": 3
+   }
+  ],
+  "graph_article_ids": [],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 193.711,
+  "candidate_oof_risk": 0.02891170747001431,
+  "candidate_oof_activates": false
+ },
+ {
+  "id": "cal-single-002",
+  "question": "如果長照特約單位在接受處罰後仍未改善，可能會面臨什麼樣的後果？",
+  "stratum": "single_hop",
+  "expected_route": "single_hop",
+  "actual_route": "single_hop",
+  "answerable_from_corpus": true,
+  "expected_article_ids": [
+   "L0070040-48-1"
+  ],
+  "available_article_ids": [
+   "L0070040-23",
+   "L0070040-32-2",
+   "L0070040-34",
+   "L0070040-41",
+   "L0070040-44",
+   "L0070040-47",
+   "L0070040-48",
+   "L0070040-48-1",
+   "L0070040-53",
+   "L0070040-55"
+  ],
+  "evidence_complete": true,
+  "needs_correction": false,
+  "features": {
+   "top1_rerank": 0.7015377984461874,
+   "top1_missing": 0.0,
+   "top1_top2_margin": 0.0046667965118180055,
+   "margin_missing": 0.0,
+   "bm25_dense_overlap_count": 11.0,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_article_coverage": 1.0,
+   "has_required_articles": 0.0,
+   "graph_added_required_article": 0.0,
+   "ambiguous_or_multi_hop": 0.0,
+   "evidence_requirement_coverage": 1.0,
+   "has_evidence_requirements": 0.0
+  },
+  "signals": {
+   "top1_rerank": 0.7015377984461874,
+   "top1_top2_margin": 0.0046667965118180055,
+   "bm25_dense_overlap_count": 11,
+   "bm25_dense_overlap_jaccard": 0.3793103448275862,
+   "required_articles": [],
+   "retrieved_articles": [
+    "L0070040-48",
+    "L0070040-48-1",
+    "L0070040-47",
+    "L0070040-55",
+    "L0070040-53"
+   ],
+   "graph_articles": [
+    "L0070040-32-2",
+    "L0070040-23",
+    "L0070040-34",
+    "L0070040-41",
+    "L0070040-44"
+   ],
+   "required_article_coverage": null,
+   "graph_added_required_article": false,
+   "ambiguous_or_multi_hop": false,
+   "evidence_requirement_coverage": null
+  },
+  "rule_decision": "refine_once",
+  "rule_activates": true,
+  "retrieval": [
+   {
+    "article_id": "L0070040-48",
+    "rerank_score": 0.7015377984461874,
+    "rrf_score": 0.0315136476426799,
+    "bm25_rank": 5,
+    "dense_rank": 2
+   },
+   {
+    "article_id": "L0070040-48-1",
+    "rerank_score": 0.6968710019343693,
+    "rrf_score": 0.03278688524590164,
+    "bm25_rank": 1,
+    "dense_rank": 1
+   },
+   {
+    "article_id": "L0070040-47",
+    "rerank_score": 0.6891897485807119,
+    "rrf_score": 0.030798389007344232,
+    "bm25_rank": 3,
+    "dense_rank": 7
+   },
+   {
+    "article_id": "L0070040-55",
+    "rerank_score": 0.6704242819612249,
+    "rrf_score": 0.030798389007344232,
+    "bm25_rank": 7,
+    "dense_rank": 3
+   },
+   {
+    "article_id": "L0070040-53",
+    "rerank_score": 0.6648013341758646,
+    "rrf_score": 0.031754032258064516,
+    "bm25_rank": 2,
+    "dense_rank": 4
+   }
+  ],
+  "graph_article_ids": [
+   "L0070040-32-2",
+   "L0070040-23",
+   "L0070040-34",
+   "L0070040-41",
+   "L0070040-44"
+  ],
+  "evidence_plan": {
+   "strategy": "no_additional_requirements",
+   "coverage": null,
+   "missing_requirement_ids": [],
+   "requirements": []
+  },
+  "latency_ms": 312.675,
+  "candidate_oof_risk": 0.08603571675483682,
+  "candidate_oof_activates": false
+ }
+]

@@ -1,0 +1,41 @@
+{
+  "schema_version": "route-eval-v1",
+  "annotated_at": "2026-07-29",
+  "annotation_policy": "Intent labels were assigned without running the router. The set is versioned independently from implementation results.",
+  "items": [
+    {"id": "nr-01", "question": "你可以回答哪些問題？", "expected_route": "no_retrieval"},
+    {"id": "nr-02", "question": "這個系統的功能是什麼？", "expected_route": "no_retrieval"},
+    {"id": "nr-03", "question": "我能問你哪些法規？", "expected_route": "no_retrieval"},
+    {"id": "nr-04", "question": "你是什麼助手？", "expected_route": "no_retrieval"},
+    {"id": "nr-05", "question": "你的能力範圍到哪裡？", "expected_route": "no_retrieval"},
+
+    {"id": "st-01", "question": "請列出長期照顧服務法所有條文", "expected_route": "structured"},
+    {"id": "st-02", "question": "老人福利法總共幾條？", "expected_route": "structured"},
+    {"id": "st-03", "question": "長照法施行細則條文目錄", "expected_route": "structured"},
+    {"id": "st-04", "question": "逐條列出申請及給付辦法", "expected_route": "structured"},
+    {"id": "st-05", "question": "設立許可及管理辦法有哪些條文？", "expected_route": "structured"},
+
+    {"id": "gl-01", "question": "長期照顧服務法整體規範什麼？", "expected_route": "global_or_multi_hop"},
+    {"id": "gl-02", "question": "老人福利法的重點是什麼？", "expected_route": "global_or_multi_hop"},
+    {"id": "gl-03", "question": "長照法和老人福利法有什麼差異？", "expected_route": "global_or_multi_hop"},
+    {"id": "gl-04", "question": "長期照顧服務法最重的罰則是什麼？", "expected_route": "global_or_multi_hop"},
+    {"id": "gl-05", "question": "申請及給付辦法主要規定哪些內容？", "expected_route": "global_or_multi_hop"},
+    {"id": "gl-06", "question": "設立許可及管理辦法整部在管什麼？", "expected_route": "global_or_multi_hop"},
+
+    {"id": "cc-01", "question": "這個可以嗎？", "expected_route": "corrective_candidate"},
+    {"id": "cc-02", "question": "那件事是否合法？", "expected_route": "corrective_candidate"},
+    {"id": "cc-03", "question": "相關規定是什麼？", "expected_route": "corrective_candidate"},
+    {"id": "mh-01", "question": "要先申請之後再設立，兩個階段各需要什麼？", "expected_route": "global_or_multi_hop"},
+    {"id": "mh-02", "question": "資格以及給付同時要符合哪些條件？", "expected_route": "global_or_multi_hop"},
+    {"id": "cc-06", "question": "前面提到的那個要怎麼辦？", "expected_route": "corrective_candidate"},
+
+    {"id": "sh-01", "question": "幾歲才算老人？", "expected_route": "single_hop"},
+    {"id": "sh-02", "question": "長照機構的許可證遺失如何補發？", "expected_route": "single_hop"},
+    {"id": "sh-03", "question": "長照需要等級第一級有給付嗎？", "expected_route": "single_hop"},
+    {"id": "sh-04", "question": "私立老人福利機構名稱要加私立嗎？", "expected_route": "single_hop"},
+    {"id": "sh-05", "question": "社區式長照服務有哪些項目？", "expected_route": "single_hop"},
+    {"id": "sh-06", "question": "長照機構業務負責人最多可代理多久？", "expected_route": "single_hop"},
+    {"id": "sh-07", "question": "老人福利經費來源有哪些？", "expected_route": "single_hop"},
+    {"id": "sh-08", "question": "非長照機構可以使用長照機構名稱嗎？", "expected_route": "single_hop"}
+  ]
+}

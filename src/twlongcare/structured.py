@@ -42,6 +42,7 @@ import json
 import re
 
 from .config import DATA_DIR
+from .knowledge_base import active_laws_path
 
 # 法規名稱與常見簡稱 → pcode（僅本語料庫五法；他法簡稱不收，讓其落入拒答門檻）
 LAW_ALIASES: dict[str, str] = {
@@ -156,7 +157,7 @@ def detect_global_question(question: str) -> list[str] | None:
 
 def load_chapter_summaries(pcodes: list[str]) -> list[dict]:
     data = json.loads(CHAPTER_SUMMARY_PATH.read_text(encoding="utf-8"))
-    laws = json.loads((DATA_DIR / "laws.json").read_text(encoding="utf-8"))
+    laws = json.loads(active_laws_path().read_text(encoding="utf-8"))
     law_names = {m["pcode"]: m["law_name"] for m in laws["meta"]["laws"]}
     out = []
     for pcode in pcodes:
@@ -194,7 +195,9 @@ def verify_chapter_citations(text: str, chapters: list[dict]) -> tuple[str, int]
     return "\n".join(kept), removed
 
 
-def answer_global_question(question: str, pcodes: list[str], model) -> tuple[str, int]:
+def answer_global_question(
+    question: str, pcodes: list[str], model, on_response=None
+) -> tuple[str, int]:
     """回傳 (回答文字, 移除段數)。章節摘要規模小（一部法最多 7 段），
     落在 Phase 3 已驗證地端模型可靠的規模。"""
     from langchain_core.messages import HumanMessage, SystemMessage
@@ -211,6 +214,8 @@ def answer_global_question(question: str, pcodes: list[str], model) -> tuple[str
         HumanMessage(content=f"章節摘要：\n\n{context}\n\n---\n問題：{question}"),
     ]
     reply = model.invoke(messages)
+    if on_response is not None:
+        on_response("global_generation", reply)
     text = extract_text(reply.content).strip()
     cleaned, removed = verify_chapter_citations(text, chapters)
     if not cleaned.strip():
@@ -226,7 +231,7 @@ def _roc_date(yyyymmdd: str) -> str:
 
 def build_law_overview(pcode: str) -> str:
     """整部法規的確定性目錄：章節結構＋每章條號＋官方全文連結。"""
-    data = json.loads((DATA_DIR / "laws.json").read_text(encoding="utf-8"))
+    data = json.loads(active_laws_path().read_text(encoding="utf-8"))
     meta = next(m for m in data["meta"]["laws"] if m["pcode"] == pcode)
     articles = [a for a in data["articles"] if a["pcode"] == pcode]
 

@@ -1,0 +1,67 @@
+{
+ "schema_version": "end-to-end-telemetry-v1",
+ "measurement_scope": "real current_baseline generation + sentence grounding with bounded adaptive retrieval executed in non-serving shadow",
+ "provider": "ollama",
+ "model": "taide-gemma3-12b",
+ "item_count": 44,
+ "answerable_count": 31,
+ "unanswerable_count": 13,
+ "retrieval": {
+  "recall_at_5": 0.8709677419354839,
+  "mrr": 0.6935483870967742,
+  "observed_hit_count": 27
+ },
+ "answers": {
+  "correctness": 0.16129032258064516,
+  "correctness_method": "strict expected-citation proxy",
+  "citation_coverage": 0.16129032258064516,
+  "citation_validity": 0.22580645161290322,
+  "sentence_grounding_pre_filter_support_rate": 0.9183760683760683,
+  "independent_faithfulness_note": "existing frozen DeepEval faithfulness remains the independent metric; this rate is operational judge telemetry"
+ },
+ "refusal": {
+  "precision": 0.6666666666666666,
+  "recall": 0.7692307692307693,
+  "confusion": {
+   "tp": 10,
+   "fp": 5,
+   "fn": 3
+  }
+ },
+ "latency_ms": {
+  "p50": 8560.687,
+  "p95": 20155.948
+ },
+ "tokens": {
+  "main_total": 224549,
+  "shadow_total": 32760,
+  "combined_total": 257309,
+  "mean_combined_per_query": 5847.931818181818,
+  "by_stage": {
+   "answer_generation": 45760,
+   "query_rewrite": 9952,
+   "sentence_grounding": 168837,
+   "shadow.query_refinement": 32760
+  }
+ },
+ "estimated_cost_usd": 0.0,
+ "cost_note": "local Ollama has no per-token API charge",
+ "corrective_shadow": {
+  "trace_count": 44,
+  "activation_rate": 0.7954545454545454,
+  "refinement_execution_rate": 0.7954545454545454,
+  "rescue_rate": 0.5714285714285714,
+  "regression_rate": 0.0,
+  "initial_decisions": {
+   "answer": 9,
+   "refine_once": 35
+  }
+ },
+ "grounding": {
+  "removed_sentence_count": 9,
+  "judge_error_count": 0
+ },
+ "versions": {
+  "hybrid-index-v1-e941dcc3e345-gtaide-native-ctx": 44
+ }
+}
