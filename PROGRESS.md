@@ -2,12 +2,12 @@
 
 ## 🧭 快速回憶區（隔段時間回來先看這裡；上次收工：2026-07-30）
 
-- **現在做到哪**：本機 production-readiness 已通過：乾淨 prospective cycle 2、44 題真實 answer/grounding/token 遙測、官方 2026-07-17 metadata refresh、active law/index 配對、強制 retrieval regression 與 Space persistent-volume bootstrap 均已完成。沒有改框架或引入 LlamaIndex。
+- **現在做到哪**：Production RAG 已完成並上線：本機 readiness 全通過、GitHub/HF Space 已同步、Space 為 `RUNNING` 且 public API smoke 通過。準備以 `production-rag-v1` 封版；沒有改框架或引入 LlamaIndex。
 - **預設決策**：Adaptive 維持關閉，`current_baseline` 不變（D22/D29/D31）。Cycle 2 candidate 雖降低 false activation，但 correction recall 95.7%→87.0%；完整端到端 shadow 又有 79.5% activation 與 257,309 tokens。
-- **下一步**：維持 rule gate shadow；累積真實、去識別化流量後再開新的 calibration/holdout cycle。現有 holdout 不再讀取或調參。
-- **未決問題**：redaction 是 best-effort、非完整 DLP；synthetic proxy 不代表 production distribution；TAIDE strict citation proxy 僅 16.1%，不能冒充語意 correctness。
-- **待使用者人工處理**：只有外部發布：若要持久 Living KB，需在 HF Space 掛 Storage Bucket volume；若要更新遠端，需明確授權 commit/push（本輪仍未做）。
-- **⚠️ 已知坑**：Space 外部 volume 與新 bundle 尚未實際部署驗證；本機 readiness 通過不代表遠端設定完成。完整限制見 `docs/production-rag.md`。
+- **下一步**：封版後沒有必做開發；未來只有取得真實、去識別化流量後才開新的 calibration/holdout cycle。現有 holdout 不再讀取或調參。
+- **未決問題**：Space 未掛持久 volume、法規更新尚無排程；redaction 是 best-effort、synthetic proxy 不代表 production distribution、TAIDE strict citation proxy 不能冒充語意 correctness。
+- **待使用者人工處理**：無。只有未來若願意承擔 Storage Bucket 費用，才需在 HF Space 帳號層掛載 volume。
+- **⚠️ 已知坑**：Space 目前使用 ephemeral disk，restart 後 runtime index/trace 會重建；Adaptive default-off 是實測後的安全決策，不是未完成功能。完整限制見 `docs/production-rag.md`。
 
 ## 📜 Phase 日誌（append-only）
 
@@ -1065,3 +1065,29 @@
   default-off）。
 - **實際成本**：US$0 API；全部使用本機 Ollama/embedding/reranker。總 token
   是算力成本，不宣稱零成本。
+
+### Production RAG 封版與發布（2026-07-30，tag `production-rag-v1`）
+
+- **完成內容**：
+  - 主 repo 以既有 GitHub 身份
+    `kuotunyu <61350295+kuotunyu@users.noreply.github.com>` 提交並推送
+    `bbc2277`；commit 無共同作者或機器人署名。GitHub Contributors API
+    實查只有 `kuotunyu`。
+  - 同一份已驗證 Space bundle 推送為 HF commit `ccf3bfe`；遠端 runtime
+    SHA 一致，stage=`RUNNING`、hardware=`cpu-basic`。
+  - 線上首頁與 `/gradio_api/info` 均回 HTTP 200；對
+    `/handle_question` 發送不需生成的 meta 問題，三個 public API 回傳欄位、
+    no-retrieval 回答與空 retrieval/related outputs 全部正確。
+  - 封版名稱固定為 `production-rag-v1`，GitHub Release 說明明列
+    Adaptive default-off、負面 evaluation 結果、Living KB 與 trace 能力，
+    不宣稱未實跑改善。
+- **驗證證據**：
+  - 封版前全套 `183 passed`；production readiness 全項 true。
+  - 主 repo 與 Space repo 均 local/remote SHA 相同、worktree clean。
+  - GitHub Contributors API：`kuotunyu` 1 人；主 repo shortlog：
+    封版 commit 後 `kuotunyu` 96 commits。
+- **相關 commit/tag/release**：本條目所在 commit；
+  tag `production-rag-v1`；GitHub Release
+  `https://github.com/kuotunyu/tw-longcare-rag/releases/tag/production-rag-v1`。
+- **決策變更**：無；封版落實 D22/D29/D31，Adaptive 繼續 default-off。
+- **實際成本**：US$0；Storage Bucket 因可能產生額外費用，未擅自建立。
