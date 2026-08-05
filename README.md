@@ -34,20 +34,20 @@
 ```mermaid
 sequenceDiagram
     autonumber
-    participant App as User / API App
-    participant Gate as Router / Gate
+    participant App as User / App
+    participant Gate as Router Gate
     participant Engine as Hybrid Engine
-    participant LLM as LLM / Grounding
+    participant LLM as LLM Grounding
 
-    App->>Gate: 1. 口語提問 (如: 阿嬤請看護有補助嗎)
-    Gate->>Engine: 2. 混合檢索 (BM25 + Dense -> RRF -> Reranker)
-    Engine-->>Gate: 3. 回傳條文候選與信心度評分
-    Note over Gate: 門控判定：中等檢索信心度 (70%)<br/>觸發 Bounded Query Refinement (最多 1 次)
-    Gate->>Engine: 4. 關鍵字優化二次重檢索 (Re-retrieval)
-    Engine-->>Gate: 5. 回傳精確補強法條 (Hit@5 100%)
-    Gate->>LLM: 6. 發送完整法理上下文 (Evidence Plan)
-    LLM-->>LLM: 7. 逐句 Grounding 校驗<br/>自動過濾無數據支持之句子
-    LLM-->>App: 8. 回傳精確回答 + 法條引用 + rag-trace-v2
+    App->>Gate: 1. 提問 (如: 看護補助)
+    Gate->>Engine: 2. 混合檢索 (BM25 + Dense + Reranker)
+    Engine-->>Gate: 3. 候選法條與信心度
+    Note over Gate,Engine: 信心度中等 (70%) ➔ 觸發 Query Refinement 重檢索
+    Gate->>Engine: 4. 關鍵字二次重檢索
+    Engine-->>Gate: 5. 精確補強法條 (Hit@5 100%)
+    Gate->>LLM: 6. 發送完整法理上下文
+    LLM-->>LLM: 7. 逐句 Grounding 校驗 (過濾無證據句子)
+    LLM-->>App: 8. 回傳精確回答與法條引用
 ```
 
 ---
