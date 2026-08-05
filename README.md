@@ -27,27 +27,27 @@
 
 ---
 
-## 系統架構
+## 系統架構與檢索時序
+
+### 有界修正檢索與 Grounding 檢索時序
 
 ```mermaid
-flowchart TD
-    Q["口語提問"] --> ROUTER["Typed Router (路由分類與信心度判斷)"]
-    ROUTER --> PLAN["Evidence Plan 檢索計畫"]
+sequenceDiagram
+    autonumber
+    participant App as User / API App
+    participant Gate as Router / Gate
+    participant Engine as Hybrid Engine
+    participant LLM as LLM / Grounding
 
-    PLAN --> RETRIEVE["混合檢索 (BM25 + Dense -> RRF -> Reranker / RAPTOR-lite)"]
-    RETRIEVE --> GRAPH["Citation Graph Expansion (條文關聯與涵蓋度)"]
-    GRAPH --> GATE{"生成前檢索信心度門控 (Pre-generation Gate)"}
-
-    GATE -->|"高信心度"| GEN["LLM 答案生成"]
-    GATE -->|"中信心度"| REFINE["Bounded Query Refinement (最多 1 次)"]
-    REFINE --> RETRIEVE2["二次重檢索 (Re-retrieval)"]
-    RETRIEVE2 -->|"成功"| GEN
-    GATE -->|"低信心度"| REFUSE["誠實拒答 (轉介 1966 專線)"]
-    RETRIEVE2 -->|"失敗"| REFUSE
-
-    GEN --> GROUND["Post-generation Grounding (逐句過濾未支持內容)"]
-    GROUND --> ANSWER["精確回答 + 包含法規條文引用"]
-    ANSWER --> TRACE["rag-trace-v2 遙測紀錄 (Scores / Latency / Tokens)"]
+    App->>Gate: 1. 口語提問 (如: 阿嬤請看護有補助嗎)
+    Gate->>Engine: 2. 混合檢索 (BM25 + Dense -> RRF -> Reranker)
+    Engine-->>Gate: 3. 回傳條文候選與信心度評分
+    Note over Gate: 門控判定：中等檢索信心度 (70%)<br/>觸發 Bounded Query Refinement (最多 1 次)
+    Gate->>Engine: 4. 關鍵字優化二次重檢索 (Re-retrieval)
+    Engine-->>Gate: 5. 回傳精確補強法條 (Hit@5 100%)
+    Gate->>LLM: 6. 發送完整法理上下文 (Evidence Plan)
+    LLM-->>LLM: 7. 逐句 Grounding 校驗<br/>自動過濾無數據支持之句子
+    LLM-->>App: 8. 回傳精確回答 + 法條引用 + rag-trace-v2
 ```
 
 ---
