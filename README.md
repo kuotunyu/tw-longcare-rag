@@ -32,6 +32,7 @@
 ### 有界修正檢索與 Grounding 檢索時序
 
 ```mermaid
+%%{init: {'themeVariables': {'fontSize': '22px', 'actorFontSize': '20px', 'messageFontSize': '18px', 'noteFontSize': '18px'}}}%%
 sequenceDiagram
     autonumber
     participant App as User / App
