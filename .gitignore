@@ -1,8 +1,12 @@
 # 金鑰與環境
 .env
-.venv/
+.env.*
+!.env.example
 
-# 本機開發指令、公開文案禁詞清單與內部紀錄
+# 私人面試筆記與本機工作紀錄
+interview*.md
+INTERVIEW_PREP.md
+*.private.md
 /.claude/
 /CLAUDE.md
 /PLAN.md
