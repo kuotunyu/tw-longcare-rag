@@ -7,10 +7,11 @@
 interview*.md
 INTERVIEW_PREP.md
 *.private.md
-/.claude/
-/CLAUDE.md
-/PLAN.md
-/PROGRESS.md
+.claude/
+.agents/
+CLAUDE.md
+PLAN.md
+PROGRESS.md
 
 # 大型資料與產出物（由腳本重建）；Modelfile 為可重現設定，例外入版控
 data/raw/

@@ -29,18 +29,46 @@
 
 ## 系統架構與檢索時序
 
-### 有界修正檢索與 Grounding 檢索時序
+### 1. Production RAG 雙軌混合檢索與門控架構
 
 ```mermaid
-%%{init: {'themeVariables': {'fontSize': '22px', 'actorFontSize': '20px', 'messageFontSize': '18px', 'noteFontSize': '18px'}}}%%
+%%{init: {'themeVariables': {'fontSize': '18px'}}}%%
+flowchart TD
+    Q["1. 使用者提問"] --> R["2. Typed Router 意圖分流"]
+    R --> H["3. 雙軌混合檢索 (BM25 + Dense)"]
+    H --> RRF["4. Reciprocal Rank Fusion (RRF)"]
+    RRF --> CE["5. Cross-Encoder Reranker 重排序"]
+    CE --> Gate{"6. 信心度門控 (Pre-Gen Gate)"}
+
+    Gate -->|高信心度 (≥80%)| Gen["7. 發送條文至 LLM 生成內容"]
+    Gate -->|中信心度 (60-79%)| Ref["8. Query Refinement (最多 1 次)"]
+    Gate -->|低信心度 / 無證據 (<60%)| Rej["8. 誠實拒答 (轉介 1966 專線)"]
+
+    Ref --> H
+    Gen --> Post["9. 逐句 Grounding 校驗 (過濾無證據句子)"]
+    Post --> Out[("10. 精確回答與法規條文引用")]
+
+    classDef normStyle fill:#e7f5ff,stroke:#1971c2,stroke-width:2px,color:#0c8599
+    classDef condStyle fill:#fff9db,stroke:#f59f00,stroke-width:2px,color:#d9480f
+    classDef outStyle fill:#e6fcf5,stroke:#0ca678,stroke-width:2px,color:#099268
+
+    class Q,R,H,RRF,CE,Ref,Gen,Post normStyle
+    class Gate condStyle
+    class Out,Rej outStyle
+```
+
+### 2. 有界修正檢索與 Grounding 檢索時序 (Sequence Diagram)
+
+```mermaid
+%%{init: {'themeVariables': {'fontSize': '18px'}}}%%
 sequenceDiagram
     autonumber
-    participant App as User / App
+    actor User as 使用者 / App
     participant Gate as Router Gate
     participant Engine as Hybrid Engine
     participant LLM as LLM Grounding
 
-    App->>Gate: 1. 提問 (如: 看護補助)
+    User->>Gate: 1. 提問 (如: 看護補助)
     Gate->>Engine: 2. 混合檢索 (BM25 + Dense + Reranker)
     Engine-->>Gate: 3. 候選法條與信心度
     Note over Gate,Engine: 信心度中等 (70%) ➔ 觸發 Query Refinement 重檢索
@@ -48,7 +76,7 @@ sequenceDiagram
     Engine-->>Gate: 5. 精確補強法條 (Hit@5 100%)
     Gate->>LLM: 6. 發送完整法理上下文
     LLM-->>LLM: 7. 逐句 Grounding 校驗 (過濾無證據句子)
-    LLM-->>App: 8. 回傳精確回答與法條引用
+    LLM-->>User: 8. 回傳精確回答與法條引用
 ```
 
 ---
@@ -104,3 +132,9 @@ uv run python -m twlongcare.cli "阿嬤請看護政府有補助嗎" --provider o
 # 啟動 Web UI (預設 localhost:7860)
 uv run python app.py
 ```
+
+---
+
+## 授權與聲明
+
+本專案採 [MIT License](LICENSE)。內容僅供學術研究用途，非正式法規申請建議。
