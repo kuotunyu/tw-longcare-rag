@@ -48,9 +48,9 @@ flowchart TD
     Gen --> Post["9. 逐句 Grounding 校驗 (過濾無證據句子)"]
     Post --> Out[("10. 精確回答與法規條文引用")]
 
-    classDef normStyle fill:#e7f5ff,stroke:#1971c2,stroke-width:2px,color:#0c8599
-    classDef condStyle fill:#fff9db,stroke:#f59f00,stroke-width:2px,color:#d9480f
-    classDef outStyle fill:#e6fcf5,stroke:#0ca678,stroke-width:2px,color:#099268
+    classDef normStyle fill:#e7f5ff,stroke:#1971c2,stroke-width:2px,color:#212529
+    classDef condStyle fill:#fff9db,stroke:#f59f00,stroke-width:2px,color:#212529
+    classDef outStyle fill:#e6fcf5,stroke:#0ca678,stroke-width:2px,color:#212529
 
     class Q,R,H,RRF,CE,Ref,Gen,Post normStyle
     class Gate condStyle
