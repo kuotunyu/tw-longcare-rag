@@ -40,9 +40,9 @@ flowchart TD
     RRF --> CE["5. Cross-Encoder Reranker 重排序"]
     CE --> Gate{"6. 信心度門控 (Pre-Gen Gate)"}
 
-    Gate -->|高信心度 (≥80%)| Gen["7. 發送條文至 LLM 生成內容"]
-    Gate -->|中信心度 (60-79%)| Ref["8. Query Refinement (最多 1 次)"]
-    Gate -->|低信心度 / 無證據 (<60%)| Rej["8. 誠實拒答 (轉介 1966 專線)"]
+    Gate -->|"高信心度 (>=80%)"| Gen["7. 發送條文至 LLM 生成內容"]
+    Gate -->|"中信心度 (60-79%)"| Ref["8. Query Refinement (最多 1 次)"]
+    Gate -->|"低信心度 (<60%)"| Rej["8. 誠實拒答 (轉介 1966 專線)"]
 
     Ref --> H
     Gen --> Post["9. 逐句 Grounding 校驗 (過濾無證據句子)"]
