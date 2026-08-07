@@ -18,10 +18,11 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install uv and Python
-        uses: astral-sh/setup-uv@v5
+        # setup-uv 的浮動大版號只發到 v7（v8/v9 僅有精確 tag），v7 已是 node24
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
