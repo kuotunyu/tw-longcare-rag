@@ -1,10 +1,15 @@
-"""index_build.py：Phase 7 抽出的建索引核心邏輯純函式測試（不載模型、不打 API）。
+"""index_build.py：Phase 7 抽出的建索引核心邏輯測試（一律不打 API；embedder 用替身）。
+
+例外：build_index() 全流程測試需載入 GTAIDE tokenizer 重現凍結切塊，離線／gated
+未授權時自動 skip（見 gtaide_tokenizer fixture）。
 
 重點是 ensure_contextual 的成本確認守門——Space 冷啟動自動建索引固定傳
 confirm_cost=False，快取有缺漏時必須明確拋錯而非靜默呼叫付費 API。
 """
 
 import json
+
+import pytest
 
 from twlongcare.chunking import Chunk
 from twlongcare.contextual import ContextualCache
@@ -66,7 +71,28 @@ class _StubEmbedder:
         return [[float(i), float(len(t) % 7)] for i, t in enumerate(texts)]
 
 
-def test_build_index_with_external_embedder_produces_loadable_index(tmp_path, monkeypatch):
+@pytest.fixture(scope="module")
+def gtaide_tokenizer():
+    """build_index() 內的 chunking 需 gated GTAIDE tokenizer 才能重現凍結切塊。
+
+    contextual 快取以 chunk_id + text hash 為鍵，換任何替身 counter 都會讓切塊
+    位移、快取全數失效而拋 ContextualCostConfirmationRequired，因此無法用假
+    tokenizer 讓此測試離線化。離線或 gated 未授權（如公開 CI 無 HF_TOKEN）時
+    跳過，比照 test_embeddings.py 對同一模型的處理。
+    """
+    from twlongcare.chunking import gtaide_token_counter
+    from twlongcare.config import get_settings
+
+    s = get_settings()
+    try:
+        return gtaide_token_counter(s.embedding_model, s.hf_token)
+    except Exception as e:  # noqa: BLE001 - 離線 / gated 未授權時跳過
+        pytest.skip(f"GTAIDE tokenizer 載入失敗（離線或 gated 未授權？）：{e}")
+
+
+def test_build_index_with_external_embedder_produces_loadable_index(
+    tmp_path, monkeypatch, gtaide_tokenizer
+):
     """模擬 Space 冷啟動自動建索引：真實 laws.json/contextual_cache.json（快取齊全，
     不打 API）+ 外部提供的 embedder，驗證 chroma collection 與 bm25s 都真的建好、
     可重新載入——這是 retriever.py 自動建索引路徑實際依賴的公開介面。"""
