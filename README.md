@@ -34,19 +34,20 @@
 ```mermaid
 %%{init: {'themeVariables': {'fontSize': '18px'}}}%%
 flowchart TD
-    Q["1. 使用者提問"] --> R["2. Typed Router 意圖分流"]
-    R --> H["3. 雙軌混合檢索 (BM25 + Dense)"]
-    H --> RRF["4. Reciprocal Rank Fusion (RRF)"]
-    RRF --> CE["5. Cross-Encoder Reranker 重排序"]
-    CE --> Gate{"6. 信心度門控 (Pre-Gen Gate)"}
+    subgraph Stage1 ["階段一：意圖分流與雙軌混合檢索"]
+        direction LR
+        Q[("1. 使用者提問<br/>(法條諮詢/補助詢問)")] --> R["2. Typed Router<br/>(意圖分流)"] --> H["3. 雙軌混合檢索<br/>(BM25 + Dense)"] --> RRF["4. Reciprocal Rank Fusion<br/>(RRF 融合)"] --> CE["5. Cross-Encoder Reranker<br/>(精確重排序)"]
+    end
 
-    Gate -->|"高信心度 (>=80%)"| Gen["7. 發送條文至 LLM 生成內容"]
-    Gate -->|"中信心度 (60-79%)"| Ref["8. Query Refinement (最多 1 次)"]
-    Gate -->|"低信心度 (<60%)"| Rej["8. 誠實拒答 (轉介 1966 專線)"]
+    subgraph Stage2 ["階段二：信心度門控與生成校驗"]
+        direction LR
+        CE --> Gate{"6. 信心度門控<br/>(Pre-Gen Gate)"}
+        Gate -->|"高信心 (>=80%)"| Gen["7. 發送條文至 LLM<br/>(上下文生成)"] --> Post["9. 逐句 Grounding 校驗<br/>(過濾無證據句子)"] --> Out[("10. 精確回答與法條引用<br/>(輸出結果)")]
+        Gate -->|"中信心 (60-79%)"| Ref["8. Query Refinement<br/>(最多重檢索 1 次)"] --> H
+        Gate -->|"低信心 (<60%)"| Rej(["8. 誠實拒答<br/>(轉介 1966 專線)"])
+    end
 
-    Ref --> H
-    Gen --> Post["9. 逐句 Grounding 校驗 (過濾無證據句子)"]
-    Post --> Out[("10. 精確回答與法規條文引用")]
+    Stage1 --> Stage2
 
     classDef normStyle fill:#e7f5ff,stroke:#1971c2,stroke-width:2px,color:#212529
     classDef condStyle fill:#fff9db,stroke:#f59f00,stroke-width:2px,color:#212529
@@ -55,6 +56,9 @@ flowchart TD
     class Q,R,H,RRF,CE,Ref,Gen,Post normStyle
     class Gate condStyle
     class Out,Rej outStyle
+
+    style Stage1 fill:#f8f9fa,stroke:#1971c2,stroke-width:2px,stroke-dasharray: 4 4
+    style Stage2 fill:#fffcf0,stroke:#f59f00,stroke-width:2px,stroke-dasharray: 4 4
 ```
 
 ### 2. 有界修正檢索與 Grounding 檢索時序 (Sequence Diagram)
@@ -120,21 +124,18 @@ uv run python scripts/fetch_laws.py
 uv run python scripts/build_index.py --confirm-cost
 ```
 
-### 2. 執行命令列對話與測試 (183 passed)
+### 2. 啟動 Web UI Demo 與執行單元測試
 
 ```powershell
-# 執行 183 項測試單元
-uv run python -m pytest -q
-
-# CLI 命令列問答
-uv run python -m twlongcare.cli "阿嬤請看護政府有補助嗎" --provider ollama
-
-# 啟動 Web UI (預設 localhost:7860)
+# 啟動 Gradio Web 介面
 uv run python app.py
+
+# 執行單元與整合測試
+uv run pytest -q tests
 ```
 
 ---
 
 ## 授權與聲明
 
-本專案採 [MIT License](LICENSE)。內容僅供學術研究用途，非正式法規申請建議。
+本專案採 [MIT License](LICENSE)。數據集與長照法規文字請依衛生福利部與全國法規資料庫條款使用。
