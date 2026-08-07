@@ -9,6 +9,7 @@
 1. 內建通用樣式（本檔）：Windows 使用者絕對路徑、常見金鑰字樣（sk- / AIza / hf_ / ghp_）
 2. 禁詞清單 ``.claude/private/redlist.txt``（不進 git）：一行一詞、``#`` 為註解，
    比對不分大小寫（純子字串、非 regex）。清單不存在時印警告但不擋。
+3. 僅 ``--msg-file``：共同作者尾行（會讓他人登上 GitHub Contributors 名單）。
 
 發現違規 exit 1（git hook 據此擋下 commit），否則 0。
 """
@@ -31,6 +32,23 @@ BUILTIN_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("疑似 Hugging Face token", re.compile(r"\bhf_[A-Za-z0-9]{30,}")),
     ("疑似 GitHub token", re.compile(r"\bghp_[A-Za-z0-9]{30,}")),
 ]
+
+
+# 僅套用於 commit 訊息：共同作者尾行會讓對方一併登上 GitHub Contributors 名單，
+# 本專案要求該名單只有 repo 擁有者本人。不放進 BUILTIN_PATTERNS，否則文件裡
+# 「請勿加這種尾行」的說明也會被誤擋。
+COAUTHOR_TRAILER = re.compile(r"^\s*co-authored-by\s*:", re.IGNORECASE)
+
+
+def scan_commit_msg(text: str, redlist: list[str]) -> list[str]:
+    hits = scan_text("commit-msg", text, redlist)
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        if COAUTHOR_TRAILER.match(line):
+            hits.append(
+                f"commit-msg:{lineno} 共同作者尾行"
+                f"（會讓他人登上 Contributors 名單）→ {line.strip()[:80]}"
+            )
+    return hits
 
 
 def load_redlist() -> list[str]:
@@ -104,7 +122,7 @@ def main(argv: list[str]) -> int:
         hits += scan_staged(redlist)
     elif "--msg-file" in argv:
         msg_path = Path(argv[argv.index("--msg-file") + 1])
-        hits += scan_text("commit-msg", msg_path.read_text(encoding="utf-8", errors="replace"), redlist)
+        hits += scan_commit_msg(msg_path.read_text(encoding="utf-8", errors="replace"), redlist)
     else:
         for arg in argv:
             p = Path(arg)
