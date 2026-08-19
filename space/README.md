@@ -1,5 +1,5 @@
 ---
-title: 台灣長照法規 RAG 諮詢系統
+title: 台灣長照法規 RAG 作品展示
 emoji: ⚖️
 colorFrom: blue
 colorTo: gray
@@ -7,11 +7,14 @@ sdk: gradio
 sdk_version: 6.20.0
 app_file: app.py
 python_version: "3.11"
-short_description: 用白話中文問台灣長照法規，RAG 回答附法條引用可查證
+short_description: Frozen portfolio demo，使用固定歷史法規快照展示檢索與引用
 pinned: false
 ---
 
-# 台灣長照法規 RAG 諮詢系統
+# 台灣長照法規 RAG 作品展示
+
+> **Frozen / Portfolio Complete**：此 Demo 使用固定的
+> `2026-07-17-e941dcc3e345` 歷史快照，不會自動更新法律內容。
 
 家中長輩申請長照服務時，我發現相關規定分散在好幾部法規裡——母法、給付辦法、
 機構管理辦法、老人福利法彼此交錯，自己查證很花時間。這個工具用白話中文提問，
@@ -21,8 +24,13 @@ pinned: false
 免費 Space 硬體，回答固定使用雲端模型，本機執行可改用台灣在地生成模型
 （TAIDE 12B）——完整原始碼、模型選型對照與評估結果另見專案說明。
 
-> ⚠️ 本工具為非官方個人專案，僅供參考。正式資訊請以衛生福利部公告與
+> ⚠️ 這是非官方 portfolio prototype，不是現行法規來源，也不是法律、長照
+> 資格、給付或申請決策工具。正式資訊請以衛生福利部公告、全國法規資料庫與
 > **1966 長照服務專線**為準。
+
+> 🔒 問題會送往畫面所選的雲端模型；執行期 trace 預設做常見個資的 best-effort
+> 去識別化，但不是完整 DLP。請勿輸入姓名、電話、身分證字號、地址、病歷或其他
+> 敏感資料。
 
 ## 使用方式
 

@@ -1,5 +1,9 @@
 # Production RAG：Adaptive / Corrective Retrieval 設計與實測
 
+> **Frozen / Portfolio Complete**：這是 `v1.0.0` 的歷史架構與評估記錄，
+> 不是持續維運中的 production service，也不是法律或長照決策工具。法規資料
+> 固定於 `2026-07-17-e941dcc3e345` 歷史快照。
+
 本次強化保留原本的 LangChain 呼叫層、Chroma、BM25 + dense + RRF、
 cross-encoder reranker、RAPTOR-lite、citation graph 與逐句 grounding。
 沒有引入 LlamaIndex，也沒有 web-search fallback。
@@ -152,7 +156,10 @@ query terms、satisfied article IDs 與 coverage；無法辨識第二 hop 時明
 `unresolved_second_hop`，不把「有抓到五個 chunks」誤當完整證據。
 Adaptive gate 將 coverage 不足視為 uncertainty；baseline 只 trace、不改行為。
 
-## Living Knowledge Base
+## Versioned Knowledge Base（手動流程；目前凍結）
+
+以下機制已用 offline drill 與 locked regression 驗證，但 repository 沒有法規
+更新排程、監控或自動發佈服務；closure 也沒有執行 `fetch_laws.py --refresh`。
 
 `fetch_laws.py` 現在透過 `knowledge_base.publish_law_version()`：
 

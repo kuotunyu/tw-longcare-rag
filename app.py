@@ -52,14 +52,20 @@ IS_SPACE = bool(os.environ.get("SPACE_ID"))
 MAX_QUESTIONS_PER_SESSION = 20  # Space 濫用防護；本機開發不受限
 
 DISCLAIMER = (
-    "⚠️ 本工具為非官方個人專案，僅供參考。正式資訊請以衛生福利部公告與 "
-    "<strong>1966 長照服務專線</strong>為準。"
+    "⚠️ Frozen portfolio prototype；使用固定歷史快照，不是現行法規來源，"
+    "也不是法律、長照資格、給付或申請決策工具。正式資訊請查官方公告、"
+    "全國法規資料庫或洽 <strong>1966 長照服務專線</strong>。"
 )
 SPACE_NOTICE = (
     "🌐 這是公開線上 Demo：檢索仍使用台灣 TAIDE 模型（embeddinggemma-GTAIDE），"
     "但免費 Space 硬體無法執行本機 12B 生成模型，回答固定使用雲端模型。"
     "若想實測本機 TAIDE 生成效果，請見 GitHub 專案說明自行執行。"
     f"（本頁每個瀏覽器分頁最多可提問 {MAX_QUESTIONS_PER_SESSION} 次）"
+)
+SPACE_PRIVACY_NOTICE = (
+    "🔒 問題會送往畫面所選的雲端模型；執行期 trace 預設做常見個資的 "
+    "best-effort 去識別化，但不是完整 DLP。請勿輸入姓名、電話、身分證字號、"
+    "地址、病歷或其他敏感資料。"
 )
 EMPTY_HINT = (
     '<p class="hint">💬 在上方輸入問題，按「送出」後，答案裡的每一句引用'
@@ -454,14 +460,15 @@ def embedding_choices() -> tuple[list[str], str, str]:
 
 
 def build_app() -> gr.Blocks:
-    with gr.Blocks(title="台灣長照法規 RAG 諮詢系統") as demo:
+    with gr.Blocks(title="台灣長照法規 RAG 作品展示") as demo:
         gr.Markdown(
-            "# 台灣長照法規 RAG 諮詢系統\n"
-            "每句回答都附法條引用（點擊可展開條文原文）；查不到明確法源，就誠實說「查無明確法源」。"
+            "# 台灣長照法規 RAG 作品展示\n"
+            "回答會附可展開的檢索法條供自行查核；證據不足時可能回覆「查無明確法源」。"
         )
         gr.HTML(f'<div class="notice">{DISCLAIMER}</div>')
         if IS_SPACE:
             gr.HTML(f'<div class="notice">{SPACE_NOTICE}</div>')
+            gr.HTML(f'<div class="notice">{SPACE_PRIVACY_NOTICE}</div>')
 
         session_count = gr.State(0)
 
