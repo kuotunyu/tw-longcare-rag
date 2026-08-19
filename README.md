@@ -2,15 +2,24 @@
 
 [![CI](https://github.com/kuotunyu/tw-longcare-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/kuotunyu/tw-longcare-rag/actions/workflows/ci.yml)
 ![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
-![Tests](https://img.shields.io/badge/Tests-183%20passed-success)
 [![Release](https://img.shields.io/badge/Release-v1.0.0-blue.svg)](https://github.com/kuotunyu/tw-longcare-rag/releases/tag/production-rag-v1)
+![Status](https://img.shields.io/badge/Status-Frozen%20%2F%20Portfolio%20Complete-6c757d)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-本專案為針對台灣長照法規設計的可量測、可追蹤且具備「誠實拒答」機制之 Production-grade RAG 系統。架構結合 BM25 + Dense + RRF 混合檢索、Cross-Encoder Reranker、Typed Router、有界修正檢索 (Bounded Corrective Retrieval) 與逐句 Grounding 校驗，確保回答可精確回查法規條文原文，且在證據不足時絕不胡亂生成。
+> **Frozen / Portfolio Complete**：`v1.0.0` 是本作品的最終發佈版本；不再新增
+> RAG 功能，也不以此 repository 持續更新法規。知識庫固定為
+> `2026-07-17-e941dcc3e345` 的 versioned historical snapshot。
 
-> **免責聲明**：本工具為非官方個人學術專案，不構成法律或長照申請建議。正式資訊請以衛生福利部公告、全國法規資料庫與 1966 長照服務專線為準。
+本專案是以台灣長照法規歷史快照為範圍的 RAG 作品展示。它實作 BM25 + Dense +
+RRF 混合檢索、Cross-Encoder Reranker、Typed Router、有界修正檢索與逐句
+Grounding，並保留可重現的評估與 trace 證據。系統能提供法條出處並在部分證據
+不足情境拒答，但實測仍有漏拒、誤拒與引用覆蓋限制。
 
-[線上 Demo](https://huggingface.co/spaces/steven0226/tw-longcare-rag) · [Production RAG 設計文檔](docs/production-rag.md) · [完整評估報告](docs/eval.md)
+> **使用邊界**：這是非官方、已凍結的 portfolio prototype，不是現行法規來源，
+> 也不是法律、長照資格、給付或申請決策工具。請勿以輸出直接作成權益決定；
+> 正式資訊請查衛生福利部公告、全國法規資料庫或洽 1966 長照服務專線。
+
+[線上 Demo](https://huggingface.co/spaces/steven0226/tw-longcare-rag) · [Portfolio closure audit](docs/portfolio-closure.md) · [Production RAG 歷史設計文檔](docs/production-rag.md) · [完整評估報告](docs/eval.md)
 
 ---
 
@@ -91,7 +100,7 @@ sequenceDiagram
 
 | 評測模式 / 部署策略 | Recall@5 / MRR | 拒答 Precision / Recall | p50 / p95 生成前延遲 | 系統特性說明 |
 |---|---:|---:|---:|---|
-| **Current Baseline (預設)** | **93.5% / 0.785** | **84.6% / 84.6%** | **219 ms / 236 ms** | 生產環境預設模式，超低延遲且性能極度穩定 |
+| **Current Baseline (預設)** | **93.5% / 0.785** | **84.6% / 84.6%** | **219 ms / 236 ms** | Portfolio Demo 保留的預設路徑 |
 | **Refinement Enabled (實驗)** | **100% / 0.871** | 80.0% / 92.3% | 1.28 s / 5.71 s | 精確度提升，但延遲呈倍數增加，設為 Opt-in 實驗組 |
 
 - **路由準確率 (Route Accuracy)**：30/30 (100%)。
@@ -100,11 +109,17 @@ sequenceDiagram
 
 ---
 
-## 法規知識庫管理 (Living Knowledge Base)
+## 版本化知識庫機制（目前凍結）
 
-系統建置可追蹤版本之法規知識庫（包含長期照顧服務法、老人福利法及其施行細則與給付辦法，共 5 部法規、205 條）：
-- **自動化 Diff 與驗證**：追蹤官方法規 SHA-256 簽章，自動識別變更條文。
-- **原子切換與 Regression 防護**：僅在自動化檢索 Regression 測試通過後方可原子切換 (Atomic Swap) 啟用新版知識庫。
+repository 保留一套**手動觸發**的版本化流程：以 SHA-256 辨識條文差異，建立
+immutable snapshot，並要求 locked retrieval regression 通過後才原子切換索引。
+這是已測試的維護機制，不代表目前存在排程、監控或自動法律更新服務。
+
+Portfolio 最終快照包含 5 部法規、205 條；官方 package metadata 日期為
+`2026-07-17`，corpus hash 為
+`e941dcc3e3454cc262e66667f5d227b32291fbde9ed689c0374347d41d456c35`。
+該次 refresh 與 `2026-07-10` 快照的 205 條內容相同，屬 metadata-only rebind；
+closure 沒有重抓或更新任何法律內容。
 
 ---
 
@@ -119,9 +134,8 @@ sequenceDiagram
 uv sync
 copy .env.example .env
 
-# 下載法規與建置混合檢索索引
-uv run python scripts/fetch_laws.py
-uv run python scripts/build_index.py --confirm-cost
+# 使用 repository 內封存的法律快照建置混合檢索索引
+uv run python scripts/build_index.py
 ```
 
 ### 2. 啟動 Web UI Demo 與執行單元測試

@@ -2,6 +2,10 @@
 
 > 本工具為非官方個人專案，僅供參考；正式資訊以衛生福利部公告與 1966 專線為準。
 
+> **Frozen evidence**：本報告是 `v1.0.0` 的歷史評估記錄。Portfolio closure
+> 不重跑付費 LLM evaluation；正式數字以 hash-locked artifacts 為準。下列
+> `--confirm-cost` 指令僅保留作歷史重現說明，不是 closure 步驟。
+
 一鍵重現：`uv run python scripts/run_eval.py --all`（retrieval 矩陣）、
 `uv run python scripts/blind_test.py --confirm-cost`（生成端盲測）、
 `uv run python scripts/eval_faithfulness.py --confirm-cost`（faithfulness/answer relevancy）。

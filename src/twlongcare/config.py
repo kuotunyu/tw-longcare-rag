@@ -72,7 +72,9 @@ def get_settings() -> Settings:
         shadow_adaptive_enabled=_parse_bool(os.getenv("RAG_SHADOW_ADAPTIVE")),
         shadow_adaptive_refinement=_parse_bool(os.getenv("RAG_SHADOW_REFINEMENT")),
         trace_sample_rate=float(os.getenv("RAG_TRACE_SAMPLE_RATE", "1.0")),
-        trace_redact_pii=_parse_bool(os.getenv("RAG_TRACE_REDACT_PII")),
+        trace_redact_pii=_parse_bool(
+            os.getenv("RAG_TRACE_REDACT_PII"), default=True
+        ),
         trace_retention_days=_parse_retention_days(
             os.getenv("RAG_TRACE_RETENTION_DAYS", "30")
         ),
