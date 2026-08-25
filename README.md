@@ -19,7 +19,7 @@ Grounding，並保留可重現的評估與 trace 證據。系統能提供法條�
 > 也不是法律、長照資格、給付或申請決策工具。請勿以輸出直接作成權益決定；
 > 正式資訊請查衛生福利部公告、全國法規資料庫或洽 1966 長照服務專線。
 
-[線上 Demo](https://huggingface.co/spaces/steven0226/tw-longcare-rag) · [Portfolio closure audit](docs/portfolio-closure.md) · [Production RAG 歷史設計文檔](docs/production-rag.md) · [完整評估報告](docs/eval.md)
+[線上 Demo](https://huggingface.co/spaces/steven0226/tw-longcare-rag) · [Deployment lineage](docs/deployment-lineage.md) · [Portfolio closure audit](docs/portfolio-closure.md) · [Production RAG 歷史設計文檔](docs/production-rag.md) · [完整評估報告](docs/eval.md)
 
 ---
 
